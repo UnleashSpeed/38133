@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* KaTeX Styles */
+@import 'katex/dist/katex.min.css';
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 217 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 100% 50%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 3px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.5);
+  }
+}
+
+/* KaTeX Custom Styling */
+.katex {
+  font-size: 1.1em;
+}
+
+.katex-display {
+  margin: 1.5em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Code Block Styling */
+pre {
+  @apply bg-muted rounded-lg p-4 overflow-x-auto text-sm;
+}
+
+code {
+  @apply font-mono text-sm;
+}
+
+/* Table Styling */
+.data-table {
+  @apply w-full border-collapse;
+}
+
+.data-table th {
+  @apply bg-muted/50 text-left p-3 text-sm font-semibold text-muted-foreground border-b;
+}
+
+.data-table td {
+  @apply p-3 text-sm border-b border-border;
+}
+
+.data-table tr:hover td {
+  @apply bg-muted/30;
+}
+
+/* Formula Block */
+.formula-block {
+  @apply bg-nokia-light/50 dark:bg-nokia-navy/30 rounded-lg p-4 my-4 border border-nokia-blue/20;
+}
+
+/* Clause Navigation */
+.clause-nav-item {
+  @apply flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors;
+}
+
+.clause-nav-item:hover {
+  @apply bg-muted;
+}
+
+.clause-nav-item.active {
+  @apply bg-nokia-blue/10 text-nokia-blue font-medium;
+}
+
+/* Content Layer Toggle */
+.layer-toggle {
+  @apply inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full transition-all;
+}
+
+.layer-toggle.active {
+  @apply bg-nokia-blue text-white;
+}
+
+.layer-toggle:not(.active) {
+  @apply bg-muted text-muted-foreground hover:bg-muted/80;
+}
+
+/* Search Highlight */
+.search-highlight {
+  @apply bg-yellow-200 dark:bg-yellow-900/50 px-0.5 rounded;
+}
+
+/* Cross Reference Link */
+.cross-ref-link {
+  @apply inline-flex items-center gap-1 text-nokia-blue hover:underline cursor-pointer;
+}
+
+/* Card Hover Effect */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5;
+}
+
+/* Gradient Text */
+.gradient-text {
+  @apply bg-gradient-to-r from-nokia-blue to-nokia-dark bg-clip-text text-transparent;
+}
+
+/* Section Divider */
+.section-divider {
+  @apply h-px bg-gradient-to-r from-transparent via-border to-transparent my-8;
+}

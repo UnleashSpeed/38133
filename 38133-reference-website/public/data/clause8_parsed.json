@@ -1,0 +1,1337 @@
+{
+  "document_info": {
+    "specification": "3GPP TS 38.133",
+    "title": "NR; Requirements for support of radio resource management",
+    "version": "j20",
+    "clause": "8 - Signalling Characteristics",
+    "parsed_date": "2024"
+  },
+  "clauses": [
+    {
+      "clause_id": "8.3.1",
+      "title": "Introduction",
+      "requirements": [
+        "Requirements for delay within which UE shall activate at least one deactivated SCell and deactivate at least one activated SCell",
+        "Applies for EN-DC, standalone NR carrier aggregation, NE-DC, and NR-DC"
+      ],
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.2",
+      "title": "SCell Activation Delay Requirement for Deactivated SCell",
+      "requirements": [
+        "UE configured with at least one downlink SCell in EN-DC, standalone NR CA, NE-DC, or NR-DC",
+        "UE shall be capable to transmit valid CSI report and apply actions no later than specified slot"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{T_{HARQ}+T_{activation\\_time}+T_{CSI\\_Reporting}}{NR\\ slot\\ length}$",
+        "variables": {
+          "THARQ": "Timing between DL data transmission and acknowledgement (ms) as specified in TS 38.213",
+          "Tactivation_time": "SCell activation delay in milliseconds",
+          "TCSI_Reporting": "Delay including uncertainty in acquiring first available downlink CSI reference resource, UE processing time for CSI reporting and uncertainty in acquiring first available CSI reporting resources"
+        }
+      },
+      "fr1_known_scell": {
+        "conditions": "SCell is known and belongs to FR1",
+        "formulas": [
+          "$T_{activation\\_time} = T_{FirstSSB} + T_{\\Delta} + 5\\ ms$ (if measurement period ≤ 2400 ms)",
+          "$T_{activation\\_time} = T_{FirstSSB\\_MAX} + T_{rs} + T_{\\Delta} + 5\\ ms$ (if measurement period > 2400 ms)"
+        ]
+      },
+      "fr1_unknown_scell": {
+        "conditions": "SCell is unknown and belongs to FR1, with side condition Ês/Iot ≥ -2 dB",
+        "single_ssb_or_tci_provided": {
+          "shortMeasInterval_r18_supported": [
+            "$T_{activation\\_time} = T_{FirstSSB\\_MAX,enhanced} + T_{SMTC\\_MAX,enhanced} + T_{rs,enhanced} + 5\\ ms$ (if contiguous conditions met)",
+            "$T_{activation\\_time} = T_{FirstSSB\\_MAX,enhanced} + T_{SMTC\\_MAX,enhanced} + 2*T_{rs,enhanced} + 5\\ ms$ (otherwise)"
+          ],
+          "not_supported": [
+            "$T_{activation\\_time} = T_{FirstSSB\\_MAX} + T_{SMTC\\_MAX} + T_{rs} + 5\\ ms$ (if contiguous conditions met)",
+            "$T_{activation\\_time} = T_{FirstSSB\\_MAX} + T_{SMTC\\_MAX} + 2*T_{rs} + T_{\\Delta} + 5\\ ms$ (otherwise)"
+          ]
+        },
+        "contiguous_conditions": [
+          "SCell is contiguous to an active serving cell in the same band",
+          "ssb-PositionInBurst is same as contiguous FR1 active serving cell",
+          "SMTC offset is same as contiguous FR1 active serving cell",
+          "RTD with contiguous FR1 active serving cell ≤ 260 ns",
+          "Reception power difference with contiguous FR1 active serving cell ≤ 6 dB"
+        ]
+      },
+      "fr1_unknown_scell_otherwise": {
+        "shortMeasInterval_r18_supported": [
+          "$T_{activation\\_time} = 6\\ ms + T_{FirstSSB\\_MAX,enhanced} + T_{SMTC\\_MAX,enhanced} + T_{rs,enhanced} + T_{L1-RSRP,enhanced\\_measure} + T_{L1-RSRP,report} + T_{HARQ} + max(T_{uncertainty\\_MAC} + T_{FineTiming} + 2\\ ms, T_{uncertainty\\_SP})$ (semi-persistent CSI-RS)",
+          "$T_{activation\\_time} = 3\\ ms + T_{FirstSSB\\_MAX,enhanced} + T_{SMTC\\_MAX,enhanced} + T_{rs,enhanced} + T_{L1-RSRP,enhanced\\_measure} + T_{L1-RSRP,report} + max(T_{HARQ} + T_{uncertainty\\_MAC} + 5\\ ms + T_{FineTiming}, T_{uncertainty\\_RRC} + T_{RRC\\_delay})$ (periodic CSI-RS)"
+        ],
+        "not_supported": [
+          "$T_{activation\\_time} = 6\\ ms + T_{FirstSSB\\_MAX} + T_{SMTC\\_MAX} + T_{rs} + T_{\\Delta} + T_{L1-RSRP,measure} + T_{L1-RSRP,report} + T_{HARQ} + max(T_{uncertainty\\_MAC} + T_{FineTiming} + 2\\ ms, T_{uncertainty\\_SP})$ (semi-persistent CSI-RS)",
+          "$T_{activation\\_time} = 3\\ ms + T_{FirstSSB\\_MAX} + T_{SMTC\\_MAX} + T_{rs} + T_{\\Delta} + T_{L1-RSRP,measure} + T_{L1-RSRP,report} + max(T_{HARQ} + T_{uncertainty\\_MAC} + 5\\ ms + T_{FineTiming}, T_{uncertainty\\_RRC} + T_{RRC\\_delay})$ (periodic CSI-RS)"
+        ]
+      },
+      "fr1_ssb_less_scell": {
+        "scellWithoutSSB_supported": "$T_{activation\\_time} = 3\\ ms$ (if RTD ≤ ±260ns, power diff ≤ 6dB, RS QCL-TypeA with TRS, TRS QCL-TypeC with SSB of active serving cell)",
+        "scellWithoutSSB_InterBandCA_r18": {
+          "conditions": [
+            "RTD between target SCell and collocated reference serving cell within CP",
+            "EPRE difference ≤ 30 dB",
+            "RS(s) of SSB-less SCell QCL-TypeA with TRS(s), TRS(s) QCL-TypeC with SSB(s) of inter-band active serving cell"
+          ],
+          "formulas": [
+            "$T_{activation\\_time} = T_{first\\_TRS} + T_{TRS} + 5\\ ms$ (if EPRE ≤ 12 dB, aperiodic CSI-RS not configured or not supported)",
+            "$T_{activation\\_time} = T_{first\\_ATRS} + T_{gap} + T_{ATRS} + 5\\ ms$ (if EPRE ≤ 12 dB, aperiodic CSI-RS configured and supported)",
+            "$T_{activation\\_time} = T_{first\\_TRS} + 2*T_{TRS} + 5\\ ms$ (if 12 dB < EPRE ≤ 30 dB)"
+          ]
+        }
+      },
+      "fr2_known_scell": {
+        "with_smtc": "$T_{activation\\_time} = T_{FirstSSB} + 5\\ ms$ (if SSBs fulfil clause 3.6.3, ssb-PositionsInBurst same, SSB in same half-frame)",
+        "without_smtc_scellWithoutSSB": "$T_{activation\\_time} = 3\\ ms$ (if RS QCL-TypeD with active serving cell)",
+        "highSpeedMeasFlagFR2_r17": "$T_{activation\\_time} = 3\\ ms$ (for FR2 power class 6 UE with measEnhCAInterFreqFR2-r18, if RS QCL-TypeD)"
+      },
+      "fr2_unknown_scell_no_active": {
+        "known_semi_persistent": "$T_{activation\\_time} = 3\\ ms + max(T_{uncertainty\\_MAC} + T_{FineTiming} + 2\\ ms, T_{uncertainty\\_SP})$ (Tuncertainty_MAC=0, Tuncertainty_SP=0 if simultaneous reception)",
+        "known_periodic": "$T_{activation\\_time} = max(T_{uncertainty\\_MAC} + 5\\ ms + T_{FineTiming}, T_{uncertainty\\_RRC} + T_{RRC\\_delay} - T_{HARQ})$ (Tuncertainty_MAC=0 if simultaneous reception)",
+        "unknown_FR1_FR2_1_semi_persistent": [
+          "$T_{activation\\_time} = 6\\ ms + T_{FirstSSB\\_MAX} + 15*T_{SMTC\\_MAX} + 8*T_{rs} + T_{L1-RSRP,measure} + T_{L1-RSRP,report} + T_{HARQ} + max(T_{uncertainty\\_MAC} + T_{FineTiming} + 2\\ ms, T_{uncertainty\\_SP})$",
+          "$T_{activation\\_time} = 6\\ ms + T_{FirstSSB\\_MAX,enhanced} + 15*T_{SMTC\\_MAX,enhanced} + X1*T_{rs,enhanced} + T_{L1-RSRP,enhanced\\_measure} + T_{L1-RSRP,report} + T_{HARQ} + max(T_{uncertainty\\_MAC} + T_{FineTiming} + 2\\ ms, T_{uncertainty\\_SP})$ (with reduceForCellDetection/reduceForSSB-L1-RSRP-Meas/shortMeasInterval-r18)"
+        ],
+        "unknown_FR1_FR2_2_semi_persistent": "$T_{activation\\_time} = 6\\ ms + T_{FirstSSB\\_MAX} + 23*T_{SMTC\\_MAX} + 12*T_{rs} + T_{L1-RSRP,measure} + T_{L1-RSRP,report} + T_{HARQ} + max(T_{uncertainty\\_MAC} + T_{FineTiming} + 2\\ ms, T_{uncertainty\\_SP})$",
+        "unknown_FR1_FR2_1_periodic": [
+          "$T_{activation\\_time} = 3\\ ms + T_{FirstSSB\\_MAX} + 15*T_{SMTC\\_MAX} + 8*T_{rs} + T_{L1-RSRP,measure} + T_{L1-RSRP,report} + max(T_{HARQ} + T_{uncertainty\\_MAC} + 5\\ ms + T_{FineTiming}, T_{uncertainty\\_RRC} + T_{RRC\\_delay})$",
+          "$T_{activation\\_time} = 3\\ ms + T_{FirstSSB\\_MAX,enhanced} + 15*T_{SMTC\\_MAX,enhanced} + X1*T_{rs,enhanced} + T_{L1-RSRP,enhanced\\_measure} + T_{L1-RSRP,report} + max(T_{HARQ} + T_{uncertainty\\_MAC} + 5\\ ms + T_{FineTiming}, T_{uncertainty\\_RRC} + T_{RRC\\_delay})$ (with capabilities)"
+        ],
+        "unknown_FR1_FR2_2_periodic": "$T_{activation\\_time} = 3\\ ms + T_{FirstSSB\\_MAX} + 23*T_{SMTC\\_MAX} + 12*T_{rs} + T_{L1-RSRP,measure} + T_{L1-RSRP,report} + max(T_{HARQ} + T_{uncertainty\\_MAC} + 5\\ ms + T_{FineTiming}, T_{uncertainty\\_RRC} + T_{RRC\\_delay})$"
+      },
+      "parameter_definitions": {
+        "TSMTC_MAX": {
+          "FR1_intra_band_contiguous": "Longer SMTC periodicity between active serving cells and SCell being activated (if cell-specific RS available in same slot)",
+          "FR1_intra_band_non_contiguous": "SMTC periodicity of SCell being activated (for UE capable of intraBandNR-CA-non-collocated-r18 without nonCollocatedTypeNR-CA-r18)",
+          "FR2_intra_band": "Longer SMTC periodicity between active serving cells and SCell being activated",
+          "FR2_inter_band": "SMTC periodicity of SCell being activated",
+          "minimum": "10 ms"
+        },
+        "Trs": "SMTC periodicity of SCell being activated if provided, otherwise from measObjectNR with same SSB frequency and SCS; if no SMTC configured, Trs = 5 ms assuming SSB transmission periodicity is 5 ms",
+        "Tdelta": "Additional time for fine time tracking. T∆ = 2*Trs ms for SCell operating with 12 PRB SSB BW, otherwise T∆ = 0 ms",
+        "TFirstSSB": "Time to end of first complete SSB burst indicated by SMTC, or within 5 ms if SMTC not configured, after slot $n + \\frac{T_{HARQ}+3ms}{NR slot length}$",
+        "TFirstSSB_MAX": "Time to end of first complete SSB burst indicated by SMTC, or within 5 ms if SMTC not configured, after slot $n + \\frac{T_{HARQ}+3ms}{NR slot length}$, fulfilling occasion when all active serving cells and SCells transmit SSB bursts in same slot (FR1 intra-band) or first occasion when SCell transmits SSB burst (FR1 inter-band) or all transmit in same slot (FR2)",
+        "TFineTiming": "Time period between UE finish processing last activation command for PDCCH TCI, PDSCH TCI and timing of first complete available SSB corresponding to TCI state",
+        "TL1_RSRP_measure": "L1-RSRP measurement delay TL1-RSRP_Measurement_Period_SSB or TL1-RSRP_Measurement_Period_CSI-RS assuming M=1 and TReport=0",
+        "X1": "Reported value in reduceForCellDetection in FR2-1; if absent, X1 = 8"
+      },
+      "known_scell_conditions": {
+        "FR1": [
+          "During period equal to max(5*measCycleSCell, 5*DRX cycles) before reception of SCell activation command:",
+          "UE has sent valid measurement report for SCell being activated",
+          "SSB measured remains detectable according to cell identification conditions in clause 9.2 and 9.3",
+          "SSB measured during the period also remains detectable during SCell activation delay"
+        ],
+        "FR2_first_activation": [
+          "During period equal to 4s (power class 1/5) or 3s (power class 2/3/4) before receiving last activation command for PDCCH TCI, PDSCH TCI and semi-persistent CSI-RS for CQI reporting:",
+          "UE has sent valid L3-RSRP measurement report with SSB index",
+          "SCell activation command received after L3-RSRP reporting and no later than MAC-CE command for TCI activation",
+          "Reported SSBs with indexes remain detectable from L3-RSRP reporting to valid CQI reporting"
+        ]
+      },
+      "interruption_window": {
+        "starting_point": "Not before slot $n+1+\\frac{T_{HARQ}}{NR slot length}$",
+        "ending_point": "Not after slot $n+1+\\frac{T_{HARQ}+3ms+T_X}{NR slot length}$",
+        "TX_values": [
+          "TX = 0 if Tactivation_time = 3 ms",
+          "TX = TFirstSSB if Tactivation_time includes TFirstSSB",
+          "TX = TFirstSSB_MAX if Tactivation_time includes TFirstSSB_MAX",
+          "TX = Tuncertainty_MAC + TFineTiming if Tactivation_time includes only TFineTiming and no TFirstSSB_MAX",
+          "TX = Tfirst_TRS for FR1 inter-band SSB-less SCell activation",
+          "TX = Tfirst_ATRS for FR1 inter-band SSB-less SCell activation with aperiodic CSI-RS"
+        ]
+      },
+      "notes": [
+        "Longer delays for RRM measurement requirements can be expected during cell detection time for unknown SCell activation",
+        "In case of FR2 also SSB based RLM/BFD/CBD/L1-RSRP measurement requirements can have longer delays",
+        "When absoluteFrequencySSB is not configured in DownlinkConfigCommon for target SCell but SMTC is configured, no requirement would be applied",
+        "Requirements apply provided that SSB of to-be-activated SCell is within first active DL BWP of the SCell",
+        "Starting from slot specified in clause 4.3 of TS 38.213 until SCell activation completion, UE shall report out of range if has available UL resources to report CQI",
+        "Starting from slot specified in clause 4.3 of TS 38.213 until first L1-RSRP measurement completed, UE shall report lowest valid L1 SS-RSRP range if has available UL resources"
+      ],
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ],
+      "frequency_ranges": [
+        "FR1",
+        "FR2"
+      ]
+    },
+    {
+      "clause_id": "8.3.2A",
+      "title": "SCell Activation Delay Requirement for Deactivated SCell based on measurement in IDLE/INACTIVE mode",
+      "requirements": [
+        "UE configured with at least one downlink SCell in EN-DC, standalone NR CA, NE-DC, or NR-DC",
+        "Requirements apply if SCell is unknown and UE supports measValidationReportEMR with measIdleValidityDuration-r18 configured, or",
+        "UE supports measValidationReportReselectionMeasurements with measReselectionValidityDuration-r18 configured, or",
+        "UE supports idleInactiveNR-MeasReport-r16 without measIdleValidityDuration-r18 or measReselectionValidityDuration-r18 and measIdleDuration-r16 has not expired"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{T_{HARQ}+T_{activation\\_time}+T_{CSI\\_Reporting}}{NR\\ slot\\ length}$"
+      },
+      "fr1_unknown_scell": {
+        "conditions": "SCell belongs to FR1, side condition Ês/Iot ≥ -2dB fulfilled",
+        "formula": "$T_{activation\\_time} = T_{FirstSSB\\_MAX} + T_{rs} + 5\\ ms$",
+        "conditions_to_meet": [
+          "During 5s before reception of SCell activation command: UE has sent measurement report with SSB index per 4.7.3 or 5.8.3",
+          "SSB measured is detectable from earliest measurement to end of SCell activation latency",
+          "If measIdleValidityDuration-r18 or measReselectionValidityDuration-r18 configured: earliest measurement is time instance measIdleValidityDuration-r18 or measReselectionValidityDuration-r18 before Msg1 transmission",
+          "If only measIdleDuration-r16 configured: earliest measurement is time instance when UE obtained configuration parameter",
+          "SSB measured remains detectable per IDLE/INACTIVE mode measurement conditions in 4.2 or CA/DC measurement conditions in 4.4 when UE in IDLE/INACTIVE state",
+          "SSB measured remains detectable per cell identification conditions in clause 9.2 and 9.3 when UE in CONNECTED mode"
+        ]
+      },
+      "fr2_unknown_scell": {
+        "conditions": "SCell belongs to FR2, side condition Ês/Iot ≥ -2dB fulfilled",
+        "conditions_to_meet": [
+          "During 4s (power class 1/5) or 3s (power class 2/3/4) before receiving last activation command for PDCCH TCI, PDSCH TCI and semi-persistent CSI-RS for CQI reporting:",
+          "UE has sent measurement report with SSB index per 4.7.3 or 5.8.3",
+          "SSB measured is detectable from earliest measurement to end of SCell activation latency",
+          "If measIdleValidityDuration-r18 or measReselectionValidityDuration-r18 configured: earliest measurement is time instance measIdleValidityDuration-r18 or measReselectionValidityDuration-r18 before Msg1 transmission",
+          "If only measIdleDuration-r16 configured: earliest measurement is time instance when UE obtained configuration parameter",
+          "SSB measured remains detectable per IDLE/INACTIVE mode measurement conditions in 4.2 or CA/DC measurement conditions in 4.4 when UE in IDLE/INACTIVE state",
+          "SSB measured remains detectable per cell identification conditions in clause 9.2 and 9.3 when UE in CONNECTED mode"
+        ],
+        "formulas": [
+          "FR1-FR2-1 CA with semi-persistent CSI-RS: $T_{activation\\_time} = 3\\ ms + T_{FirstSSB\\_MAX} + 15*T_{SMTC\\_MAX} + max(T_{uncertainty\\_MAC} + T_{FineTiming} + 2\\ ms, T_{uncertainty\\_SP})$ (Tuncertainty_MAC=0, Tuncertainty_SP=0 if simultaneous reception)",
+          "FR1-FR2-1 CA with periodic CSI-RS: $T_{activation\\_time} = T_{FirstSSB\\_MAX} + 15*T_{SMTC\\_MAX} + max(T_{uncertainty\\_MAC} + 5\\ ms + T_{FineTiming}, T_{uncertainty\\_RRC} + T_{RRC\\_delay} - T_{HARQ})$ (Tuncertainty_MAC=0 if simultaneous reception)"
+        ]
+      },
+      "parameter_definitions": {
+        "Tuncertainty_MAC": "Time period between reception of last activation command for PDCCH TCI, PDSCH TCI relative to SCell activation command, TCI state selected based on latest reported SSB indexes",
+        "Tuncertainty_RRC": "Time period between reception of RRC configuration message for TCI of periodic CSI-RS for CQI reporting relative to SCell activation command, TCI state selected based on latest reported SSB indexes",
+        "Tuncertainty_SP": "Time period between reception of activation command for semi-persistent CSI-RS resource set for CQI reporting relative to SCell activation command, TCI state for semi-persistent CSI-RS selected based on latest reported SSB indexes"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ],
+      "frequency_ranges": [
+        "FR1",
+        "FR2"
+      ]
+    },
+    {
+      "clause_id": "8.3.3",
+      "title": "SCell Deactivation Delay Requirement for Activated SCell",
+      "requirements": [
+        "UE configured with at least one downlink SCell in EN-DC, standalone NR CA, NE-DC, or NR-DC",
+        "Upon receiving SCell deactivation command in slot n, UE shall accomplish deactivation actions no later than in slot $n + \\frac{T_{HARQ}+3ms}{NR\\ slot\\ length}$"
+      ],
+      "timing_formulas": {
+        "deactivation_command": "$n + \\frac{T_{HARQ}+3ms}{NR\\ slot\\ length}$",
+        "sCellDeactivationTimer_expiry": "$n + \\frac{3ms}{NR\\ slot\\ length}$"
+      },
+      "interruption_window": {
+        "starting_point": "Not before slot $n+1+\\frac{T_{HARQ}}{NR\\ slot\\ length}$",
+        "ending_point": "Not after slot $n+1+\\frac{T_{HARQ}+3ms}{NR\\ slot\\ length}$ (for MAC command)",
+        "ending_point_timer": "Not after slot $n+1+\\frac{3ms}{NR\\ slot\\ length}$ (for timer expiry)"
+      },
+      "notes": [
+        "Length of interruption window may be different for different victim cells",
+        "Depends on applicable scenario and frequency band relation between aggressor cell and victim cell"
+      ],
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.4",
+      "title": "Direct SCell Activation at SCell addition",
+      "requirements": [
+        "Applies for UE configured in RRC reconfiguration message with one SCell where sCellState is set to activated",
+        "If RRC reconfiguration also configures PSCell addition or PSCell change, direct SCell activation delay may be longer"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{N_{direct}}{NR\\ slot\\ length}$",
+        "Ndirect": [
+          "$N_{direct} = T_{RRC\\_Process} + T_1 + T_{activation\\_time} + T_{CSI\\_Reporting} - 3\\ ms$ (if TCI state not indicated within Tactivation_time)",
+          "$N_{direct} = T_{RRC\\_Process} + T_1 + T_{HARQ} + T_{activation\\_time} + T_{CSI\\_Reporting}$ (otherwise)"
+        ],
+        "variables": {
+          "slot_n": "Last slot overlapping with PDSCH containing RRC reconfiguration message",
+          "TRRC_Process": "RRC procedure delay as specified in TS 36.331 clause 11.2 (if embedded in E-UTRA RRC message) or TS 38.331 clause 12 (otherwise)",
+          "T1": "Delay from slot $n+\\frac{T_{RRC\\_Process}}{NR\\ slot\\ length}$ until transmission of RRCReconfigurationComplete message (UE implementation dependent)"
+        }
+      },
+      "TFirstSSB_override": {
+        "TFirstSSB": "Time to end of first complete SSB burst indicated by SMTC after slot $n + \\frac{T_{RRC\\_Process}+T_1}{NR\\ slot\\ length}$",
+        "TFirstSSB_MAX": "Time to end of first complete SSB burst indicated by SMTC after slot $n + \\frac{T_{RRC\\_Process}+T_1}{NR\\ slot\\ length}$, fulfilling:",
+        "FR1_intra_band": "Occasion when all active serving cells and SCells transmit SSB bursts in same slot",
+        "FR1_inter_band": "First occasion when SCell being activated transmits SSB burst",
+        "FR2": "Occasion when all active serving cells and SCells transmit SSB bursts in same slot"
+      },
+      "known_scell_conditions": {
+        "FR1": [
+          "During last 5 seconds before reception of direct SCell configuration command:",
+          "UE has sent valid measurement report for SCell being directly activated",
+          "SSB measured remains detectable per cell identification conditions in clauses 9.2 and 9.3",
+          "SSB measured during 5 seconds also remains detectable during SCell activation delay"
+        ],
+        "FR2": "Same conditions as defined in clause 8.3.2"
+      },
+      "interruption_window": {
+        "starting_point": "Not before slot n+1",
+        "ending_point": "Not after slot $n+1+\\frac{T_{RRC\\_Process}+T_1+T_X}{NR\\ slot\\ length}$",
+        "TX_values": [
+          "TX = TFirstSSB if Tactivation_time includes TFirstSSB",
+          "TX = TFirstSSB_MAX if Tactivation_time includes TFirstSSB_MAX",
+          "TX = Tuncertainty_MAC + TFineTiming if Tactivation_time includes TFineTiming"
+        ]
+      },
+      "notes": [
+        "Starting from slot $n+\\frac{T_{RRC\\_Process}+T_1}{NR\\ slot\\ length}$ until direct SCell activation completion, UE shall report CQI index = 0 (out of range) if has available UL resources"
+      ],
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.5",
+      "title": "Direct SCell Activation at Handover",
+      "requirements": [
+        "Applies for UE configured in RRC reconfiguration message for handover with one SCell where sCellState is set to activated"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{N_{direct}}{NR\\ slot\\ length}$",
+        "Ndirect": [
+          "$N_{direct} = T_{RRC\\_process} + T_{interrupt} + T_2 + T_3 + T_{activation\\_time} + T_{CSI\\_Reporting} - 3\\ ms$ (if TCI state not indicated within Tactivation_time)",
+          "$N_{direct} = T_{RRC\\_process} + T_{interrupt} + T_2 + T_3 + T_{HARQ} + T_{activation\\_time} + T_{CSI\\_Reporting}$ (otherwise)"
+        ],
+        "variables": {
+          "slot_n": "Last slot overlapping with PDSCH containing RRC reconfiguration message",
+          "TRRC_Process": "RRC procedure delay per TS 36.331 clause 11.2 (E-UTRA) or TS 38.331 clause 12 (NR)",
+          "Tinterrupt": "Interruption time during handover per clause 6.1.1",
+          "T2": "Delay from slot $n+\\frac{T_{RRC\\_Process}+T_{interrupt}}{NR\\ slot\\ length}$ until UE has obtained valid TA command for target PCell",
+          "T3": "Delay for applying received TA for UL transmission in target PCell, ≥ k+1 slot where k defined in TS 38.213 clause 4.2"
+        }
+      },
+      "fr1_known_scell": {
+        "TCSI_Reporting": "Specified in clause 8.3.2",
+        "Tactivation_time": [
+          "$T_{FirstSSB} + 5\\ ms$ (if measurement period ≤ 2400 ms)",
+          "$T_{FirstSSB\\_MAX} + T_{rs} + 5\\ ms$ (if measurement period > 2400 ms)"
+        ],
+        "measurement_period_table": {
+          "intra_freq_activated": "Table 9.2.5.2-1",
+          "intra_freq_deactivated": "Table 9.2.5.2-3",
+          "inter_freq": "Table 9.3.5-1"
+        }
+      },
+      "TFirstSSB_override": {
+        "TFirstSSB": "Time to end of first complete SSB burst indicated by SMTC after slot $n + \\frac{T_{RRC\\_Process}+T_{interrupt}+T_2+T_3}{NR\\ slot\\ length}$",
+        "TFirstSSB_MAX": "Time to end of first complete SSB burst indicated by SMTC after slot $n + \\frac{T_{RRC\\_Process}+T_{interrupt}+T_2+T_3}{NR\\ slot\\ length}$, fulfilling:",
+        "FR1_intra_band": "Occasion when all active serving cells and SCells transmit SSB bursts in same slot",
+        "FR1_inter_band": "First occasion when SCell being activated transmits SSB burst",
+        "FR2": "Occasion when all active serving cells and SCells transmit SSB bursts in same slot"
+      },
+      "known_scell_conditions": {
+        "FR1": [
+          "During last 5 seconds before reception of direct SCell configuration command:",
+          "UE has sent valid measurement report for SCell being directly activated",
+          "SSB measured remains detectable per cell identification conditions in clauses 9.2 and 9.3",
+          "SSB measured during 5 seconds also remains detectable during SCell activation delay"
+        ],
+        "FR2": "Same conditions as defined in clause 8.3.2"
+      },
+      "interruption_window": {
+        "starting_point": "Not before slot $n+1+\\frac{T_{RRC\\_Processing}+T_{interrupt}+T_2+T_3}{NR\\ slot\\ length}$",
+        "ending_point": "Not after slot $n+1+\\frac{T_{RRC\\_Processing}+T_{interrupt}+T_2+T_3+T_X}{NR\\ slot\\ length}$",
+        "TX_values": [
+          "TX = TFirstSSB if Tactivation_time includes TFirstSSB",
+          "TX = TFirstSSB_MAX if Tactivation_time includes TFirstSSB_MAX",
+          "TX = Tuncertainty_MAC + TFineTiming if Tactivation_time includes TFineTiming"
+        ]
+      },
+      "notes": [
+        "Starting from slot $n+\\frac{T_{RRC\\_Process}+T_{interrupt}+T_2+T_3}{NR\\ slot\\ length}$ until direct SCell activation completion, UE shall report CQI index = 0 (out of range) if has available UL resources"
+      ],
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.6",
+      "title": "Direct SCell Activation at RRC Resume",
+      "requirements": [
+        "Applies for UE configured in RRC reconfiguration message for RRC Resume with one SCell where sCellState is set to activated"
+      ],
+      "timing_formulas": {
+        "note": "Requirements in clause 8.3.4 apply, except T1 definition replaced with:",
+        "T1": "Delay from slot $n+\\frac{T_{RRC\\_Process}}{NR\\ slot\\ length}$ until transmission of RRCResumeComplete message"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.7",
+      "title": "SCell Activation Delay Requirement for Deactivated SCell with Multiple Downlink SCells",
+      "requirements": [
+        "UE configured with more than one downlink SCells",
+        "In EN-DC, NE-DC, standalone NR CA, or one CG of NR-DC: UE receives one MAC command for multiple SCell activation, no other SCell activation/deactivation/addition/release before completion",
+        "In two CGs of NR-DC: UE receives one MAC command per CG, supports per-FR measurement gap, any unknown SCell has active serving cell(s) or known to-be-activated SCell(s) on same band"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{T_{HARQ}+T_{activation\\_time\\_multiple\\_scells}+T_{CSI\\_Reporting}}{NR\\ slot\\ length}$",
+        "variables": {
+          "Tactivation_time_multiple_scells": "Target SCell activation delay in milliseconds in multiple SCell activation scenario"
+        }
+      },
+      "fr1_known_scell": {
+        "measurement_period_leq_2400ms": [
+          "$T_{activation\\_time\\_multiple\\_scells} = T_{FirstSSB\\_MAX\\_multiple\\_scells} + T_{rs} + 5\\ ms$ (if parallel known SCell with measurement period > 2400ms but no parallel unknown SCell)",
+          "$T_{activation\\_time\\_multiple\\_scells} = T_{FirstSSB\\_MAX\\_multiple\\_scells} + T_{SMTC\\_MAX\\_multiple\\_scells} + T_{rs} + 5\\ ms$ (if parallel unknown SCell)",
+          "$T_{activation\\_time\\_multiple\\_scells} = T_{FirstSSB\\_MAX\\_multiple\\_scells} + 5\\ ms$ (otherwise)"
+        ],
+        "measurement_period_gt_2400ms": [
+          "$T_{activation\\_time\\_multiple\\_scells} = T_{FirstSSB\\_MAX\\_multiple\\_scells} + T_{SMTC\\_MAX\\_multiple\\_scells} + T_{rs} + 5\\ ms$ (if parallel unknown SCell)",
+          "$T_{activation\\_time\\_multiple\\_scells} = T_{FirstSSB\\_MAX\\_multiple\\_scells} + T_{rs} + 5\\ ms$ (otherwise)"
+        ]
+      },
+      "fr1_unknown_scell": {
+        "not_counted_in_N1": "$T_{activation\\_time\\_multiple\\_scells} = T_{FirstSSB\\_MAX\\_multiple\\_scells} + T_{SMTC\\_MAX\\_multiple\\_scells} + T_{rs} + 5\\ ms$",
+        "single_ssb_or_tci_provided": "$T_{activation\\_time\\_multiple\\_scells} = T_{FirstSSB\\_MAX\\_multiple\\_scells} + T_{SMTC\\_MAX\\_multiple\\_scells} + T_{rs}*N1 + T_{rs} + 5\\ ms$",
+        "otherwise": [
+          "$T_{activation\\_time\\_multiple\\_scells} = 6\\ ms + T_{FirstSSB\\_MAX\\_multiple\\_scells} + T_{SMTC\\_MAX\\_multiple\\_scells} + T_{rs}*N1 + T_{L1-RSRP,measure} + T_{L1-RSRP,report} + T_{HARQ} + max(T_{uncertainty\\_MAC\\_multiple\\_scells} + T_{FineTiming} + 2\\ ms, T_{uncertainty\\_SP\\_multiple\\_scells})$ (semi-persistent CSI-RS)",
+          "$T_{activation\\_time\\_multiple\\_scells} = 3\\ ms + T_{FirstSSB\\_MAX\\_multiple\\_scells} + T_{SMTC\\_MAX\\_multiple\\_scells} + T_{rs}*N1 + T_{L1-RSRP,measure} + T_{L1-RSRP,report} + max(T_{HARQ} + T_{uncertainty\\_MAC\\_multiple\\_scells} + 5\\ ms + T_{FineTiming}, T_{uncertainty\\_RRC\\_multiple\\_scells} + T_{RRC\\_delay})$ (periodic CSI-RS)"
+        ]
+      },
+      "N1_definition": {
+        "description": "Number counting for parallel FR1 unknown to-be-activated SCell(s) except those fulfilling:",
+        "exclusion_conditions": [
+          "Contiguous to active serving cell in same band, or to known SCell in same band being activated by same MAC PDU",
+          "Single SSB used in unknown SCell; or multiple SSBs used and TCI state indication for PDCCH provided by same MAC PDU",
+          "ssb-PositionInBurst same as contiguous FR1 known cell or active serving cell",
+          "RTD with contiguous FR1 known cell or active serving cell ≤ 260 ns",
+          "Reception power difference with contiguous FR1 known cell or active serving cell ≤ 6 dB",
+          "SMTC offset same as contiguous FR1 known cell or active serving cell"
+        ]
+      },
+      "fr2_scell": {
+        "with_active_serving_cell": "Same as single SCell activation delay in clause 8.3.2",
+        "known_semi_persistent": "Same as single SCell activation delay in clause 8.3.2",
+        "known_periodic": "Same as single SCell activation delay in clause 8.3.2",
+        "unknown_semi_persistent_with_known_parallel": "$T_{activation\\_time\\_multiple\\_scells} = 3\\ ms + max(T_{uncertainty\\_MAC\\_multiple\\_scells} + T_{FineTiming} + 2\\ ms, T_{uncertainty\\_SP\\_multiple\\_scells})$ (Tuncertainty_MAC=0, Tuncertainty_SP=0 if simultaneous reception)",
+        "unknown_periodic_with_known_parallel": "$T_{activation\\_time\\_multiple\\_scells} = max(T_{uncertainty\\_MAC\\_multiple\\_scells} + 5\\ ms + T_{FineTiming}, T_{uncertainty\\_RRC\\_multiple\\_scells} + T_{RRC\\_delay} - T_{HARQ})$ (Tuncertainty_MAC=0 if simultaneous reception)"
+      },
+      "parameter_definitions": {
+        "TSMTC_MAX_multiple_scells": {
+          "FR1_intra_band": "Longest SMTC periodicity between active serving cells and SCells being activated on same band (if cell-specific RS available in same slot)",
+          "FR1_inter_band": "Longest SMTC periodicity of SCells being activated on same band",
+          "FR2": "Longest SMTC periodicity between active serving cells and SCell(s) being activated in FR2 intra-band CA",
+          "minimum": "10 ms"
+        },
+        "TFirstSSB_MAX_multiple_scells": "Time to end of first complete SSB burst indicated by SMTC after slot $n + \\frac{T_{HARQ}+3ms}{NR\\ slot\\ length}$, fulfilling occasion when all active serving cells and SCells transmit SSB bursts in same slot (intra-band) or first occasion when SCells transmit SSB burst (inter-band)"
+      },
+      "additional_interruptions": {
+        "conditions": "If start of first complete SSB used in TX in different bands not aligned after $n+\\frac{T_{HARQ}+3ms}{NR\\ slot\\ length}$",
+        "limitations": [
+          "Number of additional interruptions ≤ number of FR1 bands with both SCell being activated (requirements involve TFirstSSB_MAX_multiple_scells with Trs) and active serving cell",
+          "Each interruption length defined in clause 8.2.2.2.2"
+        ]
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ],
+      "frequency_ranges": [
+        "FR1",
+        "FR2"
+      ]
+    },
+    {
+      "clause_id": "8.3.8",
+      "title": "SCell Deactivation Delay Requirement for Activated SCell with Multiple Downlink SCells",
+      "requirements": [
+        "UE configured with multiple downlink SCells in EN-DC, standalone NR CA, NE-DC, or NR-DC",
+        "No other SCell activation/deactivation/addition/release before deactivation completed for all SCells deactivated by single MAC CE",
+        "In EN-DC and NE-DC: no E-UTRAN SCell activation/deactivation/addition/release before multiple SCell deactivation completed",
+        "UE receives one single MAC command for multiple SCell deactivation (or one MAC command per CG for per-FR measurement gap capable UE in NR-DC)"
+      ],
+      "timing_formulas": {
+        "deactivation_delay": "Same delay as specified in clause 8.3.3"
+      },
+      "interruption_window": "Same as single SCell activation requirement in clause 8.3.3",
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.9",
+      "title": "Direct SCell Activation of Multiple Downlink SCells at SCell addition",
+      "requirements": [
+        "UE configured in RRC reconfiguration message with 2 SCells where sCellState is set to activated",
+        "In EN-DC, NE-DC, standalone NR, or one CG of NR-DC: UE receives one RRC reconfiguration message, no other SCell activation/deactivation/addition/release before completion",
+        "In two CGs of NR-DC: UE receives one RRC message per CG, supports per-FR measurement gap, any unknown SCell has active serving cell(s) or known to-be-activated SCell(s) on same band"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{N_{direct\\_multiple\\_scells}}{NR\\ slot\\ length}$",
+        "Ndirect_multiple_scells": [
+          "$N_{direct\\_multiple\\_scells} = T_{RRC\\_Process} + T_1 + T_{activation\\_time\\_multiple\\_scells} + T_{CSI\\_Reporting} - 3\\ ms$ (if TCI state not indicated within Tactivation_time)",
+          "$N_{direct\\_multiple\\_scells} = T_{RRC\\_Process} + T_1 + T_{HARQ} + T_{activation\\_time\\_multiple\\_scells} + T_{CSI\\_Reporting}$ (otherwise)"
+        ]
+      },
+      "TFirstSSB_MAX_multiple_scells_override": "Time to end of first complete SSB burst indicated by SMTC after slot $n + \\frac{T_{RRC\\_Process}+T_1}{NR\\ slot\\ length}$, fulfilling conditions per FR1 intra-band/inter-band and FR2",
+      "interruption_window": {
+        "starting_point": "Not before slot $n+1+\\frac{T_{HARQ}}{NR\\ slot\\ length}$",
+        "ending_point": "Not after slot $n+1+\\frac{T_{RRC\\_Process}+T_1+T_X}{NR\\ slot\\ length}$",
+        "TX_values": [
+          "TX = TFirstSSB if Tactivation_time_multiple_scells includes TFirstSSB",
+          "TX = TFirstSSB_MAX if Tactivation_time_multiple_scells includes TFirstSSB_MAX",
+          "TX = TFirstSSB_MAX_multiple_scells if Tactivation_time_multiple_scells includes TFirstSSB_MAX_multiple_scells",
+          "TX = Tuncertainty_MAC + TFineTiming if Tactivation_time_multiple_scells includes TFineTiming"
+        ]
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.10",
+      "title": "Direct SCell Activation of Multiple Downlink SCells at Handover",
+      "requirements": [
+        "UE configured in RRC reconfiguration message for handover with 2 SCells where sCellState is set to activated",
+        "In MCG of NE-DC, MCG of NR-DC, or standalone NR: no other RRC reconfiguration for direct activation, no other SCell activation/deactivation/addition/release before completion"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{N_{direct\\_multiple\\_scells}}{NR\\ slot\\ length}$",
+        "Ndirect_multiple_scells": [
+          "$N_{direct\\_multiple\\_scells} = T_{RRC\\_process} + T_{interrupt} + T_2 + T_3 + T_{activation\\_time\\_multiple\\_scells} + T_{CSI\\_Reporting} - 3\\ ms$ (if TCI state not indicated within Tactivation_time)",
+          "$N_{direct\\_multiple\\_scells} = T_{RRC\\_process} + T_{interrupt} + T_2 + T_3 + T_{HARQ} + T_{activation\\_time\\_multiple\\_scells} + T_{CSI\\_Reporting}$ (otherwise)"
+        ]
+      },
+      "TFirstSSB_MAX_multiple_scells_override": "Time to end of first complete SSB burst indicated by SMTC after slot $n + \\frac{T_{RRC\\_Process}+T_{interrupt}+T_2+T_3}{NR\\ slot\\ length}$",
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.11",
+      "title": "Direct SCell Activation of Multiple Downlink SCells at RRC Resume",
+      "requirements": [
+        "UE configured in RRC reconfiguration message for RRC Resume with 2 SCells where sCellState is set to activated"
+      ],
+      "timing_formulas": {
+        "note": "Requirements in clause 8.3.9 apply, except T1 definition replaced with corresponding definition in clause 8.3.6"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.12",
+      "title": "SCell Activation Delay Requirement for Deactivated PUCCH SCell",
+      "requirements": [
+        "UE configured with one downlink SCell and PUCCH configured for SCell being activated"
+      ],
+      "valid_ta_available": {
+        "timing_formula": "$n+\\frac{T_{HARQ}+T_{activation\\_time}+max((T_{First\\_available\\_CSI}+T_{CSI\\_processing}), 3*T_{target\\_PL-RS})+T_{CSI\\_Reporting\\_after}}{NR\\ slot\\ length}$",
+        "TA_validity": "TA is valid if TimeAlignmentTimer associated with TAG containing PUCCH SCell is running",
+        "variables": {
+          "Ttarget_PL_RS": "Periodicity of target pathloss reference signal determined during PUCCH SCell activation",
+          "TFirst_available_CSI": "Delay uncertainty in acquiring first available downlink CSI reference resource",
+          "TCSI_processing": "UE processing time for CSI reporting",
+          "TCSI_reporting_after": "Delay uncertainty in acquiring first available CSI reporting resources after end of max((TFirst_available_CSI + TCSI_processing), 3*Ttarget_PL-RS)"
+        }
+      },
+      "no_valid_ta": {
+        "downlink_actions": "$n+\\frac{T_{HARQ}+T_{activation\\_time}}{NR\\ slot\\ length}$",
+        "uplink_actions_and_csi": "$n+\\frac{T_{HARQ}+T_{delay\\_PUCCH\\_SCell}+T_{CSI\\_Reporting\\_PUCCH\\_SCell}}{NR\\ slot\\ length}$",
+        "Tdelay_PUCCH_SCell": "$T_{activation\\_time} + max((T_{First\\_available\\_CSI}+T_{CSI\\_processing}), (T_1+T_2+T_3), 3*T_{target\\_PL-RS}) + T_{CSI\\_reporting\\_after}$",
+        "T1_definition": "Delay uncertainty in acquiring first available PDCCH triggered PRACH occasion in PUCCH SCell after slot $n+\\frac{T_{HARQ}+T_{activation\\_time}}{NR\\ slot\\ length}$; up to summation of delay uncertainty for PDCCH order reception, SSB to PRACH occasion association period and 10 ms",
+        "T2_definition": "Delay from slot $n+\\frac{T_{HARQ}+T_{activation\\_time}+T_1}{NR\\ slot\\ length}$ until UE has obtained valid TA command for target PUCCH SCell",
+        "T3_definition": "Delay for applying received TA for UL transmission on target PUCCH SCell per TS 38.213 clause 4.2"
+      },
+      "pathloss_reference_signal_known_conditions": {
+        "known_PUCCH_SCell": [
+          "PUCCH SCell activation command received within 1280 ms upon last transmission of RS resource used for L3 measurement reporting",
+          "Target PL-RS determination based on latest L3 measurement reporting",
+          "Target PL-RS remains detectable during PUCCH SCell activation period",
+          "SNR of target PL-RS ≥ -3 dB",
+          "Associated SSBs with target PL-RS remain detectable during PUCCH SCell activation period",
+          "SNR of associated SSB ≥ -3 dB"
+        ]
+      },
+      "notes": [
+        "Requirements apply provided: target PL-RS is known (otherwise longer activation time expected)",
+        "RA on PUCCH SCell not interrupted by RA on PCell (otherwise additional delay expected)",
+        "No SRS carrier based switching or SRS antenna port switching during SCell activation (otherwise delay can be extended)"
+      ],
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ],
+      "frequency_ranges": [
+        "FR1",
+        "FR2"
+      ]
+    },
+    {
+      "clause_id": "8.3.13",
+      "title": "SCell activation delay Requirement for Deactivated PUCCH SCell with Multiple SCells",
+      "requirements": [
+        "UE configured with multiple deactivated downlink SCells and PUCCH configured for a SCell",
+        "PUCCH SCell with downlink SCell(s) activated by one MAC command",
+        "For EN-DC, NE-DC, standalone NR: UE receives single MAC command, no other SCell activation/deactivation/addition/release before completion",
+        "All DL SCells being activated in secondary PUCCH group are unknown if PUCCH SCell being activated is unknown",
+        "If to-be-activated FR2 PUCCH SCell is unknown, no to-be-activated FR1 SCell counted in N1"
+      ],
+      "timing_formulas": {
+        "Tactivate_total_PUCCH_SCell": "$\\frac{T_{HARQ}+T_{delay\\_multiple\\_SCells\\_PUCCH\\_SCell}}{NR\\ slot\\ length}$",
+        "Tactivate_total_other_SCell": "$\\frac{T_{HARQ}+T_{delay\\_multiple\\_SCells\\_other\\_SCell}}{NR\\ slot\\ length}$",
+        "Tdelay_multiple_SCells_other_SCell": "$T_{activation\\_time\\_multiple\\_scells} + T_{CSI\\_Reporting}$",
+        "valid_ta": "$T_{delay\\_multiple\\_SCells\\_PUCCH\\_SCell} = T_{activation\\_time\\_multiple\\_scells} + max((T_{First\\_available\\_CSI}+T_{CSI\\_processing}), 3*T_{target\\_PL-RS}) + T_{CSI\\_reporting\\_after}$",
+        "no_valid_ta": "$T_{delay\\_multiple\\_SCells\\_PUCCH\\_SCell} = T_{activation\\_time\\_multiple\\_scells} + max((T_{First\\_available\\_CSI}+T_{CSI\\_processing}), (T_1+T_2+T_3), 3*T_{target\\_PL-RS}) + T_{CSI\\_reporting\\_after}$"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.14",
+      "title": "SCell Deactivation Delay Requirement for Activated PUCCH SCell",
+      "requirements": [
+        "UE configured with one SCell configured with PUCCH in EN-DC, standalone NR CA, or NE-DC"
+      ],
+      "timing_formulas": {
+        "deactivation": "$n + \\frac{T_{HARQ}+3ms}{NR\\ slot\\ length}$"
+      },
+      "interruption_window": {
+        "starting_point": "Not before slot $n+1+\\frac{T_{HARQ}}{NR\\ slot\\ length}$",
+        "ending_point": "Not after slot $n+1+\\frac{T_{HARQ}+3ms}{NR\\ slot\\ length}$"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.15",
+      "title": "SCell Deactivation Delay Requirement for Activated PUCCH SCell with Multiple Downlink SCells",
+      "requirements": [
+        "UE configured with multiple downlink SCells and one SCell configured with PUCCH in EN-DC, standalone NR CA, or NE-DC",
+        "No other SCell activation/deactivation/addition/release before deactivation completed",
+        "UE receives one single MAC command for multiple SCell deactivation"
+      ],
+      "timing_formulas": {
+        "deactivation": "Same delay as specified in clause 8.3.14"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.16",
+      "title": "Fast SCell Activation Delay Requirement for Deactivated SCell",
+      "requirements": [
+        "Aperiodic CSI-RS resources configured for fast SCell activation",
+        "UE configured with one downlink SCell in EN-DC, standalone NR CA, NE-DC, or NR-DC",
+        "UE provided with aperiodic CSI-RS resources for SCell activation for target SCell"
+      ],
+      "notes": [
+        "If UE is allocated A-TRS for fast Scell activation, UE is not required to use SSB of target Scell",
+        "Transmitted SSB defined in clause 8.3.x1 also applied if UE supports On-demand SSB operation and OD-SSB transmission is indicated"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{T_{HARQ}+T_{activation\\_time}+T_{CSI\\_Reporting}}{NR\\ slot\\ length}$"
+      },
+      "fr1_known_scell": [
+        "$T_{activation\\_time} = T_{FirstATRS} + 5\\ ms$ (if measurement period ≤ 2400 ms)",
+        "$T_{activation\\_time} = T_{FirstATRS} + T_{gap} + T_{ATRS} + 5\\ ms$ (if measurement period > 2400 ms)"
+      ],
+      "fr1_unknown_scell_contiguous": "$T_{activation\\_time} = T_{FirstATRS} + T_{gap} + T_{ATRS} + 5\\ ms$ (if contiguous conditions met)",
+      "fr2_with_active_serving_cell": "$T_{activation\\_time} = T_{FirstATRS} + 5\\ ms$ (if aperiodic CSI-RS resources provided, SSBs fulfil clause 3.6.3, ssb-PositionsInBurst same, SSB in same half-frame)",
+      "parameter_definitions": {
+        "TFirstATRS": "Time to end of first complete CSI-RS burst for SCell activation after slot $n + \\frac{T_{HARQ}+3ms}{NR\\ slot\\ length}$ (CSI-RS burst = four CSI-RS resources in two consecutive slots)",
+        "TATRS": "CSI-RS burst for SCell activation (four CSI-RS resources in two consecutive slots)",
+        "Tgap": "Gap length between two aperiodic CSI-RS bursts: ≥ 2 slots for 15/30 kHz, ≥ 3 slots for 60 kHz"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ],
+      "frequency_ranges": [
+        "FR1",
+        "FR2"
+      ]
+    },
+    {
+      "clause_id": "8.3.17",
+      "title": "SCell Activation Delay Requirement for Deactivated SCell with the L3 reporting during activation",
+      "requirements": [
+        "UE supporting l3-MeasUnknownSCellActivation-r18 configured with ReportOnScellActivation",
+        "UE reporting valid L3 measurement results after receiving SCell activation command for unknown SCell",
+        "Clause 8.3.2 applied for UE who does not report L3 measurement results"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{T_{HARQ}+T_{activation\\_time}+T_{CSI\\_Reporting}}{NR\\ slot\\ length}$",
+        "semi_persistent": "$T_{activation\\_time} = 10\\ ms + T_{L3,report} + T_{HARQ} + max(T_{uncertainty\\_MAC} + T_{FineTiming} + 2\\ ms, T_{uncertainty\\_SP})$",
+        "periodic": "$T_{activation\\_time} = 7\\ ms + T_{L3,report} + max(T_{HARQ} + T_{uncertainty\\_MAC} + 5\\ ms + T_{FineTiming}, T_{uncertainty\\_RRC} + T_{RRC\\_delay})$"
+      },
+      "conditions_for_reduced_formula": [
+        "SCell belongs to FR1 with no active serving cell contiguous and side condition Ês/Iot ≥ -2 dB fulfilled",
+        "Target SCell belongs to FR1 and neither single SSB indicated nor multiple SSBs with TCI indication in same MAC PDU",
+        "SCell belongs to FR2-1 with no active serving cell and PCell/PSCell in FR1 or FR2-1",
+        "PCell/PSCell and target SCell configured as FR1-FR2-1 CA or in FR2-1 band pair with independent beam management, target SCell unknown with side condition Ês/Iot ≥ -2 dB fulfilled"
+      ],
+      "TL3_report_definition": {
+        "description": "Delay of acquiring first available UL resource for L3 reporting from 7 ms + THARQ after receiving SCell activation command",
+        "L3_reporting_requirement": "Clause 9.2.4.4",
+        "UE_ready_time": "UE ready to report L3 measurement result no later than 7 ms + THARQ from receiving SCell activation command",
+        "UE_not_required_after": "UE not required to report L3 results after 3 ms + THARQ + M ms"
+      },
+      "M_values": {
+        "FR1_shortMeasInterval": "$M = 2*T_{SSB} + T_{L1-RSRP,report}$",
+        "FR1_otherwise": "$M = T_{SMTC} + T_{SSB} + T_{L1-RSRP,report}$",
+        "FR2_1_with_capabilities": "$M = (X1+X2)*T_{SSB} + T_{L1-RSRP,report}$",
+        "FR2_1_reduceForCellDetection_without_shortMeasInterval": "$M = X1*T_{SMTC} + X2*T_{SSB} + T_{L1-RSRP,report}$",
+        "FR2_1_shortMeasInterval_only": "$M = 16*T_{SSB} + T_{L1-RSRP,report}$",
+        "FR2_1_otherwise": "$M = 8*T_{SMTC} + 8*T_{SSB} + T_{L1-RSRP,report}$"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ],
+      "frequency_ranges": [
+        "FR1",
+        "FR2-1"
+      ]
+    },
+    {
+      "clause_id": "8.3.18",
+      "title": "SCell Activation Delay Requirement for Deactivated SCell with Multiple Downlink SCells with L3 reporting",
+      "requirements": [
+        "UE configured with more than one SCells supporting l3-MeasUnknownSCellActivation-r18",
+        "UE configured with ReportOnScellActivation",
+        "In EN-DC, NE-DC, standalone NR, or one CG of NR-DC: UE receives one MAC command, no other SCell activation/deactivation/addition/release before completion",
+        "All to-be-activated SCells unknown on same FR2 band with no active serving cell(s) or known SCell(s), OR",
+        "All to-be-activated SCells unknown on same FR1 band with no active serving cell contiguous or known SCell(s) contiguous",
+        "UE reports valid L3 measurement results after receiving SCell activation command"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{T_{HARQ}+T_{activation\\_time\\_multiple\\_scells}+T_{CSI\\_Reporting}}{NR\\ slot\\ length}$",
+        "semi_persistent": "$T_{activation\\_time\\_multiple\\_scells} = 10\\ ms + T_{HARQ} + T_{L3,report} + max(T_{uncertainty\\_MAC} + T_{FineTiming} + 2\\ ms, T_{uncertainty\\_SP})$",
+        "periodic": "$T_{activation\\_time\\_multiple\\_scells} = 7\\ ms + T_{L3,report} + max(T_{HARQ} + T_{uncertainty\\_MAC} + 5\\ ms + T_{FineTiming}, T_{uncertainty\\_RRC} + T_{RRC\\_delay})$"
+      },
+      "conditions_for_reduced_formula": [
+        "SCell belongs to FR1 with side condition Ês/Iot ≥ -2 dB fulfilled",
+        "Target SCell belongs to FR1 and neither single SSB indicated nor multiple SSBs with TCI indication in same MAC PDU",
+        "SCell belongs to FR2 and PCell or PSCell in FR1 with side condition Ês/Iot ≥ -2 dB fulfilled"
+      ],
+      "M_values": {
+        "FR1_shortMeasInterval": "$M = 2*T_{SSB} + T_{L1-RSRP,report}$",
+        "FR1_otherwise": "$M = T_{SMTC} + T_{SSB} + T_{L1-RSRP,report}$",
+        "FR2_1_with_capabilities": "$M = (X1+X2)*T_{SSB} + T_{L1-RSRP,report}$",
+        "FR2_1_reduceForCellDetection_without_shortMeasInterval": "$M = X1*T_{SMTC} + X2*T_{SSB} + T_{L1-RSRP,report}$",
+        "FR2_1_shortMeasInterval_only": "$M = 16*T_{SSB} + T_{L1-RSRP,report}$",
+        "FR2_1_otherwise": "$M = 8*T_{SMTC} + 8*T_{SSB} + T_{L1-RSRP,report}$"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ],
+      "frequency_ranges": [
+        "FR1",
+        "FR2"
+      ]
+    },
+    {
+      "clause_id": "8.3.19",
+      "title": "OD-SSB based SCell Activation Delay Requirement for Deactivated SCell",
+      "requirements": [
+        "UE supporting On-demand SSB operation configured with at least one downlink OD-SSB SCell in EN-DC, standalone NR CA, NE-DC, or NR-DC",
+        "Applies when OD-SSB transmission activated in configured DL BWP where first SSB transmission not configured, OR",
+        "OD-SSB transmission activated in configured DL BWP where first SSB transmission configured but cannot be used to obtain SIB1"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{T_{HARQ}+T_{activation\\_time}+T_{CSI\\_Reporting}}{NR\\ slot\\ length}$"
+      },
+      "fr1_known_scell": [
+        "$T_{activation\\_time} = T_{First,OD-SSB} + T_{\\Delta} + 5\\ ms$ (if measurement period ≤ 2400 ms)",
+        "$T_{activation\\_time} = T_{First,OD-SSB} + T_{rs,OD-SSB} + T_{\\Delta} + 5\\ ms$ (if measurement period > 2400 ms)"
+      ],
+      "fr1_unknown_scell": {
+        "single_ssb_or_tci_provided": [
+          "$T_{activation\\_time} = T_{First,OD-SSB} + 2*T_{rs,OD-SSB} + 5\\ ms$ (if contiguous conditions met)",
+          "$T_{activation\\_time} = T_{First,OD-SSB} + 3*T_{rs,OD-SSB} + 5\\ ms$ (otherwise)"
+        ],
+        "otherwise": [
+          "$T_{activation\\_time} = 6\\ ms + T_{First,OD-SSB} + 2*T_{rs,OD-SSB} + T_{L1-RSRP,measure,OD-SSB} + T_{L1-RSRP,report} + T_{HARQ} + max(T_{uncertainty\\_MAC} + T_{FineTiming,OD-SSB} + 2\\ ms, T_{uncertainty\\_SP})$ (semi-persistent CSI-RS)",
+          "$T_{activation\\_time} = 3\\ ms + T_{First,OD-SSB} + 2*T_{rs,OD-SSB} + T_{L1-RSRP,measure,OD-SSB} + T_{L1-RSRP,report} + max(T_{HARQ} + T_{uncertainty\\_MAC} + 5\\ ms + T_{FineTiming,OD-SSB}, T_{uncertainty\\_RRC} + T_{RRC\\_delay})$ (periodic CSI-RS)"
+        ]
+      },
+      "fr2_with_active_serving_cell": "$T_{activation\\_time} = T_{First,OD-SSB} + 5\\ ms$ (if SSBs fulfil clause 3.6.3, ssb-PositionsInBurst same, SSB in same half-frame)",
+      "parameter_definitions": {
+        "Trs_OD_SSB": "Periodicity of transmitted SSB",
+        "Tdelta_OD_SSB": "Additional time for fine timing tracking. T∆ = 2*Trs,OD-SSB ms for SCell operating with 12 PRB SSB BW, otherwise T∆ = 0 ms",
+        "TFirst_OD_SSB": "Time to end of first complete transmitted SSB burst after slot $n + \\frac{T_{HARQ}+3ms}{NR\\ slot\\ length}$",
+        "TFineTiming_OD_SSB": "Time period between UE finish processing last activation command for PDCCH TCI, PDSCH TCI and timing of first complete transmitted SSB burst corresponding to TCI state",
+        "TL1_RSRP_measure_OD_SSB": "Transmitted SSB based L1-RSRP measurement delay TL1-RSRP_Measurement_Period_SSB assuming M=1 and TReport=0"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ],
+      "frequency_ranges": [
+        "FR1",
+        "FR2"
+      ]
+    },
+    {
+      "clause_id": "8.3.20",
+      "title": "OD-SSB based SCell Deactivation Delay Requirement for Activated SCell",
+      "requirements": [
+        "UE supporting On-demand SSB operation configured with at least one downlink SCell where OD-SSB transmission is activated"
+      ],
+      "timing_formulas": {
+        "deactivation_command": "$n + \\frac{T_{HARQ}+3ms}{NR\\ slot\\ length}$",
+        "sCellDeactivationTimer_expiry": "$n + \\frac{3ms}{NR\\ slot\\ length}$"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.21",
+      "title": "OD-SSB based Direct SCell Activation at SCell addition",
+      "requirements": [
+        "UE supporting On-demand SSB operation configured in RRC reconfiguration message with one SCell where sCellState is set to activated and OD-SSB configuration provided"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{N_{direct}}{NR\\ slot\\ length}$",
+        "Ndirect": [
+          "$N_{direct} = T_{RRC\\_Process} + T_1 + T_{activation\\_time} + T_{CSI\\_Reporting} - 3\\ ms$ (if TCI state not indicated within Tactivation_time)",
+          "$N_{direct} = T_{RRC\\_Process} + T_1 + T_{HARQ} + T_{activation\\_time} + T_{CSI\\_Reporting}$ (otherwise)"
+        ]
+      },
+      "fr1_known_scell": [
+        "$T_{activation\\_time} = T_{First,OD-SSB} + 5\\ ms$ (if measurement period ≤ 2400 ms)",
+        "$T_{activation\\_time} = T_{First,OD-SSB} + T_{rs,OD-SSB} + 5\\ ms$ (if measurement period > 2400 ms)"
+      ],
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.22",
+      "title": "OD-SSB based SCell Activation Delay Requirement for Deactivated SCell with Multiple Downlink SCells",
+      "requirements": [
+        "UE configured with more than one downlink OD-SSB based SCells"
+      ],
+      "timing_formulas": {
+        "main_formula": "$n+\\frac{T_{HARQ}+T_{activation\\_time\\_multiple\\_scells}+T_{CSI\\_Reporting}}{NR\\ slot\\ length}$"
+      },
+      "fr1_known_scell_leq_2400ms": [
+        "$T_{activation\\_time\\_multiple\\_scells} = T_{First,OD-SSB\\_multiple\\_scells} + T_{rs,OD-SSB} + 5\\ ms$ (if parallel known SCell with measurement period > 2400ms but no parallel unknown SCell)",
+        "$T_{activation\\_time\\_multiple\\_scells} = T_{First,OD-SSB\\_multiple\\_scells} + 2*T_{rs,OD-SSB} + 5\\ ms$ (if parallel unknown SCell)",
+        "$T_{activation\\_time\\_multiple\\_scells} = T_{First,OD-SSB\\_multiple\\_scells} + 5\\ ms$ (otherwise)"
+      ],
+      "fr1_known_scell_gt_2400ms": [
+        "$T_{activation\\_time\\_multiple\\_scells} = T_{First,OD-SSB\\_multiple\\_scells} + 2*T_{rs,OD-SSB} + 5\\ ms$ (if parallel unknown SCell)",
+        "$T_{activation\\_time\\_multiple\\_scells} = T_{First,OD-SSB\\_multiple\\_scells} + T_{rs,OD-SSB} + 5\\ ms$ (otherwise)"
+      ],
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.23",
+      "title": "OD-SSB based SCell Deactivation Delay Requirement for Activated SCell with Multiple Downlink SCells",
+      "requirements": [
+        "UE supporting On-demand SSB operation configured with multiple downlink SCells where OD-SSB transmission is activated"
+      ],
+      "timing_formulas": {
+        "deactivation": "Same delay as specified in clause 8.3.20"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.24",
+      "title": "SCell Activation Delay Requirement for Deactivated PUCCH SCell based on OD-SSB",
+      "requirements": [
+        "UE configured with one downlink SCell and PUCCH configured for SCell being activated",
+        "If UE receives SSB activation command together with on-demand SSB activation command"
+      ],
+      "notes": [
+        "UE shall be capable to transmit valid CSI report and apply actions as required by clause 8.3.12, except Tactivation_time",
+        "Tactivation_time defined in clause 8.3.19"
+      ],
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.25",
+      "title": "OD-SSB based SCell Deactivation Delay Requirement for Activated PUCCH SCell",
+      "requirements": [
+        "UE supporting On-demand SSB operation configured with one SCell configured with PUCCH where OD-SSB transmission is activated"
+      ],
+      "timing_formulas": {
+        "deactivation": "$n + \\frac{T_{HARQ}+3ms}{NR\\ slot\\ length}$"
+      },
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC"
+      ]
+    },
+    {
+      "clause_id": "8.3.26",
+      "title": "OD-SSB based SCell Activation Delay Requirement for Deactivated SCell with the L3 reporting during activation",
+      "requirements": [
+        "UE supporting l3-MeasUnknownSCellActivation-r18 and On-demand SSB operation",
+        "Reporting valid L3 measurement results after receiving SCell activation command for unknown SCell configured with OD-SSB operation"
+      ],
+      "notes": [
+        "Requirements in clause 8.3.17 apply, except:",
+        "TFineTiming is time period between UE finish processing last activation command and timing of first complete available SSB burst corresponding to TCI state",
+        "TSSB is same as Trs,OD-SSB as specified in clause 8.3.19",
+        "TSMTC is same as Trs,OD-SSB as specified in clause 8.3.19",
+        "ssb-PositionInBurst replaced with od-ssb-PositionsInBurst if provided"
+      ],
+      "applicability": [
+        "EN-DC",
+        "SA",
+        "NE-DC",
+        "NR-DC"
+      ]
+    },
+    {
+      "clause_id": "8.10",
+      "title": "Active TCI state switching delay",
+      "sub_clauses": [
+        {
+          "clause_id": "8.10.1",
+          "title": "Introduction",
+          "requirements": [
+            "Requirements apply for UE configured with one or more TCI state configurations on serving cell in MR-DC or standalone NR",
+            "UE shall complete switch of active TCI state within delay defined in this clause"
+          ],
+          "applicability": [
+            "MR-DC",
+            "SA"
+          ]
+        },
+        {
+          "clause_id": "8.10.2",
+          "title": "Known conditions for TCI state",
+          "conditions": [
+            "During period from last transmission of RS resource used for L1-RSRP measurement reporting for target TCI state to completion of active TCI state switch",
+            "TCI state switch command received within 1280 ms upon last transmission of RS resource for beam reporting or measurement",
+            "UE has sent at least 1 L1-RSRP report for target TCI state before TCI state switch command",
+            "TCI state remains detectable during TCI state switching period",
+            "SSB associated with TCI state remains detectable during TCI switching period",
+            "SNR of TCI state ≥ -3 dB"
+          ],
+          "otherwise": "TCI state is unknown"
+        },
+        {
+          "clause_id": "8.10.3",
+          "title": "MAC-CE based TCI state switch delay",
+          "known_tci_state": {
+            "formula": "UE able to receive PDCCH with target TCI state at first slot after slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + T_{Ok}*(T_{first-SSB} + T_{SSB-proc})$ / NR slot length",
+            "old_tci_valid_until": "UE able to receive PDCCH with old TCI state until slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu}$",
+            "variables": {
+              "Tfirst_SSB": "Time to first SSB transmission after MAC CE command decoded by UE (or time to first available SSB reception based on LBCA-SwitchingPattern if UE supports LB-CA via switching)",
+              "TSSB_proc": "2 ms",
+              "TOk": "1 if target TCI state not in active TCI state list for PDSCH, 0 otherwise"
+            }
+          },
+          "unknown_tci_state": {
+            "formula": "UE able to receive PDCCH with target TCI state at first slot after slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + T_{L1-RSRP} + T_{Ouk}*(T_{first-SSB} + T_{SSB-proc})$ / NR slot length",
+            "old_tci_valid_until": "UE able to receive PDCCH with old TCI state until slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu}$",
+            "TL1_RSRP": "0 in FR1 or when TCI state switching not involving QCL-TypeD in FR2; otherwise time for Rx beam refinement in FR2",
+            "TOuk": "1 for CSI-RS based L1-RSRP measurement, 0 for SSB based L1-RSRP measurement when TCI state switching involves QCL-TypeD; 1 when TCI state switching involves other QCL types only"
+          }
+        },
+        {
+          "clause_id": "8.10.3A",
+          "title": "MAC-CE based TCI state switch delay in HST FR2 scenarios",
+          "requirements": [
+            "For FR2 power class 6 UE"
+          ],
+          "known_tci_state": {
+            "formula": "UE able to receive PDCCH with target TCI state at symbol m of first slot after slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + T_{Ok}*(T_{first-SSB} + T_{SSB-proc} + T_{rs} + T_{rs-proc})$ / NR slot length",
+            "variables": {
+              "Trs": "Time to first TRS or SSB transmission after SSB transmission in Tfirst-SSB definition is processed by UE",
+              "Trs_proc": "2 ms",
+              "TOk": "1, m = 0 if target TCI state not in active TCI state list for PDSCH; otherwise TOk = 0, m = 1"
+            }
+          }
+        },
+        {
+          "clause_id": "8.10.4",
+          "title": "DCI based TCI state switch delay",
+          "requirements": [
+            "If target TCI state is known and UE configured with tci-PresentInDCI set to 'enabled' for CORESET scheduling PDSCH at slot n"
+          ],
+          "formula": "UE able to receive PDSCH with target TCI state at first slot after slot n + timeDurationForQCL",
+          "timeDurationForQCL": "Time required by UE to perform PDCCH reception and applying spatial QCL information received in DCI for PDSCH processing"
+        },
+        {
+          "clause_id": "8.10.5",
+          "title": "RRC based TCI state switch delay",
+          "known_tci_state": {
+            "formula": "UE able to receive PDCCH with target TCI state at first slot after slot $n + (T_{RRC\\_processing} + T_{Ok}*(T_{first-SSB} + T_{SSB-proc}))$ / NR slot length"
+          },
+          "unknown_tci_state": {
+            "formula": "UE able to receive PDCCH with target TCI state at first slot after slot $n + (T_{RRC\\_processing} + T_{L1-RSRP} + T_{Ouk}*(T_{first-SSB} + T_{SSB-proc}))$ / NR slot length"
+          },
+          "note": "UE not required to receive PDCCH/PDSCH/CSI-RS or transmit PUCCH/PUSCH until end of switching period"
+        },
+        {
+          "clause_id": "8.10.6",
+          "title": "Active TCI state list update delay",
+          "known_tci_state": {
+            "formula": "UE able to receive PDCCH to schedule PDSCH with new target TCI state at first slot after $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + T_{Ok}*(T_{first-SSB} + T_{SSB-proc})$ / NR slot length"
+          }
+        }
+      ]
+    },
+    {
+      "clause_id": "8.15",
+      "title": "Active downlink TCI state switching delay for unified TCI",
+      "sub_clauses": [
+        {
+          "clause_id": "8.15.1",
+          "title": "Introduction",
+          "requirements": [
+            "Requirements apply for UE configured with dl-OrJointTCI-StateList configurations for DL channels on serving cell",
+            "Requirements also apply for serving cells in simultaneousU-TCI-UpdateList1/2/3/4 in MR-DC or standalone NR if all serving cells configured with same serving cell and BWP in unifiedTCI-StateRef-r17"
+          ],
+          "additional_pci_conditions": [
+            "Active BWP of serving cell and cell with additional PCI are same",
+            "Center frequency, SCS and SFN offset of cell with additional PCI same as serving cell",
+            "Cell with additional PCI is known to UE"
+          ]
+        },
+        {
+          "clause_id": "8.15.2",
+          "title": "Known conditions for downlink TCI state",
+          "conditions": [
+            "During period from last transmission of RS resource used for L1-RSRP measurement reporting for target DL TCI state to completion of active DL TCI state switch",
+            "DL TCI state switch command received within 1280 ms upon last transmission of RS resource for beam reporting or measurement",
+            "UE has sent at least 1 L1-RSRP report for target DL TCI state before DL TCI state switch command",
+            "Target DL TCI state remains detectable during DL TCI state switching period",
+            "SSB associated with DL TCI state remains detectable during DL TCI switching period",
+            "SNR of DL TCI state ≥ -3 dB",
+            "SSB can be associated with either serving cell PCI or PCI different from serving cell PCI"
+          ]
+        },
+        {
+          "clause_id": "8.15.3",
+          "title": "MAC-CE based downlink TCI state switch delay",
+          "known_tci_state": {
+            "formula": "UE able to receive UE-dedicated PDCCH/PDSCH with target TCI state at first slot after slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + T_{Ok}*(T_{first-SSB} + T_{SSB-proc})$ / NR slot length",
+            "old_tci_valid_until": "UE able to receive UE-dedicated PDCCH/PDSCH with old TCI state until slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu}$"
+          },
+          "unknown_tci_state": {
+            "formula": "UE able to receive UE-dedicated PDCCH/PDSCH with target TCI state at first slot after slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + (T_{L1-RSRP} + T_{Ouk}*(T_{first-SSB} + T_{SSB-proc}))$ / NR slot length"
+          }
+        },
+        {
+          "clause_id": "8.15.4",
+          "title": "DCI based downlink TCI state switch delay",
+          "requirements": [
+            "UE configured with dl-OrJointTCI-StateList or TCI-UL-State, activated with TCI states for downlink transmission by MAC CE indication of more than one codepoints"
+          ],
+          "formula": "DL TCI switching to indicated DL TCI state or joint TCI state in DCI format completed starting from first slot at least beamAppTime-r17 symbols after last symbol of PUCCH carrying HARQ-ACK in response to DCI triggering TCI state activation"
+        },
+        {
+          "clause_id": "8.15.5",
+          "title": "Active Downlink TCI state list update delay",
+          "all_known": "UE completed TCI state list update in slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + T_{Ok}*(T_{first-SSB\\_List} + T_{SSB-proc})$ / NR slot length",
+          "subset_unknown": "UE completed TCI state list update in slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + (T_{L1-RSRP\\_list} + T_{Ouk}*(T_{first-SSB\\_List} + T_{SSB-proc}))$ / NR slot length"
+        }
+      ]
+    },
+    {
+      "clause_id": "8.16",
+      "title": "Active uplink TCI state switching delay for unified TCI",
+      "sub_clauses": [
+        {
+          "clause_id": "8.16.1",
+          "title": "Introduction",
+          "requirements": [
+            "Requirements apply for UE configured with dl-OrJointTCI-StateList (if unifiedTCI-StateType is Joint) or TCI-UL-State configurations for UL channels/signals on serving cell",
+            "No requirement when UE requested to switch to TCI state with TCI-UL-State associated to SRS"
+          ]
+        },
+        {
+          "clause_id": "8.16.2",
+          "title": "Known conditions for uplink TCI state",
+          "conditions": [
+            "During period from last transmission of RS resource used for L1-RSRP measurement reporting for target UL TCI state to completion of active UL TCI state switch",
+            "UL TCI state switch command received within 1280 ms upon last transmission of RS resource for beam reporting or measurement",
+            "UE has sent at least 1 L1-RSRP report for target UL TCI state before UL TCI state switch command",
+            "RS configured in target UL TCI state remains detectable during UL TCI state switching period",
+            "SNR of RS configured in target UL TCI state ≥ -3 dB",
+            "Target UL TCI state remains detectable during UL TCI state switching period",
+            "SSB associated with UL TCI state remains detectable during UL TCI switching period",
+            "SNR of UL TCI state ≥ -3 dB"
+          ]
+        },
+        {
+          "clause_id": "8.16.3",
+          "title": "MAC-CE based uplink TCI state switch delay",
+          "requirements": [
+            "For separate UL TCI state switch or joint TCI state switch for PUCCH/PUSCH/SRS when beamCorrespondenceWithoutUL-BeamSweeping is set to 1"
+          ],
+          "known_tci_state": "UE able to transmit UL signal with target TCI state in slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + N_M*(T_{first\\_target-PL-RS} + 4*T_{target\\_PL-RS} + 2\\ ms)$ / NR slot length",
+          "unknown_tci_state": "UE able to transmit UL signal with target TCI state in slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + (T_{L1-RSRP} + T_{first\\_target-PL-RS} + 4*T_{target\\_PL-RS} + 2\\ ms)$ / NR slot length",
+          "NM": "1 if target PL-RS not maintained by UE, 0 otherwise"
+        }
+      ]
+    },
+    {
+      "clause_id": "8.21",
+      "title": "Active downlink TCI state switching delay for unified TCI for single-DCI mTRP",
+      "sub_clauses": [
+        {
+          "clause_id": "8.21.1",
+          "title": "Introduction",
+          "requirements": [
+            "Requirements apply for UE configured with dl-OrJointTCI-StateList configurations for DL channels on serving cell",
+            "UE reports capability of S-DCI based MTRP"
+          ]
+        },
+        {
+          "clause_id": "8.21.2",
+          "title": "Known conditions for downlink TCI state",
+          "conditions": [
+            "SSB can be associated with the serving cell PCI (different from clause 8.15.2)"
+          ],
+          "otherwise": "Same as clause 8.15.2"
+        },
+        {
+          "clause_id": "8.21.3",
+          "title": "MAC-CE based downlink TCI state switch delay",
+          "both_known": "UE able to receive UE-dedicated PDCCH/PDSCH with target TCI state at first slot after slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + max{T_{Ok1}*(T_{first-SSB1} + AD1*T_{SSB1} + T_{SSB-proc}), T_{Ok2}*(T_{first-SSB2} + AD2*T_{SSB2} + T_{SSB-proc})}$ / NR slot length",
+          "one_unknown": "UE able to receive UE-dedicated PDCCH/PDSCH with target TCI state at first slot after slot $T_{HARQ} + 3N_{slot}^{subframe,\\mu} + T_{L1-RSRP1} + max{T_{Ouk1}*(T_{first-SSB1} + AD1*T_{SSB1} + T_{SSB-proc}), T_{Ok2}*(T_{first-SSB2} + T_{SSB-proc})}$ / NR slot length",
+          "both_unknown": "UE able to receive UE-dedicated PDCCH/PDSCH with target TCI state at first slot after slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + max{T_{L1-RSRP1} + T_{Ouk1}*(T_{first-SSB1} + T_{SSB-proc}), T_{L1-RSRP2} + T_{Ok2}*(T_{first-SSB2} + T_{SSB-proc})}$ / NR slot length",
+          "variables": {
+            "AD1": "1 if SSBs adjacent in FR2 and TSSB1 = TSSB2; 0 otherwise",
+            "AD2": "1 if SSBs adjacent in FR2 and TSSB2 = TSSB1; 0 otherwise"
+          }
+        }
+      ]
+    },
+    {
+      "clause_id": "8.22",
+      "title": "Active downlink TCI state switching delay for unified TCI for multi-DCI mTRP",
+      "sub_clauses": [
+        {
+          "clause_id": "8.22.1",
+          "title": "Introduction",
+          "requirements": [
+            "Requirements apply for UE configured with two different values of CORESETPoolIndex in ControlResourceSet with dl-OrJointTCI-StateList configurations",
+            "Requirements apply for UE not configured with 2 TAs, or UE configured with 2 TAs in FR1, or UE configured with 2 TAs in FR2 if RTD<CP",
+            "Requirements apply when UE not expected to receive simultaneously from two different QCL-D sources in FR2",
+            "Requirements applicable to each TRP independently"
+          ]
+        },
+        {
+          "clause_id": "8.22.2",
+          "title": "Known conditions for downlink TCI state",
+          "note": "Same conditions as clause 8.15.2"
+        },
+        {
+          "clause_id": "8.22.3",
+          "title": "MAC-CE based downlink TCI state switch delay",
+          "known_tci_state": "UE able to receive UE-dedicated PDCCH/PDSCH with target TCI state at first slot after slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + T_{Ok}*(T_{first-SSB} + T_{SSB-proc} + OL*T_{SSB})$ / NR slot length",
+          "unknown_tci_state": "UE able to receive UE-dedicated PDCCH/PDSCH with target TCI state at first slot after slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + (T_{L1-RSRP} + T_{Ouk}*(T_{first-SSB} + T_{SSB-proc} + OL*T_{SSB}))$ / NR slot length",
+          "OL_definition": "1 if first SSB overlaps or is adjacent to first SSB from other TRP in FR2 and (SSB periodicity < other TRP SSB periodicity OR (SSB periodicity = other TRP SSB periodicity AND SSB associated to TRP with lowest coresetPoolIndex)); 0 otherwise"
+        }
+      ]
+    },
+    {
+      "clause_id": "8.23",
+      "title": "Active uplink TCI state switching delay for unified TCI for single-DCI mTRP",
+      "sub_clauses": [
+        {
+          "clause_id": "8.23.1",
+          "title": "Introduction",
+          "requirements": [
+            "Requirements apply for UE configured with dl-OrJointTCI-StateList (if unifiedTCI-StateType is Joint) or TCI-UL-State configurations for UL channels/signals"
+          ]
+        },
+        {
+          "clause_id": "8.23.3",
+          "title": "MAC-CE based uplink TCI state switch delay",
+          "both_known": "UE able to transmit UL signal with target TCI state(s) in slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + max{N_{M1}*(T_{first\\_target-PL-RS1} + 4*T_{target\\_PL-RS1} + 2\\ ms), N_{M2}*(T_{first\\_target-PL-RS2} + 4*T_{target\\_PL-RS2} + 2\\ ms)}$ / NR slot length",
+          "both_unknown": "UE able to transmit UL signal with target TCI state(s) in slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + max{T_{L1-RSRP1} + T_{first\\_target-PL-RS1} + 4*T_{target\\_PL-RS1} + 2\\ ms, T_{L1-RSRP2} + T_{first\\_target-PL-RS2} + 4*T_{target\\_PL-RS2} + 2\\ ms}$ / NR slot length",
+          "one_unknown_one_known": "UE able to transmit UL signal with target TCI state(s) in slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + max{T_{L1-RSRP1} + T_{first\\_target-PL-RS1} + 4*T_{target\\_PL-RS1} + 2\\ ms, N_{M2}*(T_{first\\_target-PL-RS2} + 4*T_{target\\_PL-RS2} + 2\\ ms)}$ / NR slot length"
+        }
+      ]
+    },
+    {
+      "clause_id": "8.24",
+      "title": "Active uplink TCI state switching delay for unified TCI for multi-DCI mTRP",
+      "sub_clauses": [
+        {
+          "clause_id": "8.24.1",
+          "title": "Introduction",
+          "requirements": [
+            "Requirements apply for UE configured with dl-OrJointTCI-StateList (if unifiedTCI-StateType is Joint) or TCI-UL-State configurations",
+            "UE configured with two different values of CORESETPoolIndex in ControlResourceSet",
+            "Requirements apply for UE not configured with 2 TAs, or UE configured with 2 TAs in FR1, or UE configured with 2 TAs in FR2 if RTD<CP",
+            "Requirements apply when UE not expected to receive simultaneously with multi-RX in FR2",
+            "Requirements applicable to each TRP independently"
+          ]
+        },
+        {
+          "clause_id": "8.24.3",
+          "title": "MAC-CE based uplink TCI state switch delay",
+          "known_tci_state": "UE able to transmit UL signal with target TCI state in slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + N_M*(T_{first\\_target-PL-RS} + 4*T_{target\\_PL-RS} + 2\\ ms)$ / NR slot length",
+          "unknown_tci_state": "UE able to transmit UL signal with target TCI state in slot $n + T_{HARQ} + 3N_{slot}^{subframe,\\mu} + (T_{L1-RSRP} + T_{first\\_target-PL-RS} + 4*T_{target\\_PL-RS} + 2\\ ms)$ / NR slot length"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_clauses": 34,
+    "scell_activation_clauses": [
+      "8.3.1",
+      "8.3.2",
+      "8.3.2A",
+      "8.3.3",
+      "8.3.4",
+      "8.3.5",
+      "8.3.6",
+      "8.3.7",
+      "8.3.8",
+      "8.3.9",
+      "8.3.10",
+      "8.3.11",
+      "8.3.12",
+      "8.3.13",
+      "8.3.14",
+      "8.3.15",
+      "8.3.16",
+      "8.3.17",
+      "8.3.18",
+      "8.3.19",
+      "8.3.20",
+      "8.3.21",
+      "8.3.22",
+      "8.3.23",
+      "8.3.24",
+      "8.3.25",
+      "8.3.26"
+    ],
+    "tci_state_switching_clauses": [
+      "8.10",
+      "8.15",
+      "8.16",
+      "8.21",
+      "8.22",
+      "8.23",
+      "8.24"
+    ],
+    "applicability_modes": [
+      "EN-DC",
+      "SA",
+      "NE-DC",
+      "NR-DC",
+      "MR-DC"
+    ],
+    "frequency_ranges": [
+      "FR1",
+      "FR2",
+      "FR2-1",
+      "FR2-2"
+    ],
+    "key_capabilities_referenced": [
+      "shortMeasInterval-r18",
+      "reduceForCellDetection",
+      "reduceForSSB-L1-RSRP-Meas",
+      "scellWithoutSSB",
+      "scellWithoutSSB-InterBandCA-r18",
+      "aperiodicCSI-RS-FastScellActivation-r17",
+      "l3-MeasUnknownSCellActivation-r18",
+      "measValidationReportEMR",
+      "measValidationReportReselectionMeasurements",
+      "idleInactiveNR-MeasReport-r16",
+      "intraBandNR-CA-non-collocated-r18/r19",
+      "nonCollocatedTypeNR-CA-r18/v19xy",
+      "highSpeedMeasFlagFR2-r17",
+      "measEnhCAInterFreqFR2-r18",
+      "beamCorrespondenceWithoutUL-BeamSweeping",
+      "tci-StateSwitchInd-r18",
+      "LB-CA via switching"
+    ]
+  }
+}

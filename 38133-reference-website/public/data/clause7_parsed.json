@@ -1,0 +1,2008 @@
+{
+  "document_info": {
+    "standard": "3GPP TS 38.133",
+    "clause": "7",
+    "title": "Timing",
+    "extracted_date": "2024"
+  },
+  "subclauses": [
+    {
+      "clause_id": "7.1",
+      "title": "UE transmit timing",
+      "introduction": {
+        "text": "The UE shall have capability to follow the frame timing change of the reference cell in RRC_CONNECTED state or when transmitting PUSCH on CG resources for SDT in RRC_INACTIVE. The uplink frame transmission takes place $(N_{TA}+N_{TA offset})×T_{c}$ before the reception of the first detected path (in time) of the corresponding downlink frame from the reference cell."
+      },
+      "formulas": [
+        "$(N_{TA}+N_{TA offset})×T_{c}$",
+        "$T_{new}-(N_{TA}+N_{TA offset})+2 (T_{old}-T_{new})$",
+        "$TA_{adjusted}=TA_{old}+2*(T_{new}-T_{old})$",
+        "$max(TA_{adjusted}, 0)$"
+      ],
+      "requirements": {
+        "clause_7_1_2": {
+          "title": "Requirements",
+          "text": "The UE initial transmission timing error shall be less than or equal to ±Te where the timing error limit value Te is specified in table 7.1.2-1.",
+          "conditions": [
+            "when it is the first transmission in a DRX cycle for PUCCH, PUSCH and SRS, or it is the PRACH transmission, or it is the msgA transmission, or it is the first transmission sent on the PSCell for activating the deactivated SCG without RACH.",
+            "when it is the transmission for PUSCH on CG resources for SDT in RRC_INACTIVE.",
+            "when it is the first transmission on target cell after UE receives LTM cell switch command."
+          ],
+          "ssb_availability": {
+            "UL SCS ≤ 120 kHz": "at least one SSB is available at the UE during the last 160 ms",
+            "UL SCS = 480 kHz": "at least one SSB is available in the last 80 ms",
+            "UL SCS = 960 kHz": "at least one SSB is available in the last 40 ms"
+          },
+          "tables": [
+            {
+              "table_id": "7.1.2-1",
+              "title": "Te Timing Error Limit",
+              "columns": [
+                "Frequency Range",
+                "SCS of SSB signals (kHz)",
+                "SCS of uplink signals (kHz)",
+                "Te"
+              ],
+              "rows": [
+                [
+                  "1",
+                  "15",
+                  "15",
+                  "12*64*Tc"
+                ],
+                [
+                  "1",
+                  "15",
+                  "30",
+                  "10*64*Tc"
+                ],
+                [
+                  "1",
+                  "15",
+                  "60",
+                  "10*64*Tc"
+                ],
+                [
+                  "1",
+                  "30",
+                  "15",
+                  "8*64*Tc"
+                ],
+                [
+                  "1",
+                  "30",
+                  "30",
+                  "8*64*Tc"
+                ],
+                [
+                  "1",
+                  "30",
+                  "60",
+                  "7*64*Tc"
+                ],
+                [
+                  "2-1",
+                  "120",
+                  "60",
+                  "3.5*64*Tc"
+                ],
+                [
+                  "2-1",
+                  "120",
+                  "120",
+                  "3.5*64*Tc"
+                ],
+                [
+                  "2-1",
+                  "240",
+                  "60",
+                  "3*64*Tc"
+                ],
+                [
+                  "2-1",
+                  "240",
+                  "120",
+                  "3*64*Tc"
+                ],
+                [
+                  "2-2",
+                  "120",
+                  "120",
+                  "3.5*64*Tc"
+                ],
+                [
+                  "2-2",
+                  "120",
+                  "480",
+                  "1.58*64*Tc"
+                ],
+                [
+                  "2-2",
+                  "480",
+                  "120",
+                  "2.86*64*Tc"
+                ],
+                [
+                  "2-2",
+                  "480",
+                  "480",
+                  "1.35*64*Tc"
+                ],
+                [
+                  "2-2",
+                  "480",
+                  "960",
+                  "0.90*64*Tc"
+                ],
+                [
+                  "2-2",
+                  "960",
+                  "120",
+                  "2.80*64*Tc"
+                ],
+                [
+                  "2-2",
+                  "960",
+                  "480",
+                  "1.13*64*Tc"
+                ],
+                [
+                  "2-2",
+                  "960",
+                  "960",
+                  "0.86*64*Tc"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: Tc is the basic timing unit defined in TS 38.211 [6]"
+              ]
+            },
+            {
+              "table_id": "7.1.2-2",
+              "title": "The Value of $N_{TA offset}$",
+              "columns": [
+                "Frequency range and band of cell used for uplink transmission",
+                "$N_{TA offset}$ (Unit: TC)"
+              ],
+              "rows": [
+                [
+                  "FR1 FDD or TDD band with neither E-UTRA–NR nor NB-IoT–NR coexistence case",
+                  "25600 (Note 1)"
+                ],
+                [
+                  "FR1 FDD band with E-UTRA–NR and/or NB-IoT–NR coexistence case",
+                  "0 (Note 1)"
+                ],
+                [
+                  "FR1 TDD band with E-UTRA–NR and/or NB-IoT–NR coexistence case",
+                  "39936 (Note 1)"
+                ],
+                [
+                  "FR2",
+                  "13792"
+                ]
+              ],
+              "notes": [
+                "Note 1: The UE identifies $N_{TA offset}$ based on the information n-TimingAdvanceOffset as specified in TS 38.331 [2]. If UE is not provided with the information n-TimingAdvanceOffset, the default value of $N_{TA offset}$ is set as 25600 for FR1 band. In case of multiple UL carriers in the same TAG, UE expects that the same value of n-TimingAdvanceOffset is provided for all the UL carriers according to clause 4.2 in TS 38.213 [3] and the value 39936 of $N_{TA offset}$ can also be provided for an FDD serving cell.",
+                "Note 2: Void"
+              ]
+            }
+          ],
+          "subclauses": {
+            "7.1.2.1": {
+              "title": "Gradual timing adjustment",
+              "rules": [
+                "The maximum amount of the magnitude of the timing change in one adjustment shall be Tq.",
+                "The minimum aggregate adjustment rate shall be Tp per second.",
+                "The maximum aggregate adjustment rate shall be Tq per 200 ms for SCS of UL signals smaller or equal to 120 kHz and 100 ms for SCS of uplink signals larger or equal to 480 kHz."
+              ],
+              "tables": [
+                {
+                  "table_id": "7.1.2.1-1",
+                  "title": "Tq Maximum Autonomous Time Adjustment Step and Tp Minimum Aggregate Adjustment rate",
+                  "columns": [
+                    "Frequency Range",
+                    "SCS of uplink signals (kHz)",
+                    "Tq",
+                    "Tp"
+                  ],
+                  "rows": [
+                    [
+                      "1",
+                      "15",
+                      "5.5*64*Tc",
+                      "5.5*64*Tc"
+                    ],
+                    [
+                      "1",
+                      "30",
+                      "5.5*64*Tc",
+                      "5.5*64*Tc"
+                    ],
+                    [
+                      "1",
+                      "60",
+                      "5.5*64*Tc",
+                      "5.5*64*Tc"
+                    ],
+                    [
+                      "2-1",
+                      "60",
+                      "K*64*Tc",
+                      "2.5*64*Tc"
+                    ],
+                    [
+                      "2-1",
+                      "120",
+                      "K*64*Tc",
+                      "2.5*64*Tc"
+                    ],
+                    [
+                      "2-2",
+                      "120",
+                      "2.5*64*Tc",
+                      "2.5*64*Tc"
+                    ],
+                    [
+                      "2-2",
+                      "480",
+                      "0.8*64*Tc",
+                      "0.8*64*Tc"
+                    ],
+                    [
+                      "2-2",
+                      "960",
+                      "0.8*64*Tc",
+                      "0.8*64*Tc"
+                    ]
+                  ],
+                  "notes": [
+                    "NOTE 1: Tc is the basic timing unit defined in TS 38.211 [6]",
+                    "NOTE 2: When *highSpeedMeasFlagFR2-r17* is configured for UE supporting power class 6, K = 4.5; otherwise, K = 2.5."
+                  ]
+                }
+              ]
+            },
+            "7.1.2.2": {
+              "title": "Void",
+              "status": "void"
+            },
+            "7.1.2.3": {
+              "title": "One shot large UL timing adjustment for FR2 Power Class 6 UE",
+              "conditions": [
+                "*highSpeedMeasFlagFR2-r17* is configured",
+                "*highSpeedLargeOneStepUL-TimingFR2-r17* is enabled",
+                "UE supporting FR2 power class 6",
+                "*ue-OneShotUL-TimingAdj-r17* capability"
+              ]
+            },
+            "7.1.2.4": {
+              "title": "UE transmit timing for positioning measurements",
+              "text": "If cell reselection occurs in RRC_INACTIVE within *srs-PosRRC-InactiveValidityArea area*, the UE shall have capability to follow the frame timing change of the reference cell when transmitting SRS for positioning."
+            }
+          }
+        }
+      }
+    },
+    {
+      "clause_id": "7.1A",
+      "title": "UE transmit timing for RedCap",
+      "requirements": {
+        "clause_7_1A_2": {
+          "title": "Requirements",
+          "tables": [
+            {
+              "table_id": "7.1A.2-1",
+              "title": "Te Timing Error Limit",
+              "columns": [
+                "Frequency Range",
+                "SCS of SSB signals (kHz)",
+                "SCS of uplink signals (kHz)",
+                "Te"
+              ],
+              "rows": [
+                [
+                  "1",
+                  "15",
+                  "15",
+                  "12*64*Tc"
+                ],
+                [
+                  "1",
+                  "15",
+                  "30",
+                  "10*64*Tc"
+                ],
+                [
+                  "1",
+                  "15",
+                  "60",
+                  "10*64*Tc"
+                ],
+                [
+                  "1",
+                  "30",
+                  "15",
+                  "8*64*Tc"
+                ],
+                [
+                  "1",
+                  "30",
+                  "30",
+                  "8*64*Tc"
+                ],
+                [
+                  "1",
+                  "30",
+                  "60",
+                  "7*64*Tc"
+                ],
+                [
+                  "2",
+                  "120",
+                  "60",
+                  "3.5*64*Tc"
+                ],
+                [
+                  "2",
+                  "120",
+                  "120",
+                  "3.5*64*Tc"
+                ],
+                [
+                  "2",
+                  "240",
+                  "60",
+                  "3*64*Tc"
+                ],
+                [
+                  "2",
+                  "240",
+                  "120",
+                  "3*64*Tc"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: Tc is the basic timing unit defined in TS 38.211 [6]"
+              ]
+            },
+            {
+              "table_id": "7.1A.2-2",
+              "title": "The Value of $N_{TA offset}$",
+              "columns": [
+                "Frequency range and band of cell used for uplink transmission",
+                "$N_{TA offset}$ (Unit: TC)"
+              ],
+              "rows": [
+                [
+                  "FR1 FDD or TDD band with neither E-UTRA–NR nor NB-IoT–NR coexistence case",
+                  "25600 (Note 1)"
+                ],
+                [
+                  "FR1 FDD band with E-UTRA–NR and/or NB-IoT–NR coexistence case",
+                  "0 (Note 1)"
+                ],
+                [
+                  "FR1 TDD band with E-UTRA–NR and/or NB-IoT–NR coexistence case",
+                  "39936 (Note 1)"
+                ],
+                [
+                  "FR2",
+                  "13792"
+                ]
+              ],
+              "notes": [
+                "Note 1: The UE identifies $N_{TA offset}$ based on the information n-TimingAdvanceOffset as specified in TS 38.331 [2]. If UE is not provided with the information n-TimingAdvanceOffset, the default value of $N_{TA offset}$ is set as 25600 for FR1 band.",
+                "Note 2: Void"
+              ]
+            }
+          ],
+          "subclauses": {
+            "7.1A.2.1": {
+              "title": "Gradual timing adjustment",
+              "tables": [
+                {
+                  "table_id": "7.1A.2.1-1",
+                  "title": "Tq Maximum Autonomous Time Adjustment Step and Tp Minimum Aggregate Adjustment rate",
+                  "columns": [
+                    "Frequency Range",
+                    "SCS of uplink signals (kHz)",
+                    "Tq",
+                    "Tp"
+                  ],
+                  "rows": [
+                    [
+                      "1",
+                      "15",
+                      "5.5*64*Tc",
+                      "5.5*64*Tc"
+                    ],
+                    [
+                      "1",
+                      "30",
+                      "5.5*64*Tc",
+                      "5.5*64*Tc"
+                    ],
+                    [
+                      "1",
+                      "60",
+                      "5.5*64*Tc",
+                      "5.5*64*Tc"
+                    ],
+                    [
+                      "2",
+                      "60",
+                      "2.5*64*Tc",
+                      "2.5*64*Tc"
+                    ],
+                    [
+                      "2",
+                      "120",
+                      "2.5*64*Tc",
+                      "2.5*64*Tc"
+                    ]
+                  ],
+                  "notes": [
+                    "NOTE: Tc is the basic timing unit defined in TS 38.211 [6]"
+                  ]
+                }
+              ]
+            },
+            "7.1A.2.2": {
+              "title": "UE transmit timing for positioning measurements",
+              "reference": "The requirements defined in clause 7.1.2.4 shall apply for this clause."
+            }
+          }
+        }
+      }
+    },
+    {
+      "clause_id": "7.1C",
+      "title": "UE transmit timing for Satellite Access",
+      "formulas": [
+        "$(N_{TA}+N_{TA offset}+N_{TA,adj}^{common}+N_{TA,adj}^{UE})×T_{c}$"
+      ],
+      "requirements": {
+        "clause_7_1C_2": {
+          "title": "Requirements",
+          "timing_error_limit": "Te_NTN",
+          "tables": [
+            {
+              "table_id": "7.1C.2-1",
+              "title": "Te_NTN Timing Error Limit",
+              "columns": [
+                "Frequency Range",
+                "SCS of SSB signals (kHz)",
+                "SCS of uplink signals (kHz)",
+                "Te_NTN"
+              ],
+              "rows": [
+                [
+                  "FR1-NTN",
+                  "15",
+                  "15",
+                  "29*64*Tc"
+                ],
+                [
+                  "FR1-NTN",
+                  "15",
+                  "30",
+                  "24*64*Tc"
+                ],
+                [
+                  "FR1-NTN",
+                  "15",
+                  "60",
+                  "N/A"
+                ],
+                [
+                  "FR1-NTN",
+                  "30",
+                  "15",
+                  "24*64*Tc"
+                ],
+                [
+                  "FR1-NTN",
+                  "30",
+                  "30",
+                  "22*64*Tc"
+                ],
+                [
+                  "FR1-NTN",
+                  "30",
+                  "60",
+                  "N/A"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: Tc is the basic timing unit defined in TS 38.211 [6]"
+              ]
+            },
+            {
+              "table_id": "7.1C.2-2",
+              "title": "Te_NTN Timing Error Limit for fixed VSAT is served by GSO and fixed VSAT is served by NGSO",
+              "columns": [
+                "Frequency Range",
+                "SCS of SSB signals (kHz)",
+                "SCS of uplink signals (kHz)",
+                "Te_NTN"
+              ],
+              "rows": [
+                [
+                  "FR2-NTN",
+                  "120",
+                  "60",
+                  "13*64*Tc"
+                ],
+                [
+                  "FR2-NTN",
+                  "120",
+                  "120",
+                  "7.5*64*Tc"
+                ],
+                [
+                  "FR2-NTN",
+                  "240",
+                  "60",
+                  "13*64*Tc"
+                ],
+                [
+                  "FR2-NTN",
+                  "240",
+                  "120",
+                  "7.5*64*Tc"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: Tc is the basic timing unit defined in TS 38.211 [6]"
+              ]
+            },
+            {
+              "table_id": "7.1C.2-3",
+              "title": "Te_NTN Timing Error Limit for mobile VSAT is served by GSO",
+              "columns": [
+                "Frequency Range",
+                "SCS of SSB signals (kHz)",
+                "SCS of uplink signals (kHz)",
+                "Te_NTN"
+              ],
+              "rows": [
+                [
+                  "FR2-NTN",
+                  "120",
+                  "60",
+                  "13*64*Tc"
+                ],
+                [
+                  "FR2-NTN",
+                  "120",
+                  "120",
+                  "7.5*64*Tc"
+                ],
+                [
+                  "FR2-NTN",
+                  "240",
+                  "60",
+                  "13*64*Tc"
+                ],
+                [
+                  "FR2-NTN",
+                  "240",
+                  "120",
+                  "7.5*64*Tc"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: Tc is the basic timing unit defined in TS 38.211 [6]",
+                "NOTE 2: Te_NTN for 120 kHz UL SCS applies under all the following conditions: - LOS channel between UE and each GNSS satellite - The GNSS signal power level greater than or equal to the applicable value specified in Table 6.2-1 of TS 38.171 - The GNSS satellite allocation is no less than the applicable value specified in Table 6.2-2 of TS 38.171 - The velocity change within one second does not result in the position difference with respect to the projected position, based on the position and velocity obtained one second before, exceeding 10 meters."
+              ]
+            },
+            {
+              "table_id": "7.1C.2-4",
+              "title": "The Value of $N_{TA offset}$ for VSAT in FR2-NTN",
+              "columns": [
+                "Frequency range and band of cell used for uplink transmission",
+                "$N_{TA offset}$ (Unit: TC)"
+              ],
+              "rows": [
+                [
+                  "FR2-NTN",
+                  "0"
+                ]
+              ],
+              "notes": [
+                "Note 1: The UE identifies $N_{TA offset}$ based on the information n-TimingAdvanceOffset as specified in TS 38.331 [2]. If UE is not provided with the information n-TimingAdvanceOffset, the default value of $N_{TA offset}$ is set as 0 for FR2-NTN band."
+              ]
+            }
+          ],
+          "subclauses": {
+            "7.1C.2.1": {
+              "title": "Gradual timing adjustment",
+              "rules": [
+                "The maximum amount of the magnitude of the timing change, apart from a change of $N_{TA,adj}^{UE}$ due to satellite position update and $N_{TA,adj}^{common}$ between the previous transmission and the current transmission, in one adjustment shall be Tq_NTN.",
+                "The minimum aggregate adjustment rate, apart from a change of $N_{TA,adj}^{UE}$ due to satellite position update and $N_{TA,adj}^{common}$ during the last one second, shall be Tp_NTN per second.",
+                "For a FR1-NTN UE or a FR2-NTN fixed UE, the maximum aggregate adjustment rate, apart from a change of $N_{TA,adj}^{UE}$ due to satellite position update and $N_{TA,adj}^{common}$ during the last 200 ms, shall be Tq_NTN per 200 ms.",
+                "For a FR2-NTN mobile UE, the maximum aggregate adjustment rate, apart from a change of $N_{TA,adj}^{UE}$ due to satellite position update and $N_{TA,adj}^{common}$ during the last 200 ms, shall be 3 * Tq_NTN per 200 ms."
+              ],
+              "tables": [
+                {
+                  "table_id": "7.1C.2.1-1",
+                  "title": "Tq_NTN Maximum Autonomous Time Adjustment Step and Tp_NTN Minimum Aggregate Adjustment rate",
+                  "columns": [
+                    "Frequency Range",
+                    "SCS of uplink signals (kHz)",
+                    "Tq_NTN",
+                    "Tp_NTN"
+                  ],
+                  "rows": [
+                    [
+                      "FR1-NTN",
+                      "15",
+                      "5.5*64*Tc",
+                      "5.5*64*Tc"
+                    ],
+                    [
+                      "FR1-NTN",
+                      "30",
+                      "5.5*64*Tc",
+                      "5.5*64*Tc"
+                    ],
+                    [
+                      "FR1-NTN",
+                      "60",
+                      "N/A",
+                      "N/A"
+                    ],
+                    [
+                      "FR2-NTN",
+                      "60",
+                      "2.5*64*Tc",
+                      "2.5*64*Tc"
+                    ],
+                    [
+                      "FR2-NTN",
+                      "120",
+                      "2.5*64*Tc",
+                      "2.5*64*Tc"
+                    ]
+                  ],
+                  "notes": [
+                    "NOTE: Tc is the basic timing unit defined in TS 38.211 [6]"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "clause_id": "7.1D",
+      "title": "UE transmit timing for ATG",
+      "formulas": [
+        "$(N_{TA}+N_{TA offset}+N_{TA,adj}^{UE})×T_{c}$"
+      ],
+      "requirements": {
+        "clause_7_1D_2": {
+          "title": "Requirements",
+          "timing_error_limit": "Te_ATG",
+          "tables": [
+            {
+              "table_id": "7.1D.2-1",
+              "title": "Te_ATG Timing Error Limit",
+              "columns": [
+                "Frequency Range",
+                "SCS of SSB signals (kHz)",
+                "SCS of uplink signals (kHz)",
+                "Te_ATG"
+              ],
+              "rows": [
+                [
+                  "1",
+                  "15",
+                  "15",
+                  "20*64*Tc"
+                ],
+                [
+                  "1",
+                  "15",
+                  "30",
+                  "18*64*Tc"
+                ],
+                [
+                  "1",
+                  "15",
+                  "60",
+                  "N/A"
+                ],
+                [
+                  "1",
+                  "30",
+                  "15",
+                  "16*64*Tc"
+                ],
+                [
+                  "1",
+                  "30",
+                  "30",
+                  "16*64*Tc"
+                ],
+                [
+                  "1",
+                  "30",
+                  "60",
+                  "N/A"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: Tc is the basic timing unit defined in TS 38.211 [6]"
+              ]
+            }
+          ],
+          "subclauses": {
+            "7.1D.2.1": {
+              "title": "Gradual timing adjustment",
+              "rules": [
+                "The maximum amount of the magnitude of the timing change, apart from a change of $N_{TA,adj}^{UE}$ due to ATG UE position update, in one adjustment shall be Tq_ATG.",
+                "The minimum aggregate adjustment rate, apart from a change of $N_{TA,adj}^{UE}$ due to ATG UE position update, shall be Tp_ATG per second.",
+                "The maximum aggregate adjustment rate, apart from a change of $N_{TA,adj}^{UE}$ due to ATG UE position update, shall be Tq_ATG per 200 ms."
+              ],
+              "tables": [
+                {
+                  "table_id": "7.1D.2.1-1",
+                  "title": "Tq_ATG Maximum Autonomous Time Adjustment Step and Tp_ATG Minimum Aggregate Adjustment rate",
+                  "columns": [
+                    "Frequency Range",
+                    "SCS of uplink signals (kHz)",
+                    "Tq_ATG",
+                    "Tp_ATG"
+                  ],
+                  "rows": [
+                    [
+                      "1",
+                      "15",
+                      "9.5*64*Tc",
+                      "9.5*64*Tc"
+                    ],
+                    [
+                      "1",
+                      "30",
+                      "9.5*64*Tc",
+                      "9.5*64*Tc"
+                    ],
+                    [
+                      "1",
+                      "60",
+                      "N/A",
+                      "N/A"
+                    ]
+                  ],
+                  "notes": [
+                    "NOTE 1: Tc is the basic timing unit defined in TS 38.211 [6]"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "clause_id": "7.2",
+      "title": "UE timer accuracy",
+      "requirements": {
+        "clause_7_2_2": {
+          "title": "Requirements",
+          "tables": [
+            {
+              "table_id": "7.2.2-1",
+              "title": "UE Timer Accuracy",
+              "columns": [
+                "Timer value [s]",
+                "Accuracy"
+              ],
+              "rows": [
+                [
+                  "timer value < 4",
+                  "± 0.1 s"
+                ],
+                [
+                  "timer value ≥ 4",
+                  "± 2.5 %"
+                ]
+              ],
+              "notes": [
+                "The requirements are only related to the actual timing measurements internally in the UE.",
+                "They do not include: Inaccuracy in the start and stop conditions of a timer, or Inaccuracies due to restrictions in observability of start and stop conditions of a UE timer."
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "clause_id": "7.2A",
+      "title": "UE timer accuracy for RedCap",
+      "requirements": {
+        "clause_7_2A_2": {
+          "title": "Requirements",
+          "tables": [
+            {
+              "table_id": "7.2A.2-1",
+              "title": "UE Timer Accuracy for RedCap",
+              "columns": [
+                "Timer value [s]",
+                "Accuracy"
+              ],
+              "rows": [
+                [
+                  "timer value < 4",
+                  "± 0.1 s"
+                ],
+                [
+                  "timer value ≥ 4",
+                  "± 2.5 %"
+                ]
+              ],
+              "notes": [
+                "The requirements are only related to the actual timing measurements internally in the UE.",
+                "They do not include: Inaccuracy in the start and stop conditions of a timer, or Inaccuracies due to restrictions in observability of start and stop conditions of a UE timer."
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "clause_id": "7.2C",
+      "title": "UE timer accuracy for satellite access",
+      "requirements": {
+        "clause_7_2C_2": {
+          "title": "Requirements",
+          "applicability": "The requirements in this clause are applicable for both UE served by SAN in FR1 and VSAT UE served by SAN in FR2-NTN.",
+          "tables": [
+            {
+              "table_id": "7.2C.2-1",
+              "title": "UE Timer Accuracy for Satellite Access",
+              "columns": [
+                "Timer value [s]",
+                "Accuracy"
+              ],
+              "rows": [
+                [
+                  "timer value < 4",
+                  "± 0.1 s"
+                ],
+                [
+                  "timer value ≥ 4",
+                  "± 2.5 %"
+                ]
+              ],
+              "notes": [
+                "The requirements are only related to the actual timing measurements internally in the UE.",
+                "They do not include: Inaccuracy in the start and stop conditions of a timer, or Inaccuracies due to restrictions in observability of start and stop conditions of a UE timer."
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "clause_id": "7.2D",
+      "title": "UE timer accuracy for ATG",
+      "requirements": {
+        "clause_7_2D_2": {
+          "title": "Requirements",
+          "tables": [
+            {
+              "table_id": "7.2D.2-1",
+              "title": "ATG UE Timer Accuracy",
+              "columns": [
+                "Timer value [s]",
+                "Accuracy"
+              ],
+              "rows": [
+                [
+                  "timer value < 4",
+                  "± 0.1 s"
+                ],
+                [
+                  "timer value ≥ 4",
+                  "± 2.5 %"
+                ]
+              ],
+              "notes": [
+                "The requirements are only related to the actual timing measurements internally in the ATG UE.",
+                "They do not include: Inaccuracy in the start and stop conditions of a timer, or Inaccuracies due to restrictions in observability of start and stop conditions of a ATG UE timer."
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "clause_id": "7.3",
+      "title": "Timing advance",
+      "requirements": {
+        "clause_7_3_2": {
+          "title": "Requirements",
+          "subclauses": {
+            "7.3.2.1": {
+              "title": "Timing Advance adjustment delay",
+              "text": "UE shall adjust the timing of its uplink transmission timing at time slot n+ k+1 for a timing advance command received in time slot n, and the value of k is defined in clause 4.2 in TS 38.213 [3]."
+            },
+            "7.3.2.2": {
+              "title": "Timing Advance adjustment accuracy",
+              "tables": [
+                {
+                  "table_id": "7.3.2.2-1",
+                  "title": "UE Timing Advance adjustment accuracy",
+                  "columns": [
+                    "UL Sub Carrier Spacing(kHz)",
+                    "UE Timing Advance adjustment accuracy"
+                  ],
+                  "rows": [
+                    [
+                      "15",
+                      "±256 Tc"
+                    ],
+                    [
+                      "30",
+                      "±256 Tc"
+                    ],
+                    [
+                      "60",
+                      "±128 Tc"
+                    ],
+                    [
+                      "120",
+                      "±32 Tc"
+                    ],
+                    [
+                      "480",
+                      "±10 Tc"
+                    ],
+                    [
+                      "960",
+                      "±6 Tc"
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "clause_id": "7.3A",
+      "title": "Timing Advance for RedCap",
+      "requirements": {
+        "clause_7_3A_2": {
+          "title": "Requirements",
+          "subclauses": {
+            "7.3A.2.1": {
+              "title": "Timing Advance adjustment delay",
+              "text": "UE shall adjust the timing of its uplink transmission at time slot n+ k+1 for a timing advance command received in time slot n, and the value of k is defined in clause 4.2 in TS 38.213 [3]."
+            },
+            "7.3A.2.2": {
+              "title": "Timing Advance adjustment accuracy",
+              "tables": [
+                {
+                  "table_id": "7.3A.2.2-1",
+                  "title": "UE Timing Advance adjustment accuracy",
+                  "columns": [
+                    "UL Sub Carrier Spacing(kHz)",
+                    "UE Timing Advance adjustment accuracy"
+                  ],
+                  "rows": [
+                    [
+                      "15",
+                      "±256 Tc"
+                    ],
+                    [
+                      "30",
+                      "±256 Tc"
+                    ],
+                    [
+                      "60",
+                      "±128 Tc"
+                    ],
+                    [
+                      "120",
+                      "±32 Tc"
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "clause_id": "7.3C",
+      "title": "Timing advance for satellite access",
+      "formulas": [
+        "n+ k+1+2µ ∙ K_{offset}"
+      ],
+      "requirements": {
+        "clause_7_3C_2": {
+          "title": "Requirements",
+          "subclauses": {
+            "7.3C.2.1": {
+              "title": "Timing Advance adjustment delay",
+              "text": "UE shall adjust the timing of its uplink transmission timing from the beginning of uplink time slot n+ k+1+2µ ∙ K_{offset} for a timing advance command received in time slot n, and the value of k, µ and K_{offset} are defined in clause 4.2 in TS 38.213 [3]."
+            },
+            "7.3C.2.2": {
+              "title": "Timing Advance adjustment accuracy",
+              "tables": [
+                {
+                  "table_id": "7.3C.2.2-1",
+                  "title": "UE Timing Advance adjustment accuracy",
+                  "columns": [
+                    "UL Sub Carrier Spacing(kHz)",
+                    "UE Timing Advance adjustment accuracy"
+                  ],
+                  "rows": [
+                    [
+                      "15",
+                      "±256 Tc"
+                    ],
+                    [
+                      "30",
+                      "±256 Tc"
+                    ],
+                    [
+                      "60",
+                      "N/A"
+                    ]
+                  ]
+                },
+                {
+                  "table_id": "7.3C.2.2-2",
+                  "title": "UE Timing Advance adjustment accuracy for VSAT UE in FR2-NTN",
+                  "columns": [
+                    "UL Sub Carrier Spacing(kHz)",
+                    "UE Timing Advance adjustment accuracy"
+                  ],
+                  "rows": [
+                    [
+                      "60",
+                      "±128 Tc"
+                    ],
+                    [
+                      "120",
+                      "±32 Tc"
+                    ]
+                  ],
+                  "notes": [
+                    "NOTE 1: VSAT UE are defined in TS 38.101-5 [43]"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "clause_id": "7.3D",
+      "title": "Timing advance for ATG",
+      "formulas": [
+        "n+ k+1+2µ ∙ K_{offset}"
+      ],
+      "requirements": {
+        "clause_7_3D_2": {
+          "title": "Requirements",
+          "subclauses": {
+            "7.3D.2.1": {
+              "title": "Timing Advance adjustment delay",
+              "text": "ATG UE shall adjust the timing of its uplink transmission timing from the beginning of uplink at time slot n+ k+1+2µ ∙ K_{offset} for a timing advance command received in time slot n, and the value of k, µ and K_{offset} are defined in clause 4.2 in TS 38.213 [3]."
+            },
+            "7.3D.2.2": {
+              "title": "Timing Advance adjustment accuracy",
+              "tables": [
+                {
+                  "table_id": "7.3D.2.2-1",
+                  "title": "ATG UE Timing Advance adjustment accuracy",
+                  "columns": [
+                    "UL Sub Carrier Spacing(kHz)",
+                    "ATG UE Timing Advance adjustment accuracy"
+                  ],
+                  "rows": [
+                    [
+                      "15",
+                      "±256 Tc"
+                    ],
+                    [
+                      "30",
+                      "±256 Tc"
+                    ],
+                    [
+                      "60",
+                      "N/A"
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "clause_id": "7.4",
+      "title": "Cell phase synchronization accuracy",
+      "definition": {
+        "text": "Cell phase synchronization accuracy for TDD is defined as the maximum absolute deviation in frame start timing between any pair of cells on the same frequency that have overlapping coverage areas."
+      },
+      "minimum_requirements": {
+        "text": "The cell phase synchronization accuracy measured at BS antenna connectors or radiated interface boundaries shall be better than 3 µs."
+      }
+    },
+    {
+      "clause_id": "7.5",
+      "title": "Maximum Transmission Timing Difference",
+      "introduction": {
+        "text": "A UE shall be capable of handling a relative transmission timing difference between subframe timing boundary of E-UTRA PCell and the closest slot timing boundary of PSCell to be aggregated for EN-DC operation."
+      },
+      "subclauses": {
+        "7.5.2": {
+          "title": "Minimum requirements for inter-band EN-DC",
+          "tables": [
+            {
+              "table_id": "7.5.2-1",
+              "title": "Maximum uplink transmission timing difference requirement for asynchronous EN-DC",
+              "columns": [
+                "Sub-carrier spacing in E-UTRA PCell (kHz)",
+                "UL Sub-carrier spacing for data in PSCell (kHz)",
+                "Maximum uplink transmission timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "15",
+                  "15",
+                  "500"
+                ],
+                [
+                  "15",
+                  "30",
+                  "250"
+                ],
+                [
+                  "15",
+                  "60",
+                  "125"
+                ],
+                [
+                  "15",
+                  "120",
+                  "62.5"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: For E-UTRA FDD-NR FDD intra-band EN-DC, for which the requirement is defined in clause 7.5.3 and this Table 7.5.2-1 is also applicable, the scenario with 120 kHz PSCell does not exist."
+              ]
+            }
+          ],
+          "subclauses": {
+            "7.5.2.1": {
+              "title": "Minimum requirements for inter-band synchronous EN-DC",
+              "tables": [
+                {
+                  "table_id": "7.5.2.1-1",
+                  "title": "Maximum uplink transmission timing difference requirement for inter-band synchronous EN-DC",
+                  "columns": [
+                    "Sub-carrier spacing in E-UTRA PCell (kHz)",
+                    "UL Sub-carrier spacing for data in PSCell (kHz)",
+                    "Maximum uplink transmission timing difference (µs)"
+                  ],
+                  "rows": [
+                    [
+                      "15",
+                      "15",
+                      "35.21"
+                    ],
+                    [
+                      "15",
+                      "30",
+                      "35.21"
+                    ],
+                    [
+                      "15",
+                      "60",
+                      "35.21"
+                    ],
+                    [
+                      "15",
+                      "120",
+                      "35.21"
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "7.5.3": {
+          "title": "Minimum requirements for intra-band EN-DC",
+          "tables": [
+            {
+              "table_id": "7.5.3-1",
+              "title": "Maximum uplink transmission timing difference requirement for intra-band synchronous EN-DC",
+              "columns": [
+                "Sub-carrier spacing in E-UTRA PCell (kHz)",
+                "UL Sub-carrier spacing for data in PSCell (kHz)",
+                "Maximum uplink transmission timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "15",
+                  "15",
+                  "5.21"
+                ],
+                [
+                  "15",
+                  "30",
+                  "5.21"
+                ],
+                [
+                  "15",
+                  "60",
+                  "5.21"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: This is not applicable for a UE which indicates the capability of only supporting single UL timing (*ul-TimingAlignmentEUTRA-NR* is signalled). Single UL timing for E-UTRA and NR cell is assumed for this UE.",
+                "NOTE 2: If the transmission timing difference exceeds the cyclic prefix length of the UL Sub-carrier spacing for data in PSCell, NR UE Tx EVM degradation is expected for the symbol that is overlapping the LTE subframe boundary",
+                "NOTE 3: The requirement in this table is also applicable for intra-band synchronous NE-DC."
+              ]
+            }
+          ]
+        },
+        "7.5.4": {
+          "title": "Minimum requirements for NR Carrier Aggregation",
+          "tables": [
+            {
+              "table_id": "7.5.4-1",
+              "title": "Maximum uplink transmission timing difference requirement for inter-band NR carrier aggregation",
+              "columns": [
+                "Frequency Range of the pair of TAGs",
+                "Maximum uplink transmission timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "FR1",
+                  "34.6"
+                ],
+                [
+                  "FR2-1",
+                  "8.5"
+                ],
+                [
+                  "Between FR1 and FR2-1",
+                  "26.1"
+                ],
+                [
+                  "Between FR1 and FR2-2",
+                  "26.1"
+                ]
+              ],
+              "notes": [
+                "NOTE1: This requirement applies to the UE capable of independent beam management for FR2-1 inter-band CA."
+              ]
+            }
+          ]
+        },
+        "7.5.5": {
+          "title": "Minimum requirements for inter-band NE-DC",
+          "tables": [
+            {
+              "table_id": "7.5.5-1",
+              "title": "Maximum uplink transmission timing difference requirement for inter-band asynchronous NE-DC",
+              "columns": [
+                "Sub-carrier spacing in PCell (kHz)",
+                "UL Sub-carrier spacing for data in E-UTRA PSCell (kHz)",
+                "Maximum uplink transmission timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "15",
+                  "15",
+                  "500"
+                ],
+                [
+                  "30",
+                  "15",
+                  "250"
+                ],
+                [
+                  "60",
+                  "15",
+                  "125"
+                ],
+                [
+                  "120",
+                  "15",
+                  "62.5"
+                ]
+              ]
+            }
+          ],
+          "subclauses": {
+            "7.5.5.1": {
+              "title": "Minimum requirements for inter-band synchronous NE-DC",
+              "tables": [
+                {
+                  "table_id": "7.5.5.1-1",
+                  "title": "Maximum uplink transmission timing difference requirement for inter-band synchronous NE-DC",
+                  "columns": [
+                    "Sub-carrier spacing in PCell (kHz)",
+                    "UL Sub-carrier spacing for data in E-UTRA PSCell (kHz)",
+                    "Maximum uplink transmission timing difference (µs)"
+                  ],
+                  "rows": [
+                    [
+                      "15",
+                      "15",
+                      "35.21"
+                    ],
+                    [
+                      "30",
+                      "15",
+                      "35.21"
+                    ],
+                    [
+                      "60",
+                      "15",
+                      "35.21"
+                    ],
+                    [
+                      "120",
+                      "15",
+                      "35.21"
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "7.5.6": {
+          "title": "Minimum requirements for inter-band NR-DC",
+          "tables": [
+            {
+              "table_id": "7.5.6-1",
+              "title": "Maximum uplink transmission timing difference requirement for inter-band synchronous NR-DC",
+              "columns": [
+                "Cell in MCG",
+                "Cell in SCG",
+                "Maximum uplink transmission timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "FR1",
+                  "FR1",
+                  "34.6"
+                ],
+                [
+                  "FR2-1",
+                  "FR2-1",
+                  "8.5"
+                ],
+                [
+                  "FR1",
+                  "FR2-1",
+                  "34.1"
+                ],
+                [
+                  "FR1",
+                  "FR2-2",
+                  "34.1"
+                ]
+              ]
+            },
+            {
+              "table_id": "7.5.6-2",
+              "title": "Maximum uplink transmission timing difference requirement for inter-band asynchronous NR-DC",
+              "columns": [
+                "Max {Sub-carrier spacing in PCell (kHz), Sub-carrier spacing in PSCell (kHz)}",
+                "Maximum uplink transmission timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "15",
+                  "500"
+                ],
+                [
+                  "30",
+                  "250"
+                ],
+                [
+                  "60",
+                  "125"
+                ],
+                [
+                  "120",
+                  "62.5"
+                ],
+                [
+                  "480",
+                  "15.625"
+                ],
+                [
+                  "960",
+                  "7.8125"
+                ]
+              ]
+            }
+          ]
+        },
+        "7.5.7": {
+          "title": "Minimum requirements for multi-TRP",
+          "tables": [
+            {
+              "table_id": "7.5.7-1",
+              "title": "Maximum uplink transmission timing difference requirement for multi-TRP for UE not supporting *rxTimingDiff-r18*",
+              "columns": [
+                "Frequency Range of the pair of TAGs",
+                "Maximum uplink transmission timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "FR1",
+                  "CP length + 1.6us"
+                ],
+                [
+                  "FR2-1",
+                  "CP length + 0.5us"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: CP length of the maximum SCS on the carrier.",
+                "NOTE 2: This requirement applies to the UE capable of [STxMP]."
+              ]
+            },
+            {
+              "table_id": "7.5.7-2",
+              "title": "Maximum uplink transmission timing difference requirement for multi-TRP for UE supporting *rxTimingDiff-r18*",
+              "columns": [
+                "Frequency Range of the pair of TAGs",
+                "Maximum uplink transmission timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "FR1",
+                  "34.6"
+                ],
+                [
+                  "FR2-1",
+                  "8.5"
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "clause_id": "7.6",
+      "title": "Maximum Receive Timing Difference",
+      "introduction": {
+        "text": "A UE shall be capable of handling a relative receive timing difference between subframe timing boundary of an E-UTRA cell belonging to the MCG and the closest slot timing boundary of a cell belonging to SCG to be aggregated for EN-DC operation."
+      },
+      "subclauses": {
+        "7.6.2": {
+          "title": "Minimum requirements for inter-band EN-DC",
+          "tables": [
+            {
+              "table_id": "7.6.2-1",
+              "title": "Maximum receive timing difference requirement for asynchronous EN-DC",
+              "columns": [
+                "Sub-carrier spacing of E-UTRA cell in MCG (kHz)",
+                "DL Sub-carrier spacing of cell in SCG (kHz) (Note 1)",
+                "Maximum receive timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "15",
+                  "15",
+                  "500"
+                ],
+                [
+                  "15",
+                  "30",
+                  "250"
+                ],
+                [
+                  "15",
+                  "60",
+                  "125"
+                ],
+                [
+                  "15",
+                  "120",
+                  "62.5"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: DL Sub-carrier spacing is min{SCSSS, SCSDATA}.",
+                "NOTE 2: For E-UTRA FDD-NR FDD intra-band EN-DC, for which the requirement is defined in clause 7.6.3 and this table 7.6.2-1 is also applicable, the scenario with 120 kHz does not exit."
+              ]
+            }
+          ],
+          "subclauses": {
+            "7.6.2.1": {
+              "title": "Minimum requirements for inter-band synchronous EN-DC",
+              "tables": [
+                {
+                  "table_id": "7.6.2.1-1",
+                  "title": "Maximum receive timing difference requirement for inter-band synchronous EN-DC",
+                  "columns": [
+                    "Sub-carrier spacing of E-UTRA cell in MCG (kHz)",
+                    "DL Sub-carrier spacing of cell in SCG (kHz) (Note1)",
+                    "Maximum receive timing difference (µs)"
+                  ],
+                  "rows": [
+                    [
+                      "15",
+                      "15",
+                      "33"
+                    ],
+                    [
+                      "15",
+                      "30",
+                      "33"
+                    ],
+                    [
+                      "15",
+                      "60",
+                      "33"
+                    ],
+                    [
+                      "15",
+                      "120",
+                      "33"
+                    ]
+                  ],
+                  "notes": [
+                    "NOTE 1: DL Sub-carrier spacing is min{SCSSS, SCSDATA}."
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "7.6.3": {
+          "title": "Minimum requirements for intra-band EN-DC",
+          "tables": [
+            {
+              "table_id": "7.6.3-1",
+              "title": "Maximum receive timing difference requirement for intra-band synchronous EN-DC",
+              "columns": [
+                "Sub-carrier spacing of E-UTRA cell in MCG (kHz)",
+                "DL Sub-carrier spacing of cell in SCG (kHz) Note1",
+                "Maximum receive timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "15",
+                  "15",
+                  "3"
+                ],
+                [
+                  "15",
+                  "30",
+                  "3"
+                ],
+                [
+                  "15",
+                  "60",
+                  "3"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: DL Sub-carrier spacing is min{SCSSS, SCSDATA}.",
+                "NOTE 2: The requirement in this table is also applicable for intra-band synchronous NE-DC."
+              ]
+            }
+          ]
+        },
+        "7.6.4": {
+          "title": "Minimum requirements for NR Carrier Aggregation",
+          "tables": [
+            {
+              "table_id": "7.6.4-1",
+              "title": "Maximum receive timing difference requirement for intra-band non-contiguous NR carrier aggregation",
+              "columns": [
+                "Frequency Range",
+                "Maximum receive timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "FR1",
+                  "31"
+                ],
+                [
+                  "FR2-1",
+                  "0.26"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: In the case of different SCS on different CCs, if the receive time difference exceeds the cyclic prefix length of that SCS, demodulation performance degradation is expected for the first symbol of the slot."
+              ]
+            },
+            {
+              "table_id": "7.6.4-2",
+              "title": "Maximum receive timing difference requirement for inter-band NR carrier aggregation",
+              "columns": [
+                "Frequency Range of the pair of carriers",
+                "Maximum receive timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "FR1",
+                  "33"
+                ],
+                [
+                  "FR2-1",
+                  "8"
+                ],
+                [
+                  "Between FR1 and FR2-1",
+                  "25"
+                ],
+                [
+                  "Between FR1 and FR2-2",
+                  "25"
+                ]
+              ],
+              "notes": [
+                "NOTE1: This requirement applies to the UE capable of independent beam management for FR2-1 inter-band CA."
+              ]
+            }
+          ]
+        },
+        "7.6.5": {
+          "title": "Minimum requirements for inter-band NE-DC",
+          "tables": [
+            {
+              "table_id": "7.6.5-1",
+              "title": "Maximum receive timing difference requirement for asynchronous NE-DC",
+              "columns": [
+                "Sub-carrier spacing of cell in MCG (kHz)",
+                "DL Sub-carrier spacing of EUTRA cell in SCG (kHz) (Note 1)",
+                "Maximum receive timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "15",
+                  "15",
+                  "500"
+                ],
+                [
+                  "30",
+                  "15",
+                  "250"
+                ],
+                [
+                  "60",
+                  "15",
+                  "125"
+                ],
+                [
+                  "120",
+                  "15",
+                  "62.5"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: DL Sub-carrier spacing is min{SCSSS, SCSDATA}.",
+                "NOTE 2: Void"
+              ]
+            }
+          ],
+          "subclauses": {
+            "7.6.5.1": {
+              "title": "Minimum requirements for inter-band synchronous NE-DC",
+              "tables": [
+                {
+                  "table_id": "7.6.5.1-1",
+                  "title": "Maximum receive timing difference requirement for inter-band synchronous NE-DC",
+                  "columns": [
+                    "Sub-carrier spacing of cell in MCG (kHz)",
+                    "DL Sub-carrier spacing of EUTRA cell in SCG (kHz) (Note1)",
+                    "Maximum receive timing difference (µs)"
+                  ],
+                  "rows": [
+                    [
+                      "15",
+                      "15",
+                      "33"
+                    ],
+                    [
+                      "30",
+                      "15",
+                      "33"
+                    ],
+                    [
+                      "60",
+                      "15",
+                      "33"
+                    ],
+                    [
+                      "120",
+                      "15",
+                      "33"
+                    ]
+                  ],
+                  "notes": [
+                    "NOTE 1: DL Sub-carrier spacing is min{SCSSS, SCSDATA}."
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "7.6.6": {
+          "title": "Minimum requirements for inter-band NR-DC",
+          "tables": [
+            {
+              "table_id": "7.6.6-1",
+              "title": "Maximum receive timing difference requirement for inter-band synchronous NR-DC",
+              "columns": [
+                "Cell in MCG",
+                "Cell in SCG",
+                "Maximum receive timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "FR1",
+                  "FR1",
+                  "33"
+                ],
+                [
+                  "FR2-1",
+                  "FR2-1",
+                  "8"
+                ],
+                [
+                  "FR1",
+                  "FR2-1",
+                  "33"
+                ],
+                [
+                  "FR1",
+                  "FR2-2",
+                  "33"
+                ]
+              ]
+            },
+            {
+              "table_id": "7.6.6-2",
+              "title": "Maximum receive timing difference requirement for inter-band asynchronous NR-DC",
+              "columns": [
+                "Max {Sub-carrier spacing in PCell (kHz), Sub-carrier spacing in PSCell (kHz)}",
+                "Maximum receive timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "15",
+                  "500"
+                ],
+                [
+                  "30",
+                  "250"
+                ],
+                [
+                  "60",
+                  "125"
+                ],
+                [
+                  "120",
+                  "62.5"
+                ],
+                [
+                  "480",
+                  "15.625"
+                ],
+                [
+                  "960",
+                  "7.8125"
+                ]
+              ]
+            }
+          ]
+        },
+        "7.6.7": {
+          "title": "Minimum requirements for PC6 UE in FR2",
+          "tables": [
+            {
+              "table_id": "7.6.7-1",
+              "title": "Maximum receive timing difference requirement for PC6 UE supporting *simultaneousReceptionTwoQCL-r18*",
+              "columns": [
+                "Frequency Range",
+                "Subcarrier spacing (kHz)",
+                "Maximum receive timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "FR2-1",
+                  "120",
+                  "8"
+                ]
+              ]
+            }
+          ]
+        },
+        "7.6.8": {
+          "title": "Minimum requirements for Multi-TRPs",
+          "tables": [
+            {
+              "table_id": "7.6.8-1",
+              "title": "Maximum receive timing difference requirement for multi-TRPs with two TAs for UE not capable of *rxTimingDiff-r18*",
+              "columns": [
+                "Frequency Range",
+                "Maximum receive timing difference"
+              ],
+              "rows": [
+                [
+                  "FR1",
+                  "CP length"
+                ],
+                [
+                  "FR2-1",
+                  "CP length"
+                ]
+              ],
+              "notes": [
+                "NOTE 1: CP length of the maximum SCS on the carrier."
+              ]
+            },
+            {
+              "table_id": "7.6.8-2",
+              "title": "Maximum receive timing difference requirement for multi-TRPs with two TAs for UE capable of *rxTimingDiff-r18*",
+              "columns": [
+                "Frequency Range of the pair of carriers",
+                "Maximum receive timing difference (µs)"
+              ],
+              "rows": [
+                [
+                  "FR1",
+                  "33"
+                ],
+                [
+                  "FR2-1",
+                  "8"
+                ]
+              ]
+            },
+            {
+              "table_id": "7.6.8-3",
+              "title": "Maximum receive timing difference requirement for UE supporting multi-RX",
+              "columns": [
+                "Frequency Range",
+                "Maximum receive timing difference"
+              ],
+              "rows": [
+                [
+                  "FR2-1",
+                  "CP length"
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "clause_id": "7.7",
+      "title": "deriveSSB-IndexFromCell tolerance",
+      "minimum_requirements": {
+        "enabled": {
+          "text": "When *deriveSSB-IndexFromCell* is enabled, the UE assumes frame boundary alignment (including half frame, subframe and slot boundary alignment) across cells on the same frequency carrier is within a tolerance not worse than:",
+          "conditions": [
+            "min (2 SSB symbols, 1 PDSCH symbol) for sub-carrier spacings of SSB and PDSCH up to 240 kHz",
+            "min (3 SSB symbols, NPDSCH PDSCH symbols) for sub-carrier spacing of 480 kHz and 960 kHz of either SSB or PDSCH where NPDSCH is defined in table 7.7.1-1"
+          ],
+          "tables": [
+            {
+              "table_id": "7.7.1-1",
+              "title": "NPDSCH when deriveSSB-IndexFromCell is enabled",
+              "columns": [
+                "SSB SCS (kHz)",
+                "PDSCH SCS (kHz)",
+                "NPDSCH"
+              ],
+              "rows": [
+                [
+                  "120",
+                  "480",
+                  "3"
+                ],
+                [
+                  "120",
+                  "960",
+                  "6"
+                ],
+                [
+                  "480",
+                  "120",
+                  "1"
+                ],
+                [
+                  "480",
+                  "480",
+                  "3"
+                ],
+                [
+                  "480",
+                  "960",
+                  "6"
+                ],
+                [
+                  "960",
+                  "120",
+                  "1"
+                ],
+                [
+                  "960",
+                  "480",
+                  "2"
+                ],
+                [
+                  "960",
+                  "960",
+                  "3"
+                ]
+              ]
+            }
+          ]
+        },
+        "disabled": {
+          "text": "When *deriveSSB-IndexFromCell* is not enabled, the UE assumes frame boundary alignment (including half frame, subframe and slot boundary alignment) across cells on the same frequency carrier is within a tolerance not worse than 6 SSB symbols for sub-carrier spacing of 960 kHz and the SFNs of all cells on the same frequency carrier are the same."
+        }
+      }
+    },
+    {
+      "clause_id": "7.7A",
+      "title": "deriveSSB-IndexFromCell tolerance for RedCap",
+      "minimum_requirements": {
+        "enabled": {
+          "text": "When *deriveSSB-IndexFromCell* is enabled, the RedCap UE assumes frame boundary alignment (including half frame, subframe and slot boundary alignment) across cells on the same frequency carrier is within a tolerance not worse than min(2 SSB symbols, 1 PDSCH symbol) and the SFNs of all cells on the same frequency carrier are the same."
+        }
+      }
+    },
+    {
+      "clause_id": "7.7D",
+      "title": "DeriveSSB-IndexFromCell tolerance for ATG",
+      "minimum_requirements": {
+        "enabled": {
+          "text": "When *deriveSSB-IndexFromCell* is enabled, the ATG UE assumes frame boundary alignment (including half frame, subframe and slot boundary alignment) across cells on the same frequency carrier is within a tolerance not worse than min(2 SSB symbols, 1 PDSCH symbol) and the SFNs of all cells on the same frequency carrier are the same."
+        },
+        "note": "UE does not expect the *deriveSSB-IndexFromCell* to be set as true when frame boundary across detectable cells on the same frequency carrier is larger than the minimum tolerance requirement."
+      }
+    },
+    {
+      "clause_id": "7.9",
+      "title": "deriveSSB-IndexFromCellInter-r17 tolerance",
+      "minimum_requirements": {
+        "enabled": {
+          "text": "When *deriveSSB-IndexFromCellInter-r17* is enabled, the UE assumes frame boundary alignment (including half frame, subframe and slot boundary alignment) across cells on the target carrier and reference cell is within a tolerance not worse than min(2 SSB symbols of target carrier, 1 PDSCH symbol of the reference cell) and the SFNs of all cells on the target carrier and reference cell are the same.",
+          "reference_cell": "The reference cell is the serving cell which is used for SSB indexes derivation as indicated via *deriveSSB-IndexFromCellInter-r17*."
+        }
+      }
+    },
+    {
+      "clause_id": "7.9D",
+      "title": "DeriveSSB-IndexFromCellInter-r17 tolerance for ATG",
+      "minimum_requirements": {
+        "enabled": {
+          "text": "When *deriveSSB-IndexFromCellInter-r17* is enabled, the ATG UE assumes frame boundary alignment (including half frame, subframe and slot boundary alignment) across cells on the target carrier and reference cell is within a tolerance not worse than min (2 SSB symbols of target carrier, 1 PDSCH symbol of the reference cell) and the SFNs of all cells on the target carrier and reference cell are the same.",
+          "reference_cell": "The reference cell is the serving cell which is used for SSB indexes derivation as indicated via *deriveSSB-IndexFromCellInter-r17*."
+        },
+        "note": "UE does not expect the *deriveSSB-IndexFromCellInter-r17* to be set as true when frame boundary across detectable cells on the target carrier and reference cell is larger than the minimum tolerance requirement."
+      }
+    }
+  ]
+}

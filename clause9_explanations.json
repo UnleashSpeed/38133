@@ -1,0 +1,156 @@
+{
+  "document_metadata": {
+    "source": "3GPP TS 38.133 Clause 9 - Measurement Procedure",
+    "version": "Release 18",
+    "generated_date": "2025",
+    "target_audience": "3GPP researchers, RAN4 delegates, RRM standardization experts"
+  },
+  "sections": [
+    {
+      "clause_id": "9.1.2",
+      "title": "Measurement Gap Patterns (MGL, MGRP Configurations)",
+      "expert_technical_overview": "\nThe measurement gap framework in NR represents a fundamental engineering trade-off between measurement capability and user plane throughput. The 26 gap patterns defined in Table 9.1.2-1 provide a structured approach to allocating UE receiver resources for inter-frequency and inter-RAT measurements while maintaining service continuity. The design philosophy centers on three orthogonal dimensions: gap duration (MGL from 1.5ms to 20ms), repetition periodicity (MGRP from 20ms to 160ms), and the resulting duty cycle (MGL/MGRP ratio from 1.25% to 30%).\n\nFrom an RF system design perspective, the MGL must accommodate the worst-case SSB burst duration across all supported numerologies (15/30/60/120/240 kHz SCS), including RF retuning time between serving and target frequencies. The MGRP selection directly impacts measurement latency versus throughput degradation—shorter MGRP enables faster cell identification at the cost of higher throughput penalty. The introduction of patterns #20-23 (1.5ms MGL) and patterns #24-25 (10ms/20ms extended MGL for positioning) reflects the evolution toward positioning-centric requirements in Release 16+.\n\nThe per-UE versus per-FR gap applicability (Tables 9.1.2-2 and 9.1.2-3) addresses the critical challenge of FR1-FR2 carrier aggregation scenarios. Per-FR gaps enable parallel measurement activities in one frequency range while maintaining full service capability in the other, a necessity for high-bandwidth FR2 deployments where continuous transmission is essential for beam management and link maintenance.\n            ",
+      "detailed_analysis": "\nThe gap pattern selection algorithm must consider multiple constraints: (1) SSB periodicity on target carriers (typically 5ms or 10ms for initial access), (2) SMTC configuration alignment to maximize SSB capture probability within gaps, (3) DRX cycle synchronization to avoid exacerbating paging/PSM latency, and (4) coexistence with SRS transmission and CSI reporting requirements. The interrupted slot calculations in Tables 9.1.2-4 through 9.1.2-4b quantify the physical layer impact, accounting for synchronous versus asynchronous EN-DC configurations and FR2-specific considerations where slot aggregation and mini-slot structures affect the effective gap utilization.\n\nPattern #0 (6ms/40ms) and #1 (6ms/80ms) remain the baseline configurations for E-UTRAN inter-RAT measurements due to backward compatibility requirements. The 6ms MGL accommodates the 5ms E-UTRAN PSS/SSS periodicity plus retuning margin. Patterns #4 (6ms/20ms) and #6-10 (4ms/20-160ms) target NR inter-frequency scenarios with shorter SSB bursts. The 5.5ms and 3.5ms patterns (#12-19) provide granularity for specific SCS combinations where the standard 6ms/3ms boundaries are suboptimal.\n\nThe extended patterns #24 (10ms/80ms) and #25 (20ms/160ms) serve positioning use cases requiring PRS burst reception. The 20ms MGL in pattern #25 can capture complete PRS positioning occasions spanning multiple slots, critical for multi-RTT and DL-AoD positioning methods. These patterns are restricted to positioning measurement periods to prevent undue throughput impact during normal operation.\n\nThe gap timing advance mechanism (configured via measGapTimingAdvance in TS 38.331) allows network-controlled alignment of gap occurrences with SSB/SMTC windows, reducing the required MGL by eliminating timing uncertainty margins. This is particularly valuable for high-velocity scenarios where Doppler spread and channel coherence time constraints demand rapid measurement acquisition.\n            ",
+      "key_parameters": {
+        "MGL_range_ms": "1.5 - 20 ms",
+        "MGRP_range_ms": "20 - 160 ms (standard), up to 2560 ms (MUSIM)",
+        "duty_cycle_range_percent": "1.25% - 30%",
+        "baseline_patterns": {
+          "E-UTRAN_inter_RAT": "#0 (6ms/40ms), #1 (6ms/80ms)",
+          "NR_inter_frequency": "#4 (6ms/20ms), #6-10 (4ms variants)",
+          "positioning": "#24 (10ms/80ms), #25 (20ms/160ms)"
+        },
+        "per_FR_gap_applicability": {
+          "FR1": "Independent gap configuration possible",
+          "FR2": "Independent gap configuration mandatory for CA"
+        },
+        "interrupted_slots_FR1_sync": "Depends on SCS and gap offset alignment",
+        "interrupted_slots_FR2": "Account for beam switching and TDD-UL-DL configuration"
+      },
+      "cross_references": [
+        "TS 38.331 (gap configuration)",
+        "TS 38.321 (MAC layer impacts)",
+        "Clause 9.1.5 (CSSF scaling)",
+        "Clause 9.2.6/9.3.4 (measurement with gaps)"
+      ]
+    },
+    {
+      "clause_id": "9.1.2.1/1a/1b/1c",
+      "title": "Measurement Gap Sharing Schemes (Kintra, Kinter Calculations)",
+      "expert_technical_overview": "\nMeasurement gap sharing represents a sophisticated resource multiplexing mechanism enabling simultaneous intra-frequency and inter-frequency/inter-RAT measurements within a single gap pattern. The fundamental insight is that not all gaps need to be dedicated to a single measurement type—by intelligently partitioning gap resources, the UE can maintain intra-frequency measurement continuity (critical for serving cell tracking and beam management) while performing inter-frequency discovery. The parameter X defines the percentage allocation, with the remaining (100-X)% allocated to inter-frequency activities.\n\nThe scaling factors Kintra and Kinter derived from X implement the mathematical transformation from percentage allocation to time dilation factors. Kintra = 100/X represents the effective slowdown for intra-frequency measurements when gaps are shared, while Kinter = 100/(100-X) represents the corresponding factor for inter-frequency measurements. This formulation ensures that the aggregate measurement capability remains bounded—when X=50%, both measurement types experience a 2x time dilation, maintaining fairness while doubling the total measurement latency for each type.\n\nThe four sharing schemes ('00' equal splitting, '01' 25%, '10' 50%, '11' 75%) provide network-controlled flexibility to prioritize either mobility robustness (higher X favors intra-frequency tracking) or inter-frequency discovery (lower X favors neighbor cell detection). Equal splitting ('00') represents a balanced approach where the UE autonomously determines the allocation based on internal scheduling algorithms, subject to the constraint that both measurement types receive non-zero resources.\n            ",
+      "detailed_analysis": "\nThe gap sharing implementation requires careful coordination with the CSSF calculations in clause 9.1.5.2. For equal sharing schemes, the CSSFwithin_gap,i formula uses max_j(⌈Ri × Mtot,i,j⌉), treating all measurement objects uniformly. For non-equal sharing, the formulas bifurcate based on measurement object type—intra-frequency objects scale by Kintra × Mintra,i,j while inter-frequency objects scale by Kinter × Minter,i,j. The conditional logic (if Minter/Mintra ≠ 0) handles edge cases where only one measurement type is configured.\n\nThe EN-DC, SA, NE-DC, and NR-DC variants (clauses 9.1.2.1 through 9.1.2.1c) maintain consistent mathematical formulations while adapting to the specific carrier aggregation and dual connectivity constraints of each architecture. NE-DC and NR-DC introduce the concept of Group A (intra-frequency across both FR1 and FR2) and Group B (inter-frequency, inter-RAT, and positioning) measurements, reflecting the increased complexity of multi-RAT scenarios.\n\nFrom an implementation perspective, the UE must maintain separate measurement state machines for intra-frequency and inter-frequency activities, with gap allocation decisions made at each MGRP boundary. The 160ms reference window in the CSSF formulas (j=0…(160/MGRP)-1) ensures that gap sharing decisions are evaluated across a sufficiently long horizon to capture the statistical multiplexing benefits. For MGRP=40ms, this yields 4 gap positions per evaluation window; for MGRP=160ms, only a single gap position is evaluated.\n\nThe gap sharing efficiency depends critically on the alignment between gap occurrences and SMTC windows. When gaps are poorly aligned with target SSB transmissions, the effective utilization drops, and the scaling factors may need dynamic adjustment. The network can influence this alignment through measGapSharingScheme configuration and SMTC period selection.\n            ",
+      "key_parameters": {
+        "sharing_schemes": {
+          "'00'": "Equal splitting (UE autonomous)",
+          "'01'": "25% intra-frequency / 75% inter-frequency",
+          "'10'": "50% intra-frequency / 50% inter-frequency",
+          "'11'": "75% intra-frequency / 25% inter-frequency"
+        },
+        "formulas": {
+          "Kintra": "100 / X (where X is the percentage allocated to intra-frequency)",
+          "Kinter": "100 / (100 - X)"
+        },
+        "scaling_factor_values": {
+          "X=25%": "Kintra=4, Kinter=1.33",
+          "X=50%": "Kintra=2, Kinter=2",
+          "X=75%": "Kintra=1.33, Kinter=4"
+        },
+        "CSSF_integration": "Non-equal sharing applies Kintra/Kinter to Mintra/Minter in CSSFwithin_gap calculation",
+        "evaluation_window": "160ms reference window for gap position evaluation"
+      },
+      "cross_references": [
+        "Clause 9.1.5.2 (CSSF within gaps)",
+        "Clause 9.2.6 (intra-frequency with gaps)",
+        "Clause 9.3.4 (inter-frequency with gaps)"
+      ]
+    },
+    {
+      "clause_id": "9.1.5",
+      "title": "Carrier-Specific Scaling Factors (CSSF Formulas)",
+      "expert_technical_overview": "\nCarrier-Specific Scaling Factors (CSSF) constitute the mathematical foundation for UE measurement capability allocation in multi-carrier scenarios. The CSSF framework quantifies the measurement time dilation experienced by each measurement object as a function of the total measurement load, enabling precise latency calculations while ensuring UE implementability. The core insight is that measurement resources are finite—each additional carrier or beam measurement consumes RF and baseband processing capacity that must be accounted for through proportional time scaling.\n\nThe CSSF architecture bifurcates into two domains: CSSFoutside_gap for measurements performed during normal operation (intra-frequency without gaps, inter-frequency without gaps when SSB is within active BWP) and CSSFwithin_gap for measurements performed during configured gaps. This separation reflects the fundamentally different resource constraints—in-gap measurements are limited by gap density and duration, while outside-gap measurements contend with data traffic scheduling and DRX cycles.\n\nThe general CSSFoutside_gap formula sums contributions from SSB-based measurements (NSSB,k,j), CSI-RS-based measurements (NCSI-RS,m,j), RSSI measurements (NRSSI,n,j), and L1-RSRP measurements (NL1-RSRP,l,j) across all configured carriers and beams. The double summation structure (∑j∑k) captures both inter-carrier and intra-carrier multiplicity, acknowledging that modern NR deployments may configure multiple SSB beams per carrier for coverage enhancement and mobility robustness.\n            ",
+      "detailed_analysis": "\nThe per-FR gap UE simplification (CSSFoutside_gap,i = 2 × Nwith_CSI-RS + NSSB_only + NL1_SSB for SA mode) reflects the empirical observation that CSI-RS-based measurements require approximately twice the processing resources of SSB-based measurements due to higher port count, denser RE mapping, and more sophisticated channel estimation algorithms. The NL1_SSB term accounts for FR2-specific L1-RSRP measurements that demand rapid beam sweeping and high-resolution timing acquisition.\n\nThe CSSFwithin_gap formulas introduce the critical concept of gap utilization efficiency through the Ri parameter—the maximal ratio of measurement gaps where object i is a candidate. Ri captures the SMTC-to-gap alignment probability; when SMTC period equals MGRP and timing is optimally aligned, Ri approaches 1.0, yielding minimal CSSF. When alignment is poor, Ri decreases, forcing higher CSSF values to maintain measurement reliability.\n\nThe equal sharing CSSFwithin_gap formula (max_j(⌈Ri × Mtot,i,j⌉)) computes the worst-case gap loading across all positions in the 160ms evaluation window. This max-j formulation ensures that measurement latency requirements are met even when gaps are unevenly loaded due to SMTC misalignment or DRX cycle interactions. The ceiling operator (⌈⌉) acknowledges the discrete nature of measurement scheduling—partial measurement opportunities cannot be utilized.\n\nFor non-equal sharing schemes, the CSSF formulas bifurcate based on measurement type, applying Kintra or Kinter scaling to the respective Mtot components. The conditional structure (if Minter/Mintra ≠ 0) handles the degenerate cases where only one measurement category is active, avoiding unnecessary scaling. This design ensures backward compatibility—when only intra-frequency measurements are configured, the CSSF reduces to the standard outside-gap formulation regardless of sharing scheme configuration.\n\nThe NCSG-specific CSSF formulas (clause 9.1.5.3) adapt the framework for Network Controlled Small Gaps, substituting VIRP for MGRP and removing the Ri factor due to the autonomous gap scheduling nature of NCSG. The simplified formulas (max_j(Mtot,i,j)) reflect the more deterministic gap availability in NCSG mode.\n            ",
+      "key_parameters": {
+        "CSSF_components": {
+          "NSSB": "Number of SSB-based measurement objects",
+          "NCSI-RS": "Number of CSI-RS-based measurement objects (2x weighting)",
+          "NRSSI": "Number of RSSI measurement objects",
+          "NL1-RSRP": "Number of L1-RSRP measurement objects (FR2)"
+        },
+        "per_FR_gap_simplified": {
+          "EN-DC/NE-DC": "CSSF = 2 × Nwith_CSI-RS + NSSB_only",
+          "SA/NR-DC": "CSSF = 2 × Nwith_CSI-RS + NSSB_only + NL1_SSB"
+        },
+        "within_gap_equal_sharing": "CSSFwithin_gap,i = max_j(⌈Ri × Mtot,i,j⌉), j=0…(160/MGRP)-1",
+        "within_gap_non_equal_intra": "CSSF = max{⌈Ri × Kintra × Mintra⌉ if Minter≠0, ⌈Ri × Mintra⌉ if Minter=0}",
+        "within_gap_non_equal_inter": "CSSF = max{⌈Ri × Kinter × Minter⌉ if Mintra≠0, ⌈Ri × Minter⌉ if Mintra=0}",
+        "Ri_definition": "Maximal ratio of measurement gaps where object i is candidate (SMTC alignment factor)",
+        "Mtot_definition": "Mintra + Minter (total measurement objects in gap j)"
+      },
+      "cross_references": [
+        "Clause 9.1.2.1 (gap sharing schemes)",
+        "Clause 9.2.5/9.2.6 (intra-frequency measurement periods)",
+        "Clause 9.3.4 (inter-frequency measurement periods)",
+        "Clause 9.1.9 (NCSG)"
+      ]
+    },
+    {
+      "clause_id": "9.2",
+      "title": "Intra-frequency Measurements (Cell Identification Periods)",
+      "expert_technical_overview": "\nIntra-frequency measurements form the foundation of NR mobility management, enabling the UE to maintain awareness of neighboring cells on the same carrier frequency as the serving cell. The measurement architecture distinguishes between two fundamental scenarios: measurements without gaps (when SSB is contained within the active BWP or UE indicates no-gap capability) and measurements with gaps (when BWP switching or RF limitations require dedicated measurement windows). This dichotomy reflects the NR design principle of minimizing service interruption while ensuring robust mobility.\n\nThe cell identification process comprises three sequential phases: PSS/SSS synchronization (achieving time/frequency alignment with target cell), SSB measurement period (collecting sufficient SS-RSRP/SS-RSRQ/SS-SINR samples for reliable reporting), and optional time index detection (determining the SSB index within the burst set for beam identification). The total identification time is the sum of these components, with each phase subject to independent scaling factors.\n\nThe FR1 versus FR2 distinction acknowledges the fundamental differences in beam management requirements. FR1 deployments typically use single-beam or few-beam configurations where cell identification focuses on PCI detection and basic RSRP measurement. FR2 deployments mandate beam sweeping with up to 64 SSB beams, requiring extended measurement periods to capture sufficient beams for reliable cell detection and handover preparation. The Klayer1_measurement factor in FR2 formulas accounts for this beam dimension expansion.\n            ",
+      "detailed_analysis": "\nThe PSS/SSS synchronization time formulas incorporate multiple scaling dimensions: Kp for concurrent gap handling (Ntotal/Navailable), KFR for FR2-specific processing (typically 2-4 depending on beam count), and M coefficients (Mpss/sss_sync) that capture the base processing requirements. The max(600ms, …) formulation ensures a minimum synchronization time regardless of SMTC period, acknowledging that initial cell detection requires accumulating sufficient correlation statistics across fading channel realizations.\n\nFor FR1 without gaps and no DRX, the PSS/SSS sync time is max(600ms, ⌈5×Kp⌉ × SMTC period) × CSSFintra. The 5×SMTC multiplier derives from the requirement to detect PSS/SSS with 99% reliability under typical channel conditions (Annex B.2.2 side conditions: SSB_RP ≥ -127dBm, SSB Es/Iot ≥ -6dB). The CSSFintra scaling (typically 1-4 depending on concurrent measurement load) ensures that measurement resources are fairly distributed across all configured carriers.\n\nThe SSB measurement period formulas follow similar structure but with reduced base multipliers (5× for FR1, Mmeas_period for FR2) reflecting the lower reliability requirements for measurement reporting versus initial detection. The measurement period must accumulate sufficient samples for layer 3 filtering (typically 200ms filter time constant) while accounting for SMTC periodicity and DRX cycle alignment.\n\nTime index detection (TSSB_time_index_intra) is required when the UE cannot determine the SSB index from PSS/SSS timing alone, typically in asynchronous deployments or when SSB bursts from multiple cells overlap. The additional time scales with the number of SSB positions in the burst set (L=4, 8, or 64 depending on SCS and frequency range) and the SMTC period.\n\nThe gap-based intra-frequency measurements (clause 9.2.6) introduce Kgap scaling (Ntotal/Navailable for gap utilization) and max(MGRP, SMTC period) terms to account for the discrete nature of gap-based sampling. When MGRP exceeds SMTC period, the effective measurement rate is limited by gap availability rather than SSB periodicity, fundamentally altering the latency-throughput trade-off.\n            ",
+      "key_parameters": {
+        "cell_identification_formula_no_index": "Tidentify_intra = TPSS/SSS_sync + TSSB_measurement_period",
+        "cell_identification_formula_with_index": "Tidentify_intra = TPSS/SSS_sync + TSSB_measurement_period + TSSB_time_index",
+        "PSS_SSS_sync_FR1_no_DRX": "max(600ms, ⌈5×Kp⌉ × SMTC) × CSSFintra",
+        "PSS_SSS_sync_FR1_DRX_≤320ms": "max(600ms, ⌈M2×5×Kp⌉ × max(SMTC, DRX)) × CSSFintra",
+        "PSS_SSS_sync_FR2_no_DRX": "max(600ms, ⌈Mpss/sss_sync×KFR×Kp×Klayer1⌉ × SMTC) × CSSFintra",
+        "measurement_period_FR1_no_DRX": "max(200ms, ⌈5×Kp⌉ × SMTC) × CSSFintra",
+        "measurement_period_FR2_no_DRX": "max(400ms, ⌈Mmeas×Kp×Klayer1⌉ × SMTC) × CSSFintra",
+        "Kp_definition": "Ntotal / Navailable (concurrent gap scaling)",
+        "KFR_typical": "2-4 depending on FR2 beam configuration",
+        "CSSFintra_range": "1-8 depending on concurrent measurement load",
+        "FR1_capacity": "8 identified cells, 14 SSBs per layer",
+        "FR2_capacity": "6 identified cells, 24 SSBs per layer"
+      },
+      "cross_references": [
+        "Clause 9.2.5 (without gaps)",
+        "Clause 9.2.6 (with gaps)",
+        "Clause 9.1.5 (CSSF)",
+        "Annex B.2.2 (side conditions)"
+      ]
+    },
+    {
+      "clause_id": "9.3",
+      "title": "Inter-frequency Measurements (With/Without Gaps)",
+      "expert_technical_overview": "\nInter-frequency measurements enable mobility between distinct carrier frequencies, a critical capability for load balancing, coverage extension, and inter-band handover. The fundamental challenge is that NR UEs typically cannot receive on two different frequencies simultaneously without dual receivers, necessitating either measurement gaps (time-division multiplexing) or autonomous gap scheduling (interleaving measurements during natural transmission gaps). The with-gap versus without-gap decision depends on UE capability, frequency separation, and active BWP configuration.\n\nThe gap-based inter-frequency measurement architecture (clause 9.3.4) parallels intra-frequency measurements but with additional complexity from RF retuning requirements. The PSS/SSS synchronization must occur within the constrained MGL window, with Kgap scaling accounting for the reduced measurement opportunity density. The inter-frequency formulas emphasize the max(MGRP, SMTC period) term, reflecting that gap periodicity often dominates measurement latency when MGRP exceeds target SSB periodicity.\n\nThe without-gap inter-frequency measurements (clause 9.3.6) exploit UE capabilities for autonomous measurement scheduling during transmission gaps—either natural gaps in TDD UL/DL configuration or gaps created through DRX/PSM operation. This mode requires the UE to predict and utilize available measurement windows without network-configured gaps, reducing throughput impact but potentially increasing measurement latency due to scheduling uncertainty.\n            ",
+      "detailed_analysis": "\nThe inter-frequency cell identification formulas mirror intra-frequency structure but with inter-specific scaling factors. The base identification time TBasic captures the fundamental processing requirements for PSS/SSS detection on an unknown carrier, while Kgap and CSSFinter provide the scenario-specific scaling. The TInter1 divisor (typically 1.0 for standard scenarios, higher for high-speed or challenging channel conditions) allows acceleration under favorable conditions.\n\nFor gap-based inter-frequency measurements, the critical design parameter is the MGL-to-SSB-duration matching. A 6ms MGL can accommodate a complete 4-beam SSB burst at 15kHz SCS (burst duration ~4.6ms including retuning), but may truncate 8-beam or 64-beam bursts. The UE must implement intelligent partial burst processing, accumulating SSB samples across multiple gaps to achieve reliable detection. This is captured in the Mpss/sss_sync coefficients, which increase for longer SSB bursts.\n\nThe FR2 inter-frequency measurements introduce beam recovery considerations. When the UE switches to a target FR2 frequency for measurement, it must re-establish beam alignment through a new beam sweep, potentially requiring multiple gap occurrences to capture sufficient beams. The Klayer1_measurement factor (typically 2-4) accounts for this beam dimension expansion.\n\nThe without-gap inter-frequency mode (clause 9.3.6) requires careful coordination with MAC layer scheduling. The UE must predict available measurement windows based on: (1) TDD UL/DL configuration (DL-heavy configurations provide more measurement opportunities), (2) DRX cycle phase (measurements during DRX OFF periods), (3) HARQ retransmission schedule (avoiding measurement during pending UL HARQ), and (4) SRS/CSI reporting obligations. The CSSFinter scaling is typically higher in without-gap mode due to this scheduling uncertainty.\n\nThe high-speed measurement variants (clauses 9.3.5, 9.3.7) adapt inter-frequency requirements for scenarios above 120km/h. The primary adaptation is reduced measurement period requirements, acknowledging that high-velocity UEs experience faster channel variation and require more frequent measurement updates for reliable handover decisions. The highSpeedMeasFlag-r16 configuration triggers these relaxed requirements.\n            ",
+      "key_parameters": {
+        "cell_identification_inter_with_gaps": "Tidentify_inter = TPSS/SSS_sync + TSSB_measurement_period [+ TSSB_time_index]",
+        "PSS_SSS_sync_FR1_gaps_no_DRX": "max(600ms, 5×Kgap×max(MGRP, SMTC)) × CSSFinter",
+        "PSS_SSS_sync_FR2_gaps_no_DRX": "max(600ms, Mpss/sss_sync×KFR×Kgap×max(MGRP, SMTC)) × CSSFinter",
+        "cell_identification_inter_without_gaps": "Tidentify_inter = (TBasic × Kp × CSSFinter) / TInter1 ms",
+        "Kgap_definition": "Ntotal / Navailable (gap utilization ratio)",
+        "CSSFinter": "CSSFwithin_gap,i for gap-based, CSSFoutside_gap,i for without-gap",
+        "FR1_capacity": "8 identified cells, 14 SSBs per layer",
+        "FR2_capacity": "6 identified cells, 24 SSBs per layer",
+        "high_speed_trigger": "highSpeedMeasFlag-r16 for >120km/h scenarios",
+        "MGRP_SMTC_matching": "Optimal when MGRP = SMTC period or integer multiple"
+      },
+      "cross_references": [
+        "Clause 9.3.4 (with gaps)",
+        "Clause 9.3.5 (high-speed with gaps)",
+        "Clause 9.3.6 (without gaps)",
+        "Clause 9.3.7 (with NCSG)",
+        "Clause 9.1.2 (gap patterns)"
+      ]
+    }
+  ],
+  "measurement_gap_design_philosophy": {
+    "title": "Measurement Gap Design Philosophy",
+    "explanation": "\nThe NR measurement gap framework embodies a fundamental tension between mobility robustness and user experience. The design philosophy centers on graceful degradation—providing a continuum of gap configurations that allow network operators to tune the mobility-throughput trade-off based on deployment characteristics and service requirements.\n\nThe three-dimensional gap design space (MGL × MGRP × Pattern ID) enables precise matching to target carrier characteristics. Short MGL (1.5-3ms) minimizes throughput impact for carriers with brief SSB bursts, while extended MGL (10-20ms) accommodates positioning PRS bursts and dense SSB configurations. The MGRP dimension controls measurement latency—shorter periods enable rapid handover preparation but increase duty cycle penalty.\n\nThe per-FR gap capability addresses the unique requirements of FR2 deployments, where continuous transmission is essential for beam tracking and link maintenance. By allowing independent FR1 and FR2 gap configurations, the framework enables parallel measurement activities without sacrificing FR2 service continuity.\n\nThe gap sharing mechanism (Kintra/Kinter) introduces intelligent multiplexing, recognizing that intra-frequency measurements (serving cell tracking) and inter-frequency measurements (neighbor discovery) have different latency requirements and can coexist within the same gap resources. The X parameter provides network-controlled prioritization.\n        "
+  },
+  "cssf_scaling_rationale": {
+    "title": "CSSF Scaling Rationale",
+    "explanation": "\nThe Carrier-Specific Scaling Factor framework implements a proportional fairness algorithm for UE measurement resources. The fundamental principle is that measurement latency should scale linearly with measurement load—doubling the number of carriers should double the measurement period, maintaining constant per-carrier processing resources.\n\nThe 2× weighting for CSI-RS measurements reflects empirical observations from UE implementations. CSI-RS processing requires: (1) higher-resolution channel estimation due to denser RE mapping, (2) multi-port combining for beamforming gain estimation, (3) interference suppression for RSRQ/SINR calculation, and (4) more complex timing/frequency tracking due to sparser transmission. The 2× factor represents the aggregate processing burden relative to SSB-based measurements.\n\nThe Ri parameter in within-gap CSSF captures the statistical nature of gap-to-SMTC alignment. When SMTC period equals MGRP, perfect alignment yields Ri=1.0 (every gap usable), while worst-case misalignment yields Ri=0.5 (every other gap usable on average). The max-j formulation ensures requirements are met under worst-case alignment within the 160ms evaluation window.\n\nThe conditional logic in non-equal sharing CSSF (if Minter/Mintra ≠ 0) implements a critical optimization: when only one measurement type is active, no sharing penalty applies. This ensures that single-purpose measurement configurations achieve optimal latency, while mixed configurations fairly distribute the gap resource burden.\n        "
+  }
+}

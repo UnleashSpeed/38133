@@ -1,0 +1,1988 @@
+{
+  "document_info": {
+    "source": "3GPP TS 38.133 Clause 9 - Measurement Procedure",
+    "version": "Release 18",
+    "parsed_date": "2025"
+  },
+  "clause_9": {
+    "clause_id": "9",
+    "title": "Measurement Procedure",
+    "sections": [
+      {
+        "clause_id": "9.1",
+        "title": "General measurement requirement",
+        "subsections": [
+          {
+            "clause_id": "9.1.1",
+            "title": "Introduction",
+            "requirements": [
+              "Requirements on UE regarding measurement reporting in RRC_CONNECTED state",
+              "Requirements split into intra-frequency, inter-frequency, inter-RAT E-UTRAN FDD/TDD, and L1-RSRP measurements",
+              "Measurement quantities defined in TS 38.215",
+              "Measurement model defined in TS 38.300, TS 37.340",
+              "Measurement accuracies specified in clause 10",
+              "Control of measurement reporting in TS 38.331"
+            ],
+            "notes": [
+              "UE shall perform RRM measurements when provided with IDC solution",
+              "Exceptions for side conditions apply for CA-capable UE per Annex B"
+            ],
+            "cross_references": [
+              "TS 38.215",
+              "TS 38.300",
+              "TS 37.340",
+              "TS 38.331",
+              "clause 10",
+              "Annex B"
+            ]
+          },
+          {
+            "clause_id": "9.1.2",
+            "title": "Measurement gap",
+            "description": "UE requirements for measurement gaps to identify and measure cells",
+            "tables": [
+              {
+                "table_id": "9.1.2-1",
+                "title": "Gap Pattern Configurations",
+                "columns": [
+                  "Gap Pattern Id",
+                  "Measurement Gap Length (MGL, ms)",
+                  "Measurement Gap Repetition Period (MGRP, ms)"
+                ],
+                "rows": [
+                  {
+                    "gap_pattern_id": 0,
+                    "mgl_ms": 6,
+                    "mgrp_ms": 40
+                  },
+                  {
+                    "gap_pattern_id": 1,
+                    "mgl_ms": 6,
+                    "mgrp_ms": 80
+                  },
+                  {
+                    "gap_pattern_id": 2,
+                    "mgl_ms": 3,
+                    "mgrp_ms": 40
+                  },
+                  {
+                    "gap_pattern_id": 3,
+                    "mgl_ms": 3,
+                    "mgrp_ms": 80
+                  },
+                  {
+                    "gap_pattern_id": 4,
+                    "mgl_ms": 6,
+                    "mgrp_ms": 20
+                  },
+                  {
+                    "gap_pattern_id": 5,
+                    "mgl_ms": 6,
+                    "mgrp_ms": 160
+                  },
+                  {
+                    "gap_pattern_id": 6,
+                    "mgl_ms": 4,
+                    "mgrp_ms": 20
+                  },
+                  {
+                    "gap_pattern_id": 7,
+                    "mgl_ms": 4,
+                    "mgrp_ms": 40
+                  },
+                  {
+                    "gap_pattern_id": 8,
+                    "mgl_ms": 4,
+                    "mgrp_ms": 80
+                  },
+                  {
+                    "gap_pattern_id": 9,
+                    "mgl_ms": 4,
+                    "mgrp_ms": 160
+                  },
+                  {
+                    "gap_pattern_id": 10,
+                    "mgl_ms": 3,
+                    "mgrp_ms": 20
+                  },
+                  {
+                    "gap_pattern_id": 11,
+                    "mgl_ms": 3,
+                    "mgrp_ms": 160
+                  },
+                  {
+                    "gap_pattern_id": 12,
+                    "mgl_ms": 5.5,
+                    "mgrp_ms": 20
+                  },
+                  {
+                    "gap_pattern_id": 13,
+                    "mgl_ms": 5.5,
+                    "mgrp_ms": 40
+                  },
+                  {
+                    "gap_pattern_id": 14,
+                    "mgl_ms": 5.5,
+                    "mgrp_ms": 80
+                  },
+                  {
+                    "gap_pattern_id": 15,
+                    "mgl_ms": 5.5,
+                    "mgrp_ms": 160
+                  },
+                  {
+                    "gap_pattern_id": 16,
+                    "mgl_ms": 3.5,
+                    "mgrp_ms": 20
+                  },
+                  {
+                    "gap_pattern_id": 17,
+                    "mgl_ms": 3.5,
+                    "mgrp_ms": 40
+                  },
+                  {
+                    "gap_pattern_id": 18,
+                    "mgl_ms": 3.5,
+                    "mgrp_ms": 80
+                  },
+                  {
+                    "gap_pattern_id": 19,
+                    "mgl_ms": 3.5,
+                    "mgrp_ms": 160
+                  },
+                  {
+                    "gap_pattern_id": 20,
+                    "mgl_ms": 1.5,
+                    "mgrp_ms": 20
+                  },
+                  {
+                    "gap_pattern_id": 21,
+                    "mgl_ms": 1.5,
+                    "mgrp_ms": 40
+                  },
+                  {
+                    "gap_pattern_id": 22,
+                    "mgl_ms": 1.5,
+                    "mgrp_ms": 80
+                  },
+                  {
+                    "gap_pattern_id": 23,
+                    "mgl_ms": 1.5,
+                    "mgrp_ms": 160
+                  },
+                  {
+                    "gap_pattern_id": 24,
+                    "mgl_ms": 10,
+                    "mgrp_ms": 80
+                  },
+                  {
+                    "gap_pattern_id": 25,
+                    "mgl_ms": 20,
+                    "mgrp_ms": 160
+                  }
+                ]
+              },
+              {
+                "table_id": "9.1.2-2",
+                "title": "Applicability for Gap Pattern Configurations supported by the E-UTRA-NR dual connectivity UE or NR-E-UTRA dual connectivity UE",
+                "description": "Per-UE and Per-FR measurement gap applicability for EN-DC and NE-DC"
+              },
+              {
+                "table_id": "9.1.2-3",
+                "title": "Applicability for Gap Pattern Configurations supported by the UE with NR standalone operation",
+                "description": "Per-UE and Per-FR measurement gap applicability for SA NR"
+              },
+              {
+                "table_id": "9.1.2-4",
+                "title": "Total number of interrupted slots on all serving cells during MGL for Synchronous EN-DC, NR standalone operation and NE-DC",
+                "description": "Interrupted slots for per-UE measurement gap or per-FR measurement gap for FR1"
+              },
+              {
+                "table_id": "9.1.2-4a",
+                "title": "Total number of interrupted slots on serving cells during MGL for Asynchronous EN-DC",
+                "description": "Interrupted slots for asynchronous configurations"
+              },
+              {
+                "table_id": "9.1.2-4b",
+                "title": "Total number of interrupted slots on FR2 serving cells during MGL for EN-DC, NR standalone operation and NE-DC",
+                "description": "Interrupted slots for per-UE measurement gap or per-FR measurement gap for FR2"
+              }
+            ],
+            "requirements": [
+              "UE determines measurement gap timing based on gap offset configuration and measurement gap timing advance configuration",
+              "During per-UE measurement gaps, UE is not required to conduct reception/transmission from/to serving cells except RRM measurement signals and random access signals",
+              "During per-FR measurement gaps, UE is not required to conduct reception/transmission from/to serving cells in the corresponding FR"
+            ],
+            "notes": [
+              "Measurement gap patterns #24 and #25 can only be used during positioning measurement period",
+              "Gap pattern #0 and #1 restrictions apply for GSM/UTRA inter-RAT measurements"
+            ],
+            "cross_references": [
+              "TS 38.331",
+              "TS 38.321",
+              "TS 36.331"
+            ],
+            "subsections": [
+              {
+                "clause_id": "9.1.2.1",
+                "title": "EN-DC: Measurement Gap Sharing",
+                "formulas": [
+                  {
+                    "description": "Kintra formula for gap sharing",
+                    "latex": "K_{intra} = \\frac{1}{X} \\times 100"
+                  },
+                  {
+                    "description": "Kinter formula for gap sharing",
+                    "latex": "K_{inter} = \\frac{1}{(100 - X)} \\times 100"
+                  }
+                ],
+                "tables": [
+                  {
+                    "table_id": "9.1.2.1-1",
+                    "title": "Value of parameter X for EN-DC measurement gap sharing",
+                    "rows": [
+                      {
+                        "measGapSharingScheme": "'00'",
+                        "value_of_X": "Equal splitting"
+                      },
+                      {
+                        "measGapSharingScheme": "'01'",
+                        "value_of_X": "25%"
+                      },
+                      {
+                        "measGapSharingScheme": "'10'",
+                        "value_of_X": "50%"
+                      },
+                      {
+                        "measGapSharingScheme": "'11'",
+                        "value_of_X": "75%"
+                      }
+                    ]
+                  }
+                ],
+                "cross_references": [
+                  "9.1.5.2.1"
+                ]
+              },
+              {
+                "clause_id": "9.1.2.1a",
+                "title": "SA: Measurement Gap Sharing",
+                "formulas": [
+                  {
+                    "description": "Kintra formula for gap sharing",
+                    "latex": "K_{intra} = \\frac{1}{X} \\times 100"
+                  },
+                  {
+                    "description": "Kinter formula for gap sharing",
+                    "latex": "K_{inter} = \\frac{1}{(100 - X)} \\times 100"
+                  }
+                ],
+                "tables": [
+                  {
+                    "table_id": "9.1.2.1a-1",
+                    "title": "Value of parameter X for SA measurement gap sharing",
+                    "rows": [
+                      {
+                        "measGapSharingScheme": "'00'",
+                        "value_of_X": "Equal splitting"
+                      },
+                      {
+                        "measGapSharingScheme": "'01'",
+                        "value_of_X": "25%"
+                      },
+                      {
+                        "measGapSharingScheme": "'10'",
+                        "value_of_X": "50%"
+                      },
+                      {
+                        "measGapSharingScheme": "'11'",
+                        "value_of_X": "75%"
+                      }
+                    ]
+                  }
+                ],
+                "cross_references": [
+                  "9.1.5.2.2"
+                ]
+              },
+              {
+                "clause_id": "9.1.2.1b",
+                "title": "NE-DC: Measurement Gap Sharing",
+                "formulas": [
+                  {
+                    "description": "Kintra formula for gap sharing",
+                    "latex": "K_{intra} = \\frac{1}{X} \\times 100"
+                  },
+                  {
+                    "description": "Kinter formula for gap sharing",
+                    "latex": "K_{inter} = \\frac{1}{(100 - X)} \\times 100"
+                  }
+                ],
+                "tables": [
+                  {
+                    "table_id": "9.1.2.1b-1",
+                    "title": "Value of parameter X for NE-DC measurement gap sharing",
+                    "rows": [
+                      {
+                        "measGapSharingScheme": "'00'",
+                        "value_of_X": "Equal splitting"
+                      },
+                      {
+                        "measGapSharingScheme": "'01'",
+                        "value_of_X": "25%"
+                      },
+                      {
+                        "measGapSharingScheme": "'10'",
+                        "value_of_X": "50%"
+                      },
+                      {
+                        "measGapSharingScheme": "'11'",
+                        "value_of_X": "75%"
+                      }
+                    ]
+                  }
+                ],
+                "cross_references": [
+                  "9.1.5.2.3"
+                ]
+              },
+              {
+                "clause_id": "9.1.2.1c",
+                "title": "NR-DC: Measurement Gap Sharing",
+                "formulas": [
+                  {
+                    "description": "Kintra formula for gap sharing",
+                    "latex": "K_{intra} = \\frac{1}{X} \\times 100"
+                  },
+                  {
+                    "description": "Kinter formula for gap sharing",
+                    "latex": "K_{inter} = \\frac{1}{(100 - X)} \\times 100"
+                  }
+                ],
+                "tables": [
+                  {
+                    "table_id": "9.1.2.1c-1",
+                    "title": "Value of parameter X for NR-DC measurement gap sharing",
+                    "rows": [
+                      {
+                        "measGapSharingScheme": "'00'",
+                        "value_of_X": "Equal splitting"
+                      },
+                      {
+                        "measGapSharingScheme": "'01'",
+                        "value_of_X": "25%"
+                      },
+                      {
+                        "measGapSharingScheme": "'10'",
+                        "value_of_X": "50%"
+                      },
+                      {
+                        "measGapSharingScheme": "'11'",
+                        "value_of_X": "75%"
+                      }
+                    ]
+                  }
+                ],
+                "cross_references": [
+                  "9.1.5.2.4"
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.1.3",
+            "title": "UE Measurement capability",
+            "subsections": [
+              {
+                "clause_id": "9.1.3.1",
+                "title": "EN-DC: Monitoring of multiple layers using gaps",
+                "formulas": [
+                  {
+                    "description": "Effective total number of frequencies for EN-DC",
+                    "latex": "N_{freq, EN-DC} = N_{freq, EN-DC, NR} + N_{freq, EN-DC, E-UTRA} + N_{freq, EN-DC, UTRA} + M_{EN-DC, GSM}"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.1.3.1a",
+                "title": "SA: Monitoring of multiple layers using gaps",
+                "formulas": [
+                  {
+                    "description": "Effective total number of frequencies for SA",
+                    "latex": "N_{freq, SA} = N_{freq, SA, NR} + N_{freq, SA, E-UTRA} + N_{freq, SA, UTRA}"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.1.3.1b",
+                "title": "NE-DC: Monitoring of multiple layers using gaps",
+                "formulas": [
+                  {
+                    "description": "Effective total number of frequencies for NE-DC",
+                    "latex": "N_{freq, NE-DC} = N_{freq, NE-DC, NR} + N_{freq, NE-DC, E-UTRA} + N_{freq, NE-DC, UTRA}"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.1.3.1c",
+                "title": "NR-DC: Monitoring of multiple layers using gaps",
+                "formulas": [
+                  {
+                    "description": "Effective total number of frequencies for NR-DC",
+                    "latex": "N_{freq, NR-DC} = N_{freq, NR-DC, NR} + N_{freq, NR-DC, E-UTRA} + N_{freq, NR-DC, UTRA}"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.1.3.2",
+                "title": "EN-DC: Maximum allowed layers for multiple monitoring",
+                "requirements": [
+                  "7 NR SSB inter-frequency carriers configured by PSCell",
+                  "8 NR inter-frequency carriers including SSB and CSI-RS in total configured by PSCell",
+                  "7 NR SSB inter-RAT carriers excluding NR serving carrier(s) configured by E-UTRA PCell",
+                  "6 E-UTRA TDD inter-frequency carriers configured by E-UTRA PCell",
+                  "6 E-UTRA FDD inter-frequency carriers configured by E-UTRA PCell",
+                  "3 FDD UTRA carriers",
+                  "3 TDD UTRA carriers",
+                  "32 GSM carriers (one GSM layer corresponds to 32 carriers)",
+                  "Total of at least 13 effective carrier frequency layers"
+                ]
+              },
+              {
+                "clause_id": "9.1.3.2a",
+                "title": "SA: Maximum allowed layers for multiple monitoring",
+                "requirements": [
+                  "7 NR SSB inter-frequency carriers configured by PCell",
+                  "8 NR inter-frequency carriers including SSB and CSI-RS in total configured by PCell",
+                  "7 E-UTRA TDD inter-RAT carriers configured by PCell",
+                  "7 E-UTRA FDD inter-RAT carriers configured by PCell",
+                  "3 UTRA FDD inter-RAT carriers configured by PCell",
+                  "Total of at least 13 effective carrier frequency layers"
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.1.5",
+            "title": "Carrier-specific scaling factor",
+            "description": "Carrier-specific scaling factors (CSSF) for measurements outside and within gaps",
+            "subsections": [
+              {
+                "clause_id": "9.1.5.1",
+                "title": "Monitoring of multiple layers outside gaps",
+                "formulas": [
+                  {
+                    "description": "CSSF outside gap for EN-DC",
+                    "latex": "CSSF_{outside\\_gap,i} = \\sum_{j=0}^{J-1} \\sum_{k=0}^{K_j-1} N_{SSB,k,j} + \\sum_{j=0}^{J-1} \\sum_{m=0}^{M_j-1} N_{CSI-RS,m,j} + \\sum_{j=0}^{J-1} \\sum_{n=0}^{N_j-1} N_{RSSI,n,j}"
+                  },
+                  {
+                    "description": "CSSF outside gap for SA",
+                    "latex": "CSSF_{outside\\_gap,i} = \\sum_{j=0}^{J-1} \\sum_{k=0}^{K_j-1} N_{SSB,k,j} + \\sum_{j=0}^{J-1} \\sum_{m=0}^{M_j-1} N_{CSI-RS,m,j} + \\sum_{j=0}^{J-1} \\sum_{n=0}^{N_j-1} N_{RSSI,n,j} + \\sum_{j=0}^{J-1} \\sum_{l=0}^{L_j-1} N_{L1-RSRP,l,j}"
+                  }
+                ],
+                "subsections": [
+                  {
+                    "clause_id": "9.1.5.1.1",
+                    "title": "EN-DC: CSSF for SSB, CSI-RS, RSSI measurements outside gaps",
+                    "formulas": [
+                      {
+                        "description": "CSSF for per-FR gap UE",
+                        "latex": "CSSF_{outside\\_gap,i} = 2 \\times N_{with\\_CSI-RS} + N_{SSB\\_only}"
+                      }
+                    ],
+                    "variables": [
+                      "Nwith_CSI-RS: number of measurement objects with both SSB and CSI-RS or only CSI-RS in same FR",
+                      "NSSB_only: number of measurement objects with only SSB based L3 measurement in same FR"
+                    ]
+                  },
+                  {
+                    "clause_id": "9.1.5.1.2",
+                    "title": "SA: CSSF for SSB, CSI-RS, RSSI, L1-RSRP measurements outside gaps",
+                    "formulas": [
+                      {
+                        "description": "CSSF for SA mode per-FR gap",
+                        "latex": "CSSF_{outside\\_gap,i} = 2 \\times N_{with\\_CSI-RS} + N_{SSB\\_only} + N_{L1\\_SSB}"
+                      }
+                    ],
+                    "variables": [
+                      "Nwith_CSI-RS: number of measurement objects with both SSB and CSI-RS or only CSI-RS",
+                      "NSSB_only: number of measurement objects with only SSB based L3 measurement",
+                      "NL1_SSB: number of FR2 SSB based inter-frequency L1-RSRP measurements"
+                    ]
+                  },
+                  {
+                    "clause_id": "9.1.5.1.3",
+                    "title": "NE-DC: CSSF for SSB, CSI-RS measurements outside gaps",
+                    "formulas": [
+                      {
+                        "description": "CSSF for NE-DC mode",
+                        "latex": "CSSF_{outside\\_gap,i} = 2 \\times N_{with\\_CSI-RS} + N_{SSB\\_only}"
+                      }
+                    ]
+                  },
+                  {
+                    "clause_id": "9.1.5.1.4",
+                    "title": "NR-DC: CSSF for SSB, CSI-RS, L1-RSRP measurements outside gaps",
+                    "formulas": [
+                      {
+                        "description": "CSSF for NR-DC mode",
+                        "latex": "CSSF_{outside\\_gap,i} = 2 \\times N_{with\\_CSI-RS} + N_{SSB\\_only} + N_{L1\\_SSB}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.1.5.2",
+                "title": "Monitoring of multiple layers within gaps",
+                "description": "CSSFwithin_gap,i derivation for different operation modes",
+                "subsections": [
+                  {
+                    "clause_id": "9.1.5.2.1",
+                    "title": "EN-DC: CSSF for SSB, CSI-RS, RSSI measurements within gaps",
+                    "formulas": [
+                      {
+                        "description": "CSSF within gap for per-FR gap UE",
+                        "latex": "CSSF_{within\\_gap,i} = 2 \\times N_{with\\_CSI-RS} + N_{SSB\\_only}"
+                      },
+                      {
+                        "description": "Equal sharing scheme",
+                        "latex": "CSSF_{within\\_gap,i} = \\max_j(\\lceil R_i \\times M_{tot,i,j} \\rceil), j=0\\dots(160/MGRP)-1"
+                      },
+                      {
+                        "description": "Non-equal sharing - intra-frequency",
+                        "latex": "CSSF_{within\\_gap,i} = \\max\\left\\{ \\begin{matrix} \\lceil R_i \\times K_{intra} \\times M_{intra,i,j} \\rceil & \\text{if } M_{inter,i,j} \\neq 0 \\\\ \\lceil R_i \\times M_{intra,i,j} \\rceil & \\text{if } M_{inter,i,j} = 0 \\end{matrix} \\right."
+                      },
+                      {
+                        "description": "Non-equal sharing - inter-frequency/inter-RAT",
+                        "latex": "CSSF_{within\\_gap,i} = \\max\\left\\{ \\begin{matrix} \\lceil R_i \\times K_{inter} \\times M_{inter,i,j} \\rceil & \\text{if } M_{intra,i,j} \\neq 0 \\\\ \\lceil R_i \\times M_{inter,i,j} \\rceil & \\text{if } M_{intra,i,j} = 0 \\end{matrix} \\right."
+                      }
+                    ],
+                    "variables": [
+                      "Mintra,i,j: Number of intra-frequency measurement objects candidates in gap j",
+                      "Minter,i,j: Number of inter-frequency/inter-RAT measurement objects candidates in gap j",
+                      "Mtot,i,j = Mintra,i,j + Minter,i,j: Total number of candidates in gap j",
+                      "Ri: Maximal ratio of measurement gaps where object i is candidate"
+                    ]
+                  },
+                  {
+                    "clause_id": "9.1.5.2.2",
+                    "title": "SA: CSSF for SSB, CSI-RS, RSSI, L1-RSRP measurements within gaps",
+                    "formulas": [
+                      {
+                        "description": "CSSF within gap for per-FR gap UE",
+                        "latex": "CSSF_{within\\_gap,i} = 2 \\times N_{with\\_CSI-RS} + N_{SSB\\_only} + N_{L1\\_SSB}"
+                      },
+                      {
+                        "description": "Equal sharing scheme",
+                        "latex": "CSSF_{within\\_gap,i} = \\max_j(\\lceil R_i \\times M_{tot,i,j} \\rceil), j=0\\dots(160/MGRP)-1"
+                      },
+                      {
+                        "description": "Non-equal sharing - intra-frequency",
+                        "latex": "CSSF_{within\\_gap,i} = \\max\\left\\{ \\begin{matrix} \\lceil R_i \\times K_{intra} \\times M_{intra,i,j} \\rceil & \\text{if } M_{inter,i,j} \\neq 0 \\\\ \\lceil R_i \\times M_{intra,i,j} \\rceil & \\text{if } M_{inter,i,j} = 0 \\end{matrix} \\right."
+                      },
+                      {
+                        "description": "Non-equal sharing - inter-frequency/inter-RAT/NR PRS",
+                        "latex": "CSSF_{within\\_gap,i} = \\max\\left\\{ \\begin{matrix} \\lceil R_i \\times K_{inter} \\times M_{inter,i,j} \\rceil & \\text{if } M_{intra,i,j} \\neq 0 \\\\ \\lceil R_i \\times M_{inter,i,j} \\rceil & \\text{if } M_{intra,i,j} = 0 \\end{matrix} \\right."
+                      }
+                    ]
+                  },
+                  {
+                    "clause_id": "9.1.5.2.3",
+                    "title": "NE-DC: CSSF for SSB, CSI-RS measurements within gaps",
+                    "formulas": [
+                      {
+                        "description": "CSSF within gap for per-FR gap UE",
+                        "latex": "CSSF_{within\\_gap,i} = 2 \\times N_{with\\_CSI-RS} + N_{SSB\\_only}"
+                      },
+                      {
+                        "description": "Equal sharing scheme",
+                        "latex": "CSSF_{within\\_gap,i} = \\max_j(\\lceil R_i \\times M_{tot,i,j} \\rceil), j=0\\dots(160/MGRP)-1"
+                      },
+                      {
+                        "description": "Non-equal sharing - group A",
+                        "latex": "CSSF_{within\\_gap,i} = \\max\\left\\{ \\begin{matrix} \\lceil R_i \\times K_{intra} \\times M_{groupA,i,j} \\rceil & \\text{if } M_{groupB,i,j} \\neq 0 \\\\ \\lceil R_i \\times M_{groupA,i,j} \\rceil & \\text{if } M_{groupB,i,j} = 0 \\end{matrix} \\right."
+                      },
+                      {
+                        "description": "Non-equal sharing - group B",
+                        "latex": "CSSF_{within\\_gap,i} = \\max\\left\\{ \\begin{matrix} \\lceil R_i \\times K_{inter} \\times M_{groupB,i,j} \\rceil & \\text{if } M_{groupA,i,j} \\neq 0 \\\\ \\lceil R_i \\times M_{groupB,i,j} \\rceil & \\text{if } M_{groupA,i,j} = 0 \\end{matrix} \\right."
+                      }
+                    ],
+                    "variables": [
+                      "MgroupA,i,j: Sum of FR1 and FR2 intra-frequency measurement objects",
+                      "MgroupB,i,j: Number of inter-frequency, inter-RAT, and positioning frequency layers"
+                    ]
+                  },
+                  {
+                    "clause_id": "9.1.5.2.4",
+                    "title": "NR-DC: CSSF for SSB, CSI-RS, L1-RSRP measurements within gaps",
+                    "formulas": [
+                      {
+                        "description": "CSSF within gap for per-FR gap UE",
+                        "latex": "CSSF_{within\\_gap,i} = 2 \\times N_{with\\_CSI-RS} + N_{SSB\\_only} + N_{L1\\_SSB}"
+                      },
+                      {
+                        "description": "Equal sharing scheme",
+                        "latex": "CSSF_{within\\_gap,i} = \\max_j(\\lceil R_i \\times M_{tot,i,j} \\rceil), j=0\\dots(160/MGRP)-1"
+                      },
+                      {
+                        "description": "Non-equal sharing - group A",
+                        "latex": "CSSF_{within\\_gap,i} = \\max\\left\\{ \\begin{matrix} \\lceil R_i \\times K_{intra} \\times M_{groupA,i,j} \\rceil & \\text{if } M_{groupB,i,j} \\neq 0 \\\\ \\lceil R_i \\times M_{groupA,i,j} \\rceil & \\text{if } M_{groupB,i,j} = 0 \\end{matrix} \\right."
+                      },
+                      {
+                        "description": "Non-equal sharing - group B",
+                        "latex": "CSSF_{within\\_gap,i} = \\max\\left\\{ \\begin{matrix} \\lceil R_i \\times K_{inter} \\times M_{groupB,i,j} \\rceil & \\text{if } M_{groupA,i,j} \\neq 0 \\\\ \\lceil R_i \\times M_{groupB,i,j} \\rceil & \\text{if } M_{groupA,i,j} = 0 \\end{matrix} \\right."
+                      }
+                    ]
+                  },
+                  {
+                    "clause_id": "9.1.5.2.5",
+                    "title": "SA: CSSF for PRS-based measurements within gaps",
+                    "description": "CSSFwithin_gap,i derived as described in clause 9.1.5.2.2"
+                  },
+                  {
+                    "clause_id": "9.1.5.2.6",
+                    "title": "NE-DC: CSSF for PRS-based measurements within gaps",
+                    "description": "CSSFwithin_gap,i derived as described in clause 9.1.5.2.3"
+                  },
+                  {
+                    "clause_id": "9.1.5.2.7",
+                    "title": "NR-DC: CSSF for PRS-based measurements within gaps",
+                    "description": "CSSFwithin_gap,i derived as described in clause 9.1.5.2.4"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.1.5.3",
+                "title": "Monitoring of multiple layers within NCSG",
+                "formulas": [
+                  {
+                    "description": "CSSF within NCSG for SA mode - equal sharing",
+                    "latex": "CSSF_{within\\_ncsg,i} = \\max_j(M_{tot,i,j}), j=0\\dots(160/VIRP)-1"
+                  },
+                  {
+                    "description": "CSSF within NCSG - intra-frequency non-equal sharing",
+                    "latex": "CSSF_{within\\_ncsg,i} = \\max\\left\\{ \\begin{matrix} \\lceil K_{intra} \\times M_{intra,i,j} \\rceil & \\text{if } M_{inter,i,j} \\neq 0 \\\\ M_{intra,i,j} & \\text{if } M_{inter,i,j} = 0 \\end{matrix} \\right."
+                  },
+                  {
+                    "description": "CSSF within NCSG - inter-frequency non-equal sharing",
+                    "latex": "CSSF_{within\\_ncsg,i} = \\max\\left\\{ \\begin{matrix} \\lceil K_{inter} \\times M_{inter,i,j} \\rceil & \\text{if } M_{intra,i,j} \\neq 0 \\\\ M_{inter,i,j} & \\text{if } M_{intra,i,j} = 0 \\end{matrix} \\right."
+                  }
+                ],
+                "subsections": [
+                  {
+                    "clause_id": "9.1.5.3.1",
+                    "title": "SA mode: CSSF for measurements performed within NCSG"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.1.5.4",
+                "title": "L1-RSRP measurements within measurement gap",
+                "subsections": [
+                  {
+                    "clause_id": "9.1.5.4.1",
+                    "title": "SA mode: CSSF for L1-RSRP measurements within measurement gap",
+                    "formulas": [
+                      {
+                        "description": "CSSF for L1-RSRP within gap",
+                        "latex": "CSSF_{within\\_gap,i} = 2 \\times N_{with\\_CSI-RS} + N_{SSB\\_only} + N_{L1\\_SSB}"
+                      }
+                    ]
+                  },
+                  {
+                    "clause_id": "9.1.5.4.2",
+                    "title": "NR-DC: CSSF for L1-RSRP measurements within measurement gap",
+                    "formulas": [
+                      {
+                        "description": "CSSF for L1-RSRP within gap",
+                        "latex": "CSSF_{within\\_gap,i} = 2 \\times N_{with\\_CSI-RS} + N_{SSB\\_only} + N_{L1\\_SSB}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.1.6",
+            "title": "Minimum requirement at transitions",
+            "requirements": [
+              "When measurement transitions from outside gaps to within gaps (or vice versa), requirements with longer delay apply",
+              "When measurement transitions from outside gaps to within NCSG (or vice versa), requirements with longer delay apply",
+              "When UE transitions between DRX and non-DRX or DRX cycle changes, requirements with longer delay apply"
+            ]
+          },
+          {
+            "clause_id": "9.1.7",
+            "title": "Pre-configured measurement gap",
+            "subsections": [
+              {
+                "clause_id": "9.1.7.1",
+                "title": "Introduction"
+              },
+              {
+                "clause_id": "9.1.7.2",
+                "title": "Requirements applicability"
+              },
+              {
+                "clause_id": "9.1.7.3",
+                "title": "Requirements",
+                "subsections": [
+                  {
+                    "clause_id": "9.1.7.3.1",
+                    "title": "Requirements for autonomous activation/deactivation mechanism"
+                  },
+                  {
+                    "clause_id": "9.1.7.3.2",
+                    "title": "Requirements for network-controlled activation/deactivation mechanism"
+                  },
+                  {
+                    "clause_id": "9.1.7.3.3",
+                    "title": "Requirements for reception/transmission during activation/deactivation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.1.8",
+            "title": "Concurrent measurement gaps",
+            "subsections": [
+              {
+                "clause_id": "9.1.8.1",
+                "title": "Introduction"
+              },
+              {
+                "clause_id": "9.1.8.2",
+                "title": "Requirements"
+              },
+              {
+                "clause_id": "9.1.8.3",
+                "title": "Collision between concurrent measurement gaps"
+              },
+              {
+                "clause_id": "9.1.8.4",
+                "title": "Measurement gap related requirements of concurrent measurement gaps"
+              }
+            ],
+            "tables": [
+              {
+                "table_id": "9.1.8-1",
+                "title": "The number of Gap Combination Configurations by UE supporting both concurrent measurement gap patterns and independent measurement gap patterns",
+                "columns": [
+                  "Gap Combination Configuration Id",
+                  "Per-FR1 measurement gap",
+                  "Per-FR2 measurement gap",
+                  "Per-UE measurement gap"
+                ],
+                "rows": [
+                  {
+                    "id": 0,
+                    "fr1": 2,
+                    "fr2": 1,
+                    "ue": 0
+                  },
+                  {
+                    "id": 1,
+                    "fr1": 1,
+                    "fr2": 2,
+                    "ue": 0
+                  },
+                  {
+                    "id": 2,
+                    "fr1": 0,
+                    "fr2": 0,
+                    "ue": 2
+                  },
+                  {
+                    "id": 3,
+                    "fr1": 1,
+                    "fr2": 0,
+                    "ue": 1
+                  },
+                  {
+                    "id": 4,
+                    "fr1": 0,
+                    "fr2": 1,
+                    "ue": 1
+                  },
+                  {
+                    "id": 5,
+                    "fr1": 1,
+                    "fr2": 1,
+                    "ue": 1
+                  },
+                  {
+                    "id": 6,
+                    "fr1": 2,
+                    "fr2": 0,
+                    "ue": 0
+                  },
+                  {
+                    "id": 7,
+                    "fr1": 0,
+                    "fr2": 2,
+                    "ue": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.1.9",
+            "title": "Network controlled small gap",
+            "subsections": [
+              {
+                "clause_id": "9.1.9.1",
+                "title": "Introduction"
+              },
+              {
+                "clause_id": "9.1.9.2",
+                "title": "Requirements applicability"
+              },
+              {
+                "clause_id": "9.1.9.3",
+                "title": "Requirements",
+                "tables": [
+                  {
+                    "table_id": "9.1.9.3-1",
+                    "title": "NCSG Configurations supported by the UE",
+                    "columns": [
+                      "NCSG Pattern Id",
+                      "Measurement Length (ML, ms)",
+                      "Visible interruption Repetition Period (VIRP, ms)"
+                    ],
+                    "rows": [
+                      {
+                        "id": 0,
+                        "ml": 5,
+                        "virp": 40
+                      },
+                      {
+                        "id": 1,
+                        "ml": 5,
+                        "virp": 80
+                      },
+                      {
+                        "id": 2,
+                        "ml": 2,
+                        "virp": 40
+                      },
+                      {
+                        "id": 3,
+                        "ml": 2,
+                        "virp": 80
+                      },
+                      {
+                        "id": 4,
+                        "ml": 5,
+                        "virp": 20
+                      },
+                      {
+                        "id": 5,
+                        "ml": 5,
+                        "virp": 160
+                      },
+                      {
+                        "id": 6,
+                        "ml": 3,
+                        "virp": 20
+                      },
+                      {
+                        "id": 7,
+                        "ml": 3,
+                        "virp": 40
+                      },
+                      {
+                        "id": 8,
+                        "ml": 3,
+                        "virp": 80
+                      },
+                      {
+                        "id": 9,
+                        "ml": 3,
+                        "virp": 160
+                      },
+                      {
+                        "id": 10,
+                        "ml": 2,
+                        "virp": 20
+                      },
+                      {
+                        "id": 11,
+                        "ml": 2,
+                        "virp": 160
+                      },
+                      {
+                        "id": 12,
+                        "ml": 5,
+                        "virp": 20
+                      },
+                      {
+                        "id": 13,
+                        "ml": 5,
+                        "virp": 40
+                      },
+                      {
+                        "id": 14,
+                        "ml": 5,
+                        "virp": 80
+                      },
+                      {
+                        "id": 15,
+                        "ml": 5,
+                        "virp": 160
+                      },
+                      {
+                        "id": 16,
+                        "ml": 3,
+                        "virp": 20
+                      },
+                      {
+                        "id": 17,
+                        "ml": 3,
+                        "virp": 40
+                      },
+                      {
+                        "id": 18,
+                        "ml": 3,
+                        "virp": 80
+                      },
+                      {
+                        "id": 19,
+                        "ml": 3,
+                        "virp": 160
+                      },
+                      {
+                        "id": 20,
+                        "ml": 1,
+                        "virp": 20
+                      },
+                      {
+                        "id": 21,
+                        "ml": 1,
+                        "virp": 40
+                      },
+                      {
+                        "id": 22,
+                        "ml": 1,
+                        "virp": 80
+                      },
+                      {
+                        "id": 23,
+                        "ml": 1,
+                        "virp": 160
+                      }
+                    ]
+                  },
+                  {
+                    "table_id": "9.1.9.3-2",
+                    "title": "Applicability for NCSG pattern configurations supported by the UE"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.1.10",
+            "title": "MUSIM gaps",
+            "tables": [
+              {
+                "table_id": "9.1.10-1",
+                "title": "MUSIM Gap Pattern Configurations",
+                "columns": [
+                  "MUSIM Gap Pattern Id",
+                  "MUSIM Gap Length (MGL, ms)",
+                  "MUSIM Gap Repetition Period (MGRP, ms)"
+                ],
+                "rows": [
+                  {
+                    "id": 0,
+                    "mgl": 6,
+                    "mgrp": 40
+                  },
+                  {
+                    "id": 1,
+                    "mgl": 6,
+                    "mgrp": 80
+                  },
+                  {
+                    "id": 2,
+                    "mgl": 3,
+                    "mgrp": 40
+                  },
+                  {
+                    "id": 3,
+                    "mgl": 3,
+                    "mgrp": 80
+                  },
+                  {
+                    "id": 4,
+                    "mgl": 6,
+                    "mgrp": 20
+                  },
+                  {
+                    "id": 5,
+                    "mgl": 6,
+                    "mgrp": 160
+                  },
+                  {
+                    "id": 6,
+                    "mgl": 4,
+                    "mgrp": 20
+                  },
+                  {
+                    "id": 7,
+                    "mgl": 4,
+                    "mgrp": 40
+                  },
+                  {
+                    "id": 8,
+                    "mgl": 4,
+                    "mgrp": 80
+                  },
+                  {
+                    "id": 9,
+                    "mgl": 4,
+                    "mgrp": 160
+                  },
+                  {
+                    "id": 10,
+                    "mgl": 3,
+                    "mgrp": 20
+                  },
+                  {
+                    "id": 11,
+                    "mgl": 3,
+                    "mgrp": 160
+                  },
+                  {
+                    "id": 12,
+                    "mgl": 10,
+                    "mgrp": 80
+                  },
+                  {
+                    "id": 13,
+                    "mgl": 20,
+                    "mgrp": 160
+                  },
+                  {
+                    "id": 14,
+                    "mgl": 6,
+                    "mgrp": 320
+                  },
+                  {
+                    "id": 15,
+                    "mgl": 6,
+                    "mgrp": 640
+                  },
+                  {
+                    "id": 16,
+                    "mgl": 6,
+                    "mgrp": 1280
+                  },
+                  {
+                    "id": 17,
+                    "mgl": 6,
+                    "mgrp": 2560
+                  },
+                  {
+                    "id": 18,
+                    "mgl": 10,
+                    "mgrp": 320
+                  },
+                  {
+                    "id": 19,
+                    "mgl": 10,
+                    "mgrp": 640
+                  },
+                  {
+                    "id": 20,
+                    "mgl": 10,
+                    "mgrp": 1280
+                  },
+                  {
+                    "id": 21,
+                    "mgl": 10,
+                    "mgrp": 2560
+                  },
+                  {
+                    "id": 22,
+                    "mgl": 20,
+                    "mgrp": 320
+                  },
+                  {
+                    "id": 23,
+                    "mgl": 20,
+                    "mgrp": 640
+                  },
+                  {
+                    "id": 24,
+                    "mgl": 20,
+                    "mgrp": 1280
+                  },
+                  {
+                    "id": 25,
+                    "mgl": 20,
+                    "mgrp": 2560
+                  },
+                  {
+                    "id": 26,
+                    "mgl": 20,
+                    "mgrp": 5120
+                  },
+                  {
+                    "id": 27,
+                    "mgl": 10,
+                    "mgrp": "NA"
+                  },
+                  {
+                    "id": 28,
+                    "mgl": 20,
+                    "mgrp": "NA"
+                  }
+                ]
+              }
+            ],
+            "subsections": [
+              {
+                "clause_id": "9.1.10.1",
+                "title": "Introduction"
+              },
+              {
+                "clause_id": "9.1.10.2",
+                "title": "Priorities for MUSIM gaps"
+              },
+              {
+                "clause_id": "9.1.10.3",
+                "title": "Keep solution for MUSIM gaps"
+              },
+              {
+                "clause_id": "9.1.10.4",
+                "title": "Collisions between different MUSIM gaps"
+              },
+              {
+                "clause_id": "9.1.10.5",
+                "title": "Collisions between MUSIM gaps and measurement gaps"
+              },
+              {
+                "clause_id": "9.1.10.6",
+                "title": "MUSIM gap related requirements"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "clause_id": "9.2",
+        "title": "NR intra-frequency measurements",
+        "subsections": [
+          {
+            "clause_id": "9.2.1",
+            "title": "Introduction",
+            "requirements": [
+              "SSB based intra-frequency measurement when center frequency and SCS of serving and neighbor cell SSBs are the same",
+              "UE shall identify new intra-frequency cells and perform SS-RSRP, SS-RSRQ, SS-SINR measurements",
+              "UE can perform measurements without gaps if SSB is completely contained in active BWP or UE indicates no-gap"
+            ]
+          },
+          {
+            "clause_id": "9.2.2",
+            "title": "Requirements applicability",
+            "requirements": [
+              "Cell shall be detectable when SS-RSRP, SS-RSRQ, SS-SINR side conditions are met",
+              "SSB_RP and SSB Es/Iot according to Annex B.2.2"
+            ]
+          },
+          {
+            "clause_id": "9.2.3",
+            "title": "Number of cells and number of SSB",
+            "subsections": [
+              {
+                "clause_id": "9.2.3.1",
+                "title": "Requirements for FR1",
+                "requirements": [
+                  "8 identified cells per intra-frequency layer",
+                  "14 SSBs with different SSB index and/or PCI"
+                ]
+              },
+              {
+                "clause_id": "9.2.3.2",
+                "title": "Requirements for FR2",
+                "requirements": [
+                  "6 identified cells per intra-frequency layer",
+                  "24 SSBs with different SSB index and/or PCI"
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.2.4",
+            "title": "Measurement Reporting Requirements",
+            "subsections": [
+              {
+                "clause_id": "9.2.4.1",
+                "title": "Periodic Reporting"
+              },
+              {
+                "clause_id": "9.2.4.2",
+                "title": "Event-triggered Periodic Reporting"
+              },
+              {
+                "clause_id": "9.2.4.3",
+                "title": "Event Triggered Reporting"
+              },
+              {
+                "clause_id": "9.2.4.4",
+                "title": "SCell activation Triggered Reporting"
+              }
+            ]
+          },
+          {
+            "clause_id": "9.2.5",
+            "title": "Intra-frequency measurements without measurement gaps",
+            "subsections": [
+              {
+                "clause_id": "9.2.5.1",
+                "title": "Intra-frequency cell identification",
+                "formulas": [
+                  {
+                    "description": "Cell identification time without index",
+                    "latex": "T_{identify\\_intra\\_without\\_index} = T_{PSS/SSS\\_sync\\_intra} + T_{SSB\\_measurement\\_period\\_intra}"
+                  },
+                  {
+                    "description": "Cell identification time with index",
+                    "latex": "T_{identify\\_intra\\_with\\_index} = T_{PSS/SSS\\_sync\\_intra} + T_{SSB\\_measurement\\_period\\_intra} + T_{SSB\\_time\\_index\\_intra}"
+                  },
+                  {
+                    "description": "PSS/SSS sync time FR1 No DRX",
+                    "latex": "T_{PSS/SSS\\_sync\\_intra} = \\max(600 \\text{ ms}, \\lceil 5 \\times K_p \\rceil \\times \\text{SMTC period}) \\times CSSF_{intra}"
+                  },
+                  {
+                    "description": "PSS/SSS sync time FR1 DRX ≤ 320ms",
+                    "latex": "T_{PSS/SSS\\_sync\\_intra} = \\max(600 \\text{ ms}, \\lceil M_2 \\times 5 \\times K_p \\rceil \\times \\max(\\text{SMTC period}, \\text{DRX cycle})) \\times CSSF_{intra}"
+                  },
+                  {
+                    "description": "PSS/SSS sync time FR2 No DRX",
+                    "latex": "T_{PSS/SSS\\_sync\\_intra} = \\max(600 \\text{ ms}, \\lceil M_{pss/sss\\_sync\\_w/o\\_gaps} \\times K_{FR} \\times K_p \\times K_{layer1\\_measurement} \\rceil \\times \\text{SMTC period}) \\times CSSF_{intra}"
+                  },
+                  {
+                    "description": "Kp scaling factor for concurrent GAPs",
+                    "latex": "K_p = \\frac{N_{total}}{N_{available}}"
+                  }
+                ],
+                "tables": [
+                  {
+                    "table_id": "9.2.5.1-1",
+                    "title": "Time period for PSS/SSS detection (FR1)"
+                  },
+                  {
+                    "table_id": "9.2.5.1-2",
+                    "title": "Time period for PSS/SSS detection (FR2)"
+                  },
+                  {
+                    "table_id": "9.2.5.1-3",
+                    "title": "Time period for time index detection (FR1)"
+                  },
+                  {
+                    "table_id": "9.2.5.1-4",
+                    "title": "Time period for PSS/SSS detection, CC with deactivated SCell (FR1)"
+                  },
+                  {
+                    "table_id": "9.2.5.1-5",
+                    "title": "Time period for PSS/SSS detection, CC with deactivated SCell (FR2)"
+                  },
+                  {
+                    "table_id": "9.2.5.1-6",
+                    "title": "Time period for time index detection, CC with deactivated SCell (FR1)"
+                  },
+                  {
+                    "table_id": "9.2.5.1-17",
+                    "title": "Time period for PSS/SSS detection for UE indicating no-gap-with-interruption (FR1)"
+                  },
+                  {
+                    "table_id": "9.2.5.1-18",
+                    "title": "Time period for PSS/SSS detection for UE indicating no-gap-with-interruption (FR2)"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.2.5.2",
+                "title": "Measurement period",
+                "formulas": [
+                  {
+                    "description": "Measurement period FR1 No DRX",
+                    "latex": "T_{SSB\\_measurement\\_period\\_intra} = \\max(200 \\text{ ms}, \\lceil 5 \\times K_p \\rceil \\times \\text{SMTC period}) \\times CSSF_{intra}"
+                  },
+                  {
+                    "description": "Measurement period FR2 No DRX",
+                    "latex": "T_{SSB\\_measurement\\_period\\_intra} = \\max(400 \\text{ ms}, \\lceil M_{meas\\_period\\_w/o\\_gaps} \\times K_p \\times K_{layer1\\_measurement} \\rceil \\times \\text{SMTC period}) \\times CSSF_{intra}"
+                  }
+                ],
+                "tables": [
+                  {
+                    "table_id": "9.2.5.2-1",
+                    "title": "Measurement period for intra-frequency measurements without gaps (FR1)"
+                  },
+                  {
+                    "table_id": "9.2.5.2-2",
+                    "title": "Measurement period for intra-frequency measurements without gaps (FR2)"
+                  },
+                  {
+                    "table_id": "9.2.5.2-3",
+                    "title": "Measurement period for intra-frequency measurements without gaps (CC with deactivated SCell) (FR1)"
+                  },
+                  {
+                    "table_id": "9.2.5.2-4",
+                    "title": "Measurement period for intra-frequency measurements without gaps (CC with deactivated SCell) (FR2)"
+                  },
+                  {
+                    "table_id": "9.2.5.2-7",
+                    "title": "Measurement period for intra-frequency measurements without gaps when highSpeedMeasFlagFR2-r17 is configured (FR2)"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.2.5.3",
+                "title": "Scheduling availability of UE during intra-frequency measurements",
+                "subsections": [
+                  {
+                    "clause_id": "9.2.5.3.1",
+                    "title": "Scheduling availability of UE performing measurements in TDD bands on FR1"
+                  },
+                  {
+                    "clause_id": "9.2.5.3.2",
+                    "title": "Scheduling availability of UE performing measurements with a different subcarrier spacing than PDSCH/PDCCH on FR1"
+                  },
+                  {
+                    "clause_id": "9.2.5.3.3",
+                    "title": "Scheduling availability of UE performing measurements on FR2"
+                  },
+                  {
+                    "clause_id": "9.2.5.3.4",
+                    "title": "Scheduling availability of UE performing measurements on FR1 or FR2 in case of FR1-FR2 inter-band CA"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.2.5.4",
+                "title": "SFTD Measurements between PCell and PSCell",
+                "subsections": [
+                  {
+                    "clause_id": "9.2.5.4.1",
+                    "title": "Introduction"
+                  },
+                  {
+                    "clause_id": "9.2.5.4.2",
+                    "title": "SFTD Measurement delay"
+                  },
+                  {
+                    "clause_id": "9.2.5.4.3",
+                    "title": "SFTD Measurement Reporting Delay"
+                  }
+                ],
+                "formulas": [
+                  {
+                    "description": "SFTD measurement period without DRX",
+                    "latex": "T_{measure\\_SFTD1} = \\max(200, 5 \\times \\text{SMTC period}) \\text{ ms}"
+                  },
+                  {
+                    "description": "SFTD measurement period with PSCell change",
+                    "latex": "T_{measure\\_SFTD2} = (M+1) \\times T_{measure\\_SFTD1} + M \\times T_{PSCell\\_change\\_NRDC}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.2.6",
+            "title": "Intra-frequency measurements with measurement gaps",
+            "subsections": [
+              {
+                "clause_id": "9.2.6.2",
+                "title": "Intra-frequency cell identification",
+                "formulas": [
+                  {
+                    "description": "Cell identification time without index with gaps",
+                    "latex": "T_{identify\\_intra\\_without\\_index} = T_{PSS/SSS\\_sync\\_intra} + T_{SSB\\_measurement\\_period\\_intra}"
+                  },
+                  {
+                    "description": "Cell identification time with index with gaps",
+                    "latex": "T_{identify\\_intra\\_with\\_index} = T_{PSS/SSS\\_sync\\_intra} + T_{SSB\\_measurement\\_period\\_intra} + T_{SSB\\_time\\_index\\_intra}"
+                  },
+                  {
+                    "description": "PSS/SSS sync time FR1 with gaps No DRX",
+                    "latex": "T_{PSS/SSS\\_sync\\_intra} = \\max(600 \\text{ ms}, 5 \\times K_{gap} \\times \\max(MGRP, \\text{SMTC period})) \\times CSSF_{intra}"
+                  },
+                  {
+                    "description": "PSS/SSS sync time FR2 with gaps No DRX",
+                    "latex": "T_{PSS/SSS\\_sync\\_intra} = \\max(600 \\text{ ms}, M_{pss/sss\\_sync\\_with\\_gaps} \\times K_{FR} \\times K_{gap} \\times \\max(MGRP, \\text{SMTC period})) \\times CSSF_{intra}"
+                  },
+                  {
+                    "description": "Kgap scaling factor",
+                    "latex": "K_{gap} = \\frac{N_{total}}{N_{available}}"
+                  }
+                ],
+                "tables": [
+                  {
+                    "table_id": "9.2.6.2-1",
+                    "title": "Time period for PSS/SSS detection (FR1)"
+                  },
+                  {
+                    "table_id": "9.2.6.2-2",
+                    "title": "Time period for PSS/SSS detection (FR2)"
+                  },
+                  {
+                    "table_id": "9.2.6.2-3",
+                    "title": "Time period for time index detection (FR1)"
+                  },
+                  {
+                    "table_id": "9.2.6.2-9",
+                    "title": "Time period for PSS/SSS detection when highSpeedMeasFlagFR2-r17 is configured (FR2)"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.2.6.3",
+                "title": "Intra-frequency cell measurement period",
+                "tables": [
+                  {
+                    "table_id": "9.2.6.3-1",
+                    "title": "Measurement period for intra-frequency measurements with gaps (FR1)"
+                  },
+                  {
+                    "table_id": "9.2.6.3-2",
+                    "title": "Measurement period for intra-frequency measurements with gaps (FR2)"
+                  },
+                  {
+                    "table_id": "9.2.6.3-3",
+                    "title": "Measurement period for intra-frequency measurements with gaps (FR1, deactivated SCell)"
+                  },
+                  {
+                    "table_id": "9.2.6.3-4",
+                    "title": "Measurement period for intra-frequency measurements with gaps when highSpeedMeasFlagFR2-r17 is configured (FR2)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.2.7",
+            "title": "Intra-frequency measurements with NCSG",
+            "subsections": [
+              {
+                "clause_id": "9.2.7.1",
+                "title": "Intra-frequency cell identification with NCSG"
+              },
+              {
+                "clause_id": "9.2.7.2",
+                "title": "Intra-frequency cell measurement period with NCSG"
+              },
+              {
+                "clause_id": "9.2.7.3",
+                "title": "Scheduling availability of UE during intra-frequency measurements with NCSG"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "clause_id": "9.3",
+        "title": "NR inter-frequency measurements",
+        "subsections": [
+          {
+            "clause_id": "9.3.1",
+            "title": "Introduction",
+            "requirements": [
+              "SSB based inter-frequency measurement when center frequency of neighbor cell SSB differs from serving cell SSB",
+              "UE shall identify new inter-frequency cells and perform SS-RSRP, SS-RSRQ, SS-SINR measurements",
+              "UE can perform measurements without gaps if SSB of inter-frequency carrier is completely contained in active BWP"
+            ]
+          },
+          {
+            "clause_id": "9.3.2",
+            "title": "Requirements applicability",
+            "requirements": [
+              "Cell shall be detectable when SS-RSRP, SS-RSRQ, SS-SINR side conditions are met",
+              "SSB_RP and SSB Es/Iot according to Annex B.2.2"
+            ]
+          },
+          {
+            "clause_id": "9.3.3",
+            "title": "Number of cells and number of SSB",
+            "subsections": [
+              {
+                "clause_id": "9.3.3.1",
+                "title": "Requirements for FR1",
+                "requirements": [
+                  "8 identified cells per inter-frequency layer",
+                  "14 SSBs with different SSB index and/or PCI"
+                ]
+              },
+              {
+                "clause_id": "9.3.3.2",
+                "title": "Requirements for FR2",
+                "requirements": [
+                  "6 identified cells per inter-frequency layer",
+                  "24 SSBs with different SSB index and/or PCI"
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.3.4",
+            "title": "Inter-frequency measurements with measurement gaps",
+            "subsections": [
+              {
+                "clause_id": "9.3.4.1",
+                "title": "Inter-frequency cell identification",
+                "formulas": [
+                  {
+                    "description": "Cell identification time without index",
+                    "latex": "T_{identify\\_inter} = T_{PSS/SSS\\_sync\\_inter} + T_{SSB\\_measurement\\_period\\_inter}"
+                  },
+                  {
+                    "description": "Cell identification time with index",
+                    "latex": "T_{identify\\_inter} = T_{PSS/SSS\\_sync\\_inter} + T_{SSB\\_measurement\\_period\\_inter} + T_{SSB\\_time\\_index\\_inter}"
+                  }
+                ],
+                "tables": [
+                  {
+                    "table_id": "9.3.4.1-1",
+                    "title": "Time period for PSS/SSS detection (FR1)"
+                  },
+                  {
+                    "table_id": "9.3.4.1-2",
+                    "title": "Time period for PSS/SSS detection (FR2)"
+                  },
+                  {
+                    "table_id": "9.3.4.1-3",
+                    "title": "Time period for time index detection (FR1)"
+                  },
+                  {
+                    "table_id": "9.3.4.1-4",
+                    "title": "Time period for time index detection (FR2)"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.3.4.2",
+                "title": "Inter-frequency cell measurement period",
+                "tables": [
+                  {
+                    "table_id": "9.3.4.2-1",
+                    "title": "Measurement period for inter-frequency measurements with gaps (FR1)"
+                  },
+                  {
+                    "table_id": "9.3.4.2-2",
+                    "title": "Measurement period for inter-frequency measurements with gaps (FR2)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.3.5",
+            "title": "Inter-frequency measurements with measurement gaps when highSpeedMeasFlag-r16 is configured",
+            "subsections": [
+              {
+                "clause_id": "9.3.5.1",
+                "title": "Inter-frequency cell identification",
+                "tables": [
+                  {
+                    "table_id": "9.3.5.1-1",
+                    "title": "Time period for PSS/SSS detection (FR1)"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.3.5.2",
+                "title": "Inter-frequency cell measurement period",
+                "tables": [
+                  {
+                    "table_id": "9.3.5.2-1",
+                    "title": "Measurement period for inter-frequency measurements with gaps (FR1)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.3.6",
+            "title": "Inter-frequency measurements without measurement gaps",
+            "subsections": [
+              {
+                "clause_id": "9.3.6.1",
+                "title": "Inter-frequency cell identification",
+                "formulas": [
+                  {
+                    "description": "Cell identification time without gaps",
+                    "latex": "T_{identify\\_inter\\_without\\_gap} = \\frac{T_{Basic} \\times K_p \\times CSSF_{inter}}{T_{Inter1}} \\text{ ms}"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.3.6.2",
+                "title": "Inter-frequency cell measurement period"
+              }
+            ]
+          },
+          {
+            "clause_id": "9.3.7",
+            "title": "Inter-frequency measurements with NCSG",
+            "subsections": [
+              {
+                "clause_id": "9.3.7.1",
+                "title": "Inter-frequency cell identification with NCSG"
+              },
+              {
+                "clause_id": "9.3.7.2",
+                "title": "Inter-frequency cell measurement period with NCSG"
+              },
+              {
+                "clause_id": "9.3.7.3",
+                "title": "Scheduling availability during inter-frequency measurements with NCSG"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "clause_id": "9.4",
+        "title": "Inter-RAT measurements",
+        "subsections": [
+          {
+            "clause_id": "9.4.1",
+            "title": "Introduction",
+            "description": "Inter-RAT measurements include E-UTRAN FDD/TDD, UTRAN FDD, and GSM measurements"
+          },
+          {
+            "clause_id": "9.4.2",
+            "title": "NR − E-UTRAN FDD measurements",
+            "subsections": [
+              {
+                "clause_id": "9.4.2.1",
+                "title": "Introduction"
+              },
+              {
+                "clause_id": "9.4.2.2",
+                "title": "Requirements when no DRX is used",
+                "formulas": [
+                  {
+                    "description": "E-UTRAN FDD cell identification time",
+                    "latex": "T_{Identify, E-UTRAN FDD} = \\frac{T_{BasicIdentify,E-UTRA} \\times K_{gap\\_EUTRA} \\times CSSF_{interRAT}}{T_{Inter1}} \\text{ ms}"
+                  },
+                  {
+                    "description": "CSSF for inter-RAT",
+                    "latex": "CSSF_{interRAT} = CSSF_{within\\_gap,i}"
+                  }
+                ],
+                "tables": [
+                  {
+                    "table_id": "9.4.2.2-1",
+                    "title": "TMeasure, E-UTRAN FDD for different configurations"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.4.2.3",
+                "title": "Requirements when DRX is used",
+                "tables": [
+                  {
+                    "table_id": "9.4.2.3-1",
+                    "title": "Requirement to identify a newly detectable E-UTRAN FDD cell"
+                  },
+                  {
+                    "table_id": "9.4.2.3-2",
+                    "title": "Requirement to identify a newly detectable E-UTRAN FDD cell when highSpeedMeasFlag-r16 is configured"
+                  },
+                  {
+                    "table_id": "9.4.2.3-3",
+                    "title": "Requirement to measure E-UTRAN FDD cells"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.4.2.4",
+                "title": "Measurement reporting requirements",
+                "subsections": [
+                  {
+                    "clause_id": "9.4.2.4.1",
+                    "title": "Periodic Reporting"
+                  },
+                  {
+                    "clause_id": "9.4.2.4.2",
+                    "title": "Event-triggered Periodic Reporting"
+                  },
+                  {
+                    "clause_id": "9.4.2.4.3",
+                    "title": "Event-Triggered Reporting"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.4.2.5",
+                "title": "Scheduling Availability During NR − E-UTRAN FDD measurements with NCSG"
+              }
+            ]
+          },
+          {
+            "clause_id": "9.4.3",
+            "title": "NR − E-UTRAN TDD measurements",
+            "subsections": [
+              {
+                "clause_id": "9.4.3.1",
+                "title": "Introduction"
+              },
+              {
+                "clause_id": "9.4.3.2",
+                "title": "Requirements when no DRX is used",
+                "tables": [
+                  {
+                    "table_id": "9.4.3.2-1",
+                    "title": "TMeasure, E-UTRAN TDD for different configurations"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.4.3.3",
+                "title": "Requirements when DRX is used",
+                "tables": [
+                  {
+                    "table_id": "9.4.3.3-1",
+                    "title": "Requirement to identify a newly detectable E-UTRAN TDD cell"
+                  },
+                  {
+                    "table_id": "9.4.3.3-2",
+                    "title": "Requirement to identify a newly detectable E-UTRAN TDD cell when highSpeedMeasFlag-r16 is configured"
+                  },
+                  {
+                    "table_id": "9.4.3.3-3",
+                    "title": "Requirement to measure E-UTRAN TDD cells"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.4.3.4",
+                "title": "Measurement reporting requirements"
+              },
+              {
+                "clause_id": "9.4.3.5",
+                "title": "Scheduling Availability During NR − E-UTRAN TDD measurements with NCSG"
+              }
+            ]
+          },
+          {
+            "clause_id": "9.4.4",
+            "title": "Inter-RAT RSTD measurements",
+            "subsections": [
+              {
+                "clause_id": "9.4.4.1",
+                "title": "NR − E-UTRAN FDD RSTD measurements",
+                "subsections": [
+                  {
+                    "clause_id": "9.4.4.1.1",
+                    "title": "Introduction"
+                  },
+                  {
+                    "clause_id": "9.4.4.1.2",
+                    "title": "Requirements",
+                    "formulas": [
+                      {
+                        "description": "RSTD measurement time",
+                        "latex": "T_{RSTD\\_InterRAT,E-UTRAN\\_FDD} = (M-1) \\times T_{PRS} + \\Delta_{PRS} \\text{ ms}"
+                      }
+                    ],
+                    "tables": [
+                      {
+                        "table_id": "9.4.4.1.2-1",
+                        "title": "Number of PRS positioning occasions within TRSTD_InterRAT,E-UTRAN_FDD"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.4.4.2",
+                "title": "NR − E-UTRAN TDD RSTD measurements",
+                "subsections": [
+                  {
+                    "clause_id": "9.4.4.2.1",
+                    "title": "Introduction"
+                  },
+                  {
+                    "clause_id": "9.4.4.2.2",
+                    "title": "Requirements",
+                    "tables": [
+                      {
+                        "table_id": "9.4.4.2.2-1",
+                        "title": "Number of PRS positioning occasions within TRSTD_InterRAT,E-UTRAN_TDD"
+                      },
+                      {
+                        "table_id": "9.4.4.2.2-2",
+                        "title": "TDD uplink-downlink subframe configurations applicable for inter-RAT RSTD requirements"
+                      },
+                      {
+                        "table_id": "9.4.4.2.2-3",
+                        "title": "TDD uplink-downlink subframe configurations applicable for inter-RAT RSTD requirements without gaps"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.4.5",
+            "title": "Inter-RAT E-CID measurements",
+            "subsections": [
+              {
+                "clause_id": "9.4.5.1",
+                "title": "NR−E-UTRAN FDD E-CID RSRP and RSRQ measurements",
+                "subsections": [
+                  {
+                    "clause_id": "9.4.5.1.1",
+                    "title": "Introduction"
+                  },
+                  {
+                    "clause_id": "9.4.5.1.2",
+                    "title": "Requirements"
+                  },
+                  {
+                    "clause_id": "9.4.5.1.3",
+                    "title": "Measurement Reporting Delay"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.4.5.2",
+                "title": "NR−E-UTRAN TDD E-CID RSRP and RSRQ measurements"
+              }
+            ]
+          },
+          {
+            "clause_id": "9.4.6",
+            "title": "NR − UTRAN FDD measurements",
+            "subsections": [
+              {
+                "clause_id": "9.4.6.1",
+                "title": "Introduction"
+              },
+              {
+                "clause_id": "9.4.6.2",
+                "title": "Requirements when no DRX is used",
+                "formulas": [
+                  {
+                    "description": "UTRA FDD measurement period",
+                    "latex": "T_{measurement\\_UTRA\\_FDD} = T_{Basic\\_measurement\\_UTRA\\_FDD} \\times CSSF_{interRAT} \\text{ ms}"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.4.6.3",
+                "title": "Requirements when DRX is used",
+                "tables": [
+                  {
+                    "table_id": "9.4.6.3-1",
+                    "title": "Requirement to identify a newly detectable UTRA FDD cell"
+                  },
+                  {
+                    "table_id": "9.4.6.3-2",
+                    "title": "Requirement to measure UTRA FDD cells"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "clause_id": "9.4.7",
+            "title": "NR − E-UTRAN measurements with autonomous gaps",
+            "subsections": [
+              {
+                "clause_id": "9.4.7.1",
+                "title": "CGI identification of an E-UTRA cell with autonomous gaps"
+              },
+              {
+                "clause_id": "9.4.7.2",
+                "title": "CGI reporting delay"
+              }
+            ]
+          },
+          {
+            "clause_id": "9.4.8",
+            "title": "NR − E-UTRAN measurements without measurement gaps",
+            "subsections": [
+              {
+                "clause_id": "9.4.8.1",
+                "title": "Introduction"
+              },
+              {
+                "clause_id": "9.4.8.2",
+                "title": "General requirements",
+                "tables": [
+                  {
+                    "table_id": "9.4.8.2-1",
+                    "title": "The effective measurement window"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.4.8.3",
+                "title": "NR − E-UTRAN FDD measurements",
+                "subsections": [
+                  {
+                    "clause_id": "9.4.8.3.1",
+                    "title": "Introduction"
+                  },
+                  {
+                    "clause_id": "9.4.8.3.2",
+                    "title": "Requirements when no DRX is used"
+                  },
+                  {
+                    "clause_id": "9.4.8.3.3",
+                    "title": "Requirements when DRX is used"
+                  },
+                  {
+                    "clause_id": "9.4.8.3.4",
+                    "title": "Measurement reporting requirements"
+                  },
+                  {
+                    "clause_id": "9.4.8.3.5",
+                    "title": "Scheduling availability during NR − E-UTRAN FDD measurements"
+                  }
+                ]
+              },
+              {
+                "clause_id": "9.4.8.4",
+                "title": "NR − E-UTRAN TDD measurements",
+                "subsections": [
+                  {
+                    "clause_id": "9.4.8.4.1",
+                    "title": "Introduction"
+                  },
+                  {
+                    "clause_id": "9.4.8.4.2",
+                    "title": "Requirements when no DRX is used"
+                  },
+                  {
+                    "clause_id": "9.4.8.4.3",
+                    "title": "Requirements when DRX is used"
+                  },
+                  {
+                    "clause_id": "9.4.8.4.4",
+                    "title": "Measurement reporting requirements"
+                  },
+                  {
+                    "clause_id": "9.4.8.4.5",
+                    "title": "Scheduling availability during NR − E-UTRAN TDD measurements"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
