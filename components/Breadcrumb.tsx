@@ -1,7 +1,5 @@
-"use client"
-
 import React from 'react'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 import { ChevronRight, Chrome as Home } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -20,14 +18,14 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
     <nav className={cn("flex items-center text-sm", className)}>
       <ol className="flex items-center flex-wrap gap-1">
         <li>
-          <Link 
-            href="/"
+          <Link
+            to="/"
             className="flex items-center text-muted-foreground hover:text-foreground transition-colors"
           >
             <Home className="w-4 h-4" />
           </Link>
         </li>
-        
+
         {items.map((item, index) => (
           <React.Fragment key={index}>
             <li>
@@ -36,7 +34,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
             <li>
               {item.href ? (
                 <Link
-                  href={item.href}
+                  to={item.href}
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {item.label}
@@ -54,7 +52,6 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
   )
 }
 
-// Generate breadcrumb from clause path
 interface ClauseBreadcrumbProps {
   clause: string
   subclause?: string
@@ -65,10 +62,10 @@ export function ClauseBreadcrumb({ clause, subclause, className }: ClauseBreadcr
   const items: BreadcrumbItem[] = [
     { label: `Clause ${clause}`, href: `/clause${clause}/` }
   ]
-  
+
   if (subclause) {
     items.push({ label: subclause })
   }
-  
+
   return <Breadcrumb items={items} className={className} />
 }

@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Clock, Table, Calculator, ChevronRight } from 'lucide-react'
@@ -74,7 +72,6 @@ const subclauses = [
   }
 ]
 
-// Sample table data for 7.1.2-1
 const timingErrorData = [
   { frequencyRange: 'FR1', scsSSB: '15', scsUL: '15', te: '12×64×Tc' },
   { frequencyRange: 'FR1', scsSSB: '15', scsUL: '30', te: '10×64×Tc' },
@@ -96,7 +93,6 @@ const timingErrorData = [
   { frequencyRange: 'FR2-2', scsSSB: '960', scsUL: '960', te: '0.86×64×Tc' },
 ]
 
-// Sample cross-references
 const crossReferences = [
   { from: '7.1.2', to: '7.1.2.1', type: 'depends_on' as const, description: 'Gradual timing adjustment' },
   { from: '7.1.2', to: '7.3', type: 'relates_to' as const, description: 'Timing Advance' },
@@ -109,10 +105,8 @@ export default function Clause7Page() {
   return (
     <div className="py-8 px-4 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Breadcrumb */}
         <Breadcrumb items={breadcrumbItems} className="mb-6" />
 
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -128,11 +122,10 @@ export default function Clause7Page() {
             </div>
           </div>
 
-          {/* Content Layer Toggle */}
           <div className="flex items-center justify-between flex-wrap gap-4">
-            <ContentLayerToggle 
-              currentLayer={contentLayer} 
-              onLayerChange={setContentLayer} 
+            <ContentLayerToggle
+              currentLayer={contentLayer}
+              onLayerChange={setContentLayer}
             />
             <div className="flex gap-2">
               <Badge variant="fr1">FR1</Badge>
@@ -141,7 +134,6 @@ export default function Clause7Page() {
           </div>
         </motion.div>
 
-        {/* Content based on layer */}
         {contentLayer === 'overview' && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -155,12 +147,12 @@ export default function Clause7Page() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p>
-                  Clause 7 of TS 38.133 establishes the fundamental timing requirements that enable 
-                  reliable uplink communication in 5G NR systems. The core principle is that UEs must 
-                  advance their uplink transmissions to compensate for propagation delay, ensuring 
+                  Clause 7 of TS 38.133 establishes the fundamental timing requirements that enable
+                  reliable uplink communication in 5G NR systems. The core principle is that UEs must
+                  advance their uplink transmissions to compensate for propagation delay, ensuring
                   signals arrive at the gNB within the cyclic prefix window.
                 </p>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                   <div className="bg-muted/50 rounded-lg p-4">
                     <h4 className="font-medium mb-2">Key Parameters</h4>
@@ -179,7 +171,7 @@ export default function Clause7Page() {
                       </li>
                     </ul>
                   </div>
-                  
+
                   <div className="bg-muted/50 rounded-lg p-4">
                     <h4 className="font-medium mb-2">Coverage</h4>
                     <ul className="space-y-2 text-sm">
@@ -201,7 +193,6 @@ export default function Clause7Page() {
               </CardContent>
             </Card>
 
-            {/* Subclauses Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {subclauses.map((subclause, index) => (
                 <motion.div
@@ -247,15 +238,15 @@ export default function Clause7Page() {
                 <div>
                   <h4 className="font-semibold mb-2">7.1.2 UE Transmit Timing Requirements</h4>
                   <p className="text-muted-foreground mb-4">
-                    The UE transmit timing requirements establish the fundamental timing synchronization 
-                    framework that enables the gNB to correctly receive uplink transmissions from 
-                    geographically distributed UEs. The timing error limit Te represents the maximum 
-                    permissible deviation between actual UE transmit timing and ideal timing derived 
+                    The UE transmit timing requirements establish the fundamental timing synchronization
+                    framework that enables the gNB to correctly receive uplink transmissions from
+                    geographically distributed UEs. The timing error limit Te represents the maximum
+                    permissible deviation between actual UE transmit timing and ideal timing derived
                     from downlink synchronization.
                   </p>
                   <p className="text-muted-foreground">
-                    This parameter is critically dependent on both the SCS of the SSB signals (which 
-                    determines the precision of downlink timing acquisition) and the SCS of the uplink 
+                    This parameter is critically dependent on both the SCS of the SSB signals (which
+                    determines the precision of downlink timing acquisition) and the SCS of the uplink
                     signals (which determines the granularity of uplink timing).
                   </p>
                 </div>
@@ -265,11 +256,11 @@ export default function Clause7Page() {
                 <div>
                   <h4 className="font-semibold mb-2">N_TA_offset Parameter</h4>
                   <p className="text-muted-foreground mb-4">
-                    The N_TA_offset parameter serves a crucial role in multi-RAT coexistence scenarios, 
-                    particularly for E-UTRA-NR and NB-IoT-NR deployments where frame structure alignment 
+                    The N_TA_offset parameter serves a crucial role in multi-RAT coexistence scenarios,
+                    particularly for E-UTRA-NR and NB-IoT-NR deployments where frame structure alignment
                     between different RATs must be maintained.
                   </p>
-                  
+
                   <div className="bg-muted/50 rounded-lg p-4 mt-4">
                     <h5 className="font-medium mb-2">N_TA_offset Values</h5>
                     <ul className="space-y-2 text-sm">
@@ -281,9 +272,9 @@ export default function Clause7Page() {
                   </div>
                 </div>
 
-                <CrossReference 
-                  references={crossReferences} 
-                  currentClause="7.1.2" 
+                <CrossReference
+                  references={crossReferences}
+                  currentClause="7.1.2"
                 />
               </CardContent>
             </Card>
@@ -304,27 +295,27 @@ export default function Clause7Page() {
               <CardContent className="space-y-6">
                 <div className="prose dark:prose-invert max-w-none">
                   <p>
-                    The UE initial transmission timing error shall be less than or equal to ±Te 
+                    The UE initial transmission timing error shall be less than or equal to ±Te
                     where the timing error limit value Te is specified in table 7.1.2-1:
                   </p>
                   <ul>
                     <li>
-                      when it is the first transmission in a DRX cycle for PUCCH, PUSCH and SRS, 
-                      or it is the PRACH transmission, or it is the msgA transmission, or it is 
-                      the first transmission sent on the PSCell for activating the deactivated 
+                      when it is the first transmission in a DRX cycle for PUCCH, PUSCH and SRS,
+                      or it is the PRACH transmission, or it is the msgA transmission, or it is
+                      the first transmission sent on the PSCell for activating the deactivated
                       SCG without RACH.
                     </li>
                     <li>
                       when it is the transmission for PUSCH on CG resources for SDT in RRC_INACTIVE.
                     </li>
                     <li>
-                      when it is the first transmission on target cell after UE receives LTM 
+                      when it is the first transmission on target cell after UE receives LTM
                       cell switch command.
                     </li>
                   </ul>
                 </div>
 
-                <FormulaBlock 
+                <FormulaBlock
                   formula="Te = f(FR, SCS_{SSB}, SCS_{UL})"
                   label="Timing Error Limit Formula"
                 />

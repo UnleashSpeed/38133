@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Activity, Signal, Radio, Globe, ChevronRight } from 'lucide-react'
@@ -16,7 +14,6 @@ const breadcrumbItems = [
   { label: 'Clause 9', href: '/clause9/' }
 ]
 
-// Gap pattern data from parsed JSON
 const gapPatternData = [
   { gapPatternId: 0, mglMs: 6, mgrpMs: 40 },
   { gapPatternId: 1, mglMs: 6, mgrpMs: 80 },
@@ -58,10 +55,8 @@ export default function Clause9Page() {
   return (
     <div className="py-8 px-4 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Breadcrumb */}
         <Breadcrumb items={breadcrumbItems} className="mb-6" />
 
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -77,11 +72,10 @@ export default function Clause9Page() {
             </div>
           </div>
 
-          {/* Content Layer Toggle */}
           <div className="flex items-center justify-between flex-wrap gap-4">
-            <ContentLayerToggle 
-              currentLayer={contentLayer} 
-              onLayerChange={setContentLayer} 
+            <ContentLayerToggle
+              currentLayer={contentLayer}
+              onLayerChange={setContentLayer}
             />
             <div className="flex gap-2">
               <Badge variant="fr1">FR1</Badge>
@@ -90,7 +84,6 @@ export default function Clause9Page() {
           </div>
         </motion.div>
 
-        {/* Content based on layer */}
         {contentLayer === 'overview' && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -104,12 +97,12 @@ export default function Clause9Page() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p>
-                  Clause 9 of TS 38.133 specifies the measurement procedures that UEs must perform 
-                  in RRC_CONNECTED state. These requirements cover intra-frequency, inter-frequency, 
-                  and inter-RAT measurements, including measurement gaps, reporting delays, and 
+                  Clause 9 of TS 38.133 specifies the measurement procedures that UEs must perform
+                  in RRC_CONNECTED state. These requirements cover intra-frequency, inter-frequency,
+                  and inter-RAT measurements, including measurement gaps, reporting delays, and
                   accuracy requirements.
                 </p>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                   <div className="bg-muted/50 rounded-lg p-4">
                     <h4 className="font-medium mb-2 flex items-center gap-2">
@@ -131,7 +124,7 @@ export default function Clause9Page() {
                       </li>
                     </ul>
                   </div>
-                  
+
                   <div className="bg-muted/50 rounded-lg p-4">
                     <h4 className="font-medium mb-2 flex items-center gap-2">
                       <Radio className="w-4 h-4 text-nokia-blue" />
@@ -156,7 +149,6 @@ export default function Clause9Page() {
               </CardContent>
             </Card>
 
-            {/* Subclauses Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Card className="card-hover">
                 <CardHeader>
@@ -260,12 +252,12 @@ export default function Clause9Page() {
                 <div>
                   <h4 className="font-semibold mb-2">Gap Pattern Design</h4>
                   <p className="text-muted-foreground mb-4">
-                    The 26 gap pattern configurations provide flexibility to balance measurement 
-                    opportunity with service interruption. The Measurement Gap Length (MGL) ranges 
-                    from 1.5 ms to 20 ms, while the Measurement Gap Repetition Period (MGRP) 
+                    The 26 gap pattern configurations provide flexibility to balance measurement
+                    opportunity with service interruption. The Measurement Gap Length (MGL) ranges
+                    from 1.5 ms to 20 ms, while the Measurement Gap Repetition Period (MGRP)
                     ranges from 20 ms to 160 ms.
                   </p>
-                  
+
                   <div className="bg-muted/50 rounded-lg p-4">
                     <h5 className="font-medium mb-2">Key Considerations</h5>
                     <ul className="space-y-1 text-sm text-muted-foreground">
@@ -282,8 +274,8 @@ export default function Clause9Page() {
                 <div>
                   <h4 className="font-semibold mb-2">CSSF (Cell Search and Selection Factor)</h4>
                   <p className="text-muted-foreground mb-4">
-                    The Cell Search and Selection Factor accounts for the reduced measurement 
-                    opportunity when gaps are configured. It scales the measurement period 
+                    The Cell Search and Selection Factor accounts for the reduced measurement
+                    opportunity when gaps are configured. It scales the measurement period
                     requirements based on the effective measurement time.
                   </p>
 
@@ -294,9 +286,9 @@ export default function Clause9Page() {
                   />
                 </div>
 
-                <CrossReference 
-                  references={crossReferences} 
-                  currentClause="9.1" 
+                <CrossReference
+                  references={crossReferences}
+                  currentClause="9.1"
                 />
               </CardContent>
             </Card>
@@ -317,7 +309,7 @@ export default function Clause9Page() {
               <CardContent className="space-y-6">
                 <div className="prose dark:prose-invert max-w-none">
                   <p>
-                    UE requirements for measurement gaps to identify and measure cells. The gap 
+                    UE requirements for measurement gaps to identify and measure cells. The gap
                     pattern configurations are specified in Table 9.1.2-1.
                   </p>
                 </div>

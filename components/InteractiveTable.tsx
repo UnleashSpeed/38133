@@ -1,12 +1,10 @@
-"use client"
-
 import React, { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  ChevronDown, 
-  ChevronUp, 
-  Search, 
-  Download, 
+import {
+  ChevronDown,
+  ChevronUp,
+  Search,
+  Download,
   Filter,
   ChevronLeft,
   ChevronRight,
@@ -67,11 +65,9 @@ export function InteractiveTable({
   const [currentPage, setCurrentPage] = useState(1)
   const [showFilters, setShowFilters] = useState(false)
 
-  // Filter data
   const filteredData = useMemo(() => {
     let result = [...data]
 
-    // Apply search
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
       result = result.filter(row =>
@@ -82,14 +78,12 @@ export function InteractiveTable({
       )
     }
 
-    // Apply filters
     Object.entries(filters).forEach(([key, value]) => {
       if (value && value !== 'all') {
         result = result.filter(row => String(row[key]) === value)
       }
     })
 
-    // Apply sorting
     if (sortConfig) {
       result = sortData(result, sortConfig.key, sortConfig.direction)
     }
@@ -97,7 +91,6 @@ export function InteractiveTable({
     return result
   }, [data, searchQuery, filters, sortConfig, columns])
 
-  // Paginate data
   const totalPages = Math.ceil(filteredData.length / pageSize)
   const paginatedData = useMemo(() => {
     if (!enablePagination) return filteredData
@@ -132,7 +125,6 @@ export function InteractiveTable({
 
   return (
     <div className={cn("space-y-4", className)}>
-      {/* Header */}
       {(title || description) && (
         <div className="mb-4">
           {title && <h3 className="text-lg font-semibold">{title}</h3>}
@@ -140,7 +132,6 @@ export function InteractiveTable({
         </div>
       )}
 
-      {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-3">
         {enableSearch && (
           <div className="relative flex-1 min-w-[200px] max-w-sm">
@@ -196,7 +187,6 @@ export function InteractiveTable({
         )}
       </div>
 
-      {/* Filter Panel */}
       {showFilters && enableFiltering && (
         <motion.div
           initial={{ height: 0, opacity: 0 }}
@@ -235,12 +225,10 @@ export function InteractiveTable({
         </motion.div>
       )}
 
-      {/* Results count */}
       <div className="text-sm text-muted-foreground">
         Showing {paginatedData.length} of {filteredData.length} results
       </div>
 
-      {/* Table */}
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -309,7 +297,6 @@ export function InteractiveTable({
         </div>
       </div>
 
-      {/* Pagination */}
       {enablePagination && totalPages > 1 && (
         <div className="flex items-center justify-between">
           <div className="text-sm text-muted-foreground">

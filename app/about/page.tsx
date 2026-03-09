@@ -1,5 +1,3 @@
-"use client"
-
 import React from 'react'
 import { motion } from 'framer-motion'
 import { BookOpen, Code, Database, FileText, Github, ExternalLink, CircleCheck as CheckCircle, Layers, Search, Table, Calculator } from 'lucide-react'
@@ -81,10 +79,8 @@ export default function AboutPage() {
   return (
     <div className="py-8 px-4 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Breadcrumb */}
         <Breadcrumb items={breadcrumbItems} className="mb-6" />
 
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -96,7 +92,6 @@ export default function AboutPage() {
           </p>
         </motion.div>
 
-        {/* Overview */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -112,8 +107,8 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p>
-                This reference website provides an interactive, searchable interface to the 
-                3GPP TS 38.133 specification for NR Requirements for support of radio resource 
+                This reference website provides an interactive, searchable interface to the
+                3GPP TS 38.133 specification for NR Requirements for support of radio resource
                 management. It covers:
               </p>
               <ul className="space-y-2">
@@ -134,7 +129,6 @@ export default function AboutPage() {
           </Card>
         </motion.div>
 
-        {/* Features */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -159,7 +153,6 @@ export default function AboutPage() {
           </div>
         </motion.div>
 
-        {/* Tech Stack */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -184,7 +177,6 @@ export default function AboutPage() {
           </Card>
         </motion.div>
 
-        {/* Data Sources */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -212,7 +204,6 @@ export default function AboutPage() {
           </Card>
         </motion.div>
 
-        {/* Disclaimer */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -227,15 +218,15 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                This reference is provided for informational purposes only. While every effort 
-                has been made to ensure accuracy, the official 3GPP specifications should always 
-                be consulted for definitive requirements. This website is not affiliated with 
+                This reference is provided for informational purposes only. While every effort
+                has been made to ensure accuracy, the official 3GPP specifications should always
+                be consulted for definitive requirements. This website is not affiliated with
                 3GPP or its member organizations.
               </p>
               <div className="mt-4 flex items-center gap-4">
-                <a 
-                  href="https://www.3gpp.org/specifications" 
-                  target="_blank" 
+                <a
+                  href="https://www.3gpp.org/specifications"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-nokia-blue hover:underline text-sm"
                 >

@@ -1,11 +1,9 @@
-"use client"
-
 import React, { useState } from 'react'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Link2, 
-  ArrowRight, 
+import {
+  Link2,
+  ArrowRight,
   ExternalLink,
   BookOpen,
   ChevronRight
@@ -39,21 +37,19 @@ const typeLabels: Record<string, { label: string; color: string }> = {
   referenced_by: { label: 'Referenced By', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100' },
 }
 
-export function CrossReference({ 
-  references, 
+export function CrossReference({
+  references,
   currentClause,
-  className 
+  className
 }: CrossReferenceProps) {
   const [expandedRef, setExpandedRef] = useState<string | null>(null)
 
-  // Filter references related to current clause
   const relatedRefs = references.filter(
     ref => ref.from === currentClause || ref.to === currentClause
   )
 
   if (relatedRefs.length === 0) return null
 
-  // Group by type
   const groupedRefs = relatedRefs.reduce((acc, ref) => {
     const type = ref.type
     if (!acc[type]) acc[type] = []
@@ -74,17 +70,17 @@ export function CrossReference({
             <Badge className={typeLabels[type]?.color || ''}>
               {typeLabels[type]?.label || type}
             </Badge>
-            
+
             <div className="space-y-1">
-              {refs.map((ref, i) => {
-                const isOutgoing = ref.from === currentClause
-                const targetClause = isOutgoing ? ref.to : ref.from
+              {refs.map((crossRef, i) => {
+                const isOutgoing = crossRef.from === currentClause
+                const targetClause = isOutgoing ? crossRef.to : crossRef.from
                 const targetHref = getClauseHref(targetClause)
 
                 return (
                   <CrossReferenceLink
                     key={i}
-                    ref={ref}
+                    crossRef={crossRef}
                     isOutgoing={isOutgoing}
                     targetClause={targetClause}
                     targetHref={targetHref}
@@ -100,23 +96,23 @@ export function CrossReference({
 }
 
 interface CrossReferenceLinkProps {
-  ref: CrossReferenceItem
+  crossRef: CrossReferenceItem
   isOutgoing: boolean
   targetClause: string
   targetHref: string
 }
 
-function CrossReferenceLink({ 
-  ref, 
-  isOutgoing, 
+function CrossReferenceLink({
+  crossRef,
+  isOutgoing,
   targetClause,
-  targetHref 
+  targetHref
 }: CrossReferenceLinkProps) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
         <Link
-          href={targetHref}
+          to={targetHref}
           className={cn(
             "flex items-center gap-2 px-3 py-2 rounded-md text-sm",
             "bg-muted/50 hover:bg-muted transition-colors group"
@@ -127,22 +123,22 @@ function CrossReferenceLink({
           ) : (
             <ArrowRight className="w-3 h-3 text-muted-foreground rotate-180" />
           )}
-          
+
           <span className="font-mono text-nokia-blue">
             {targetClause}
           </span>
-          
-          {ref.description && (
+
+          {crossRef.description && (
             <span className="text-muted-foreground truncate flex-1">
-              {ref.description}
+              {crossRef.description}
             </span>
           )}
-          
+
           <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
         </Link>
       </HoverCardTrigger>
-      
-      {ref.preview && (
+
+      {crossRef.preview && (
         <HoverCardContent className="w-80">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
@@ -150,7 +146,7 @@ function CrossReferenceLink({
               <span className="font-medium">Clause {targetClause}</span>
             </div>
             <p className="text-sm text-muted-foreground line-clamp-4">
-              {ref.preview}
+              {crossRef.preview}
             </p>
           </div>
         </HoverCardContent>
@@ -165,23 +161,22 @@ function getClauseHref(clauseId: string): string {
   return `/clause${mainClause}/#${clauseId.replace(/\./g, '-')}`
 }
 
-// Inline cross-reference link for use in text
 interface InlineCrossRefProps {
   clauseId: string
   children?: React.ReactNode
   className?: string
 }
 
-export function InlineCrossRef({ 
-  clauseId, 
+export function InlineCrossRef({
+  clauseId,
   children,
-  className 
+  className
 }: InlineCrossRefProps) {
   const href = getClauseHref(clauseId)
 
   return (
     <Link
-      href={href}
+      to={href}
       className={cn(
         "inline-flex items-center gap-1 text-nokia-blue hover:underline",
         className
@@ -193,7 +188,6 @@ export function InlineCrossRef({
   )
 }
 
-// Cross-reference badge for tables
 interface CrossRefBadgeProps {
   clauseId: string
   type?: 'fr1' | 'fr2' | 'default'
@@ -204,7 +198,7 @@ export function CrossRefBadge({ clauseId, type = 'default' }: CrossRefBadgeProps
   const variant = type === 'fr1' ? 'fr1' : type === 'fr2' ? 'fr2' : 'default'
 
   return (
-    <Link href={href}>
+    <Link to={href}>
       <Badge variant={variant} className="cursor-pointer hover:opacity-80">
         {clauseId}
       </Badge>

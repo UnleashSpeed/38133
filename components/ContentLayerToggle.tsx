@@ -1,10 +1,8 @@
-"use client";
-
 import React from 'react';
 import { motion } from 'framer-motion'
-import { 
-  BookOpen, 
-  Lightbulb, 
+import {
+  BookOpen,
+  Lightbulb,
   FileText,
   Eye
 } from 'lucide-react'
@@ -38,10 +36,10 @@ const layers: { id: ContentLayer; label: string; icon: React.ReactNode; descript
   }
 ]
 
-export function ContentLayerToggle({ 
-  currentLayer, 
+export function ContentLayerToggle({
+  currentLayer,
   onLayerChange,
-  className 
+  className
 }: ContentLayerToggleProps) {
   return (
     <div className={cn(
@@ -76,17 +74,16 @@ export function ContentLayerToggle({
   )
 }
 
-// Compact version for mobile
 interface CompactLayerToggleProps {
   currentLayer: ContentLayer
   onLayerChange: (layer: ContentLayer) => void
   className?: string
 }
 
-export function CompactLayerToggle({ 
-  currentLayer, 
+export function CompactLayerToggle({
+  currentLayer,
   onLayerChange,
-  className 
+  className
 }: CompactLayerToggleProps) {
   return (
     <div className={cn(
@@ -112,7 +109,6 @@ export function CompactLayerToggle({
   )
 }
 
-// Layer indicator badge
 interface LayerBadgeProps {
   layer: ContentLayer
   className?: string
@@ -120,7 +116,7 @@ interface LayerBadgeProps {
 
 export function LayerBadge({ layer, className }: LayerBadgeProps) {
   const layerInfo = layers.find(l => l.id === layer)
-  
+
   return (
     <span className={cn(
       "inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium rounded-full",

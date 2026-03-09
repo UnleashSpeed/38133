@@ -1,8 +1,5 @@
-"use client"
-
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X, Loader as Loader2, FileText, Table, Calculator, Sparkles, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -41,7 +38,7 @@ const typeLabels: Record<string, string> = {
   explanation: 'Explanation',
 }
 
-export function SemanticSearch({ 
+export function SemanticSearch({
   className,
   placeholder = "Search clauses, requirements, tables...",
   onResultSelect
@@ -51,9 +48,8 @@ export function SemanticSearch({
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
-  const router = useRouter()
+  const navigate = useNavigate()
 
-  // Mock search function - in production this would use Fuse.js or similar
   const performSearch = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
       setResults([])
@@ -61,11 +57,9 @@ export function SemanticSearch({
     }
 
     setIsLoading(true)
-    
-    // Simulate API delay
+
     await new Promise(resolve => setTimeout(resolve, 300))
 
-    // Mock results based on query
     const mockResults = [
       {
         id: '7.1.2-1',
@@ -103,7 +97,7 @@ export function SemanticSearch({
         relevance: 80,
         clause: '9'
       },
-    ].filter(r => 
+    ].filter(r =>
       r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.clauseId.includes(searchQuery)
@@ -128,7 +122,7 @@ export function SemanticSearch({
     if (onResultSelect) {
       onResultSelect(result)
     } else {
-      router.push(getResultHref(result))
+      navigate(getResultHref(result))
     }
   }
 
@@ -154,7 +148,7 @@ export function SemanticSearch({
   const highlightMatch = (text: string, query: string) => {
     if (!query) return text
     const parts = text.split(new RegExp(`(${query})`, 'gi'))
-    return parts.map((part, i) => 
+    return parts.map((part, i) =>
       part.toLowerCase() === query.toLowerCase() ? (
         <mark key={i} className="bg-yellow-200 dark:bg-yellow-900/50 px-0.5 rounded">
           {part}
@@ -195,13 +189,11 @@ export function SemanticSearch({
       <AnimatePresence>
         {isOpen && (query || results.length > 0) && (
           <>
-            {/* Backdrop */}
-            <div 
+            <div
               className="fixed inset-0 z-40"
               onClick={() => setIsOpen(false)}
             />
-            
-            {/* Results dropdown */}
+
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -243,7 +235,7 @@ export function SemanticSearch({
                   <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase">
                     {results.length} result{results.length !== 1 ? 's' : ''}
                   </div>
-                  
+
                   {results.map((result, index) => (
                     <button
                       key={result.id}
@@ -270,8 +262,8 @@ export function SemanticSearch({
                             {highlightMatch(result.content, query)}
                           </p>
                           <div className="flex items-center gap-2 mt-1.5">
-                            <Badge 
-                              variant="secondary" 
+                            <Badge
+                              variant="secondary"
                               className="text-[10px]"
                             >
                               {typeLabels[result.type]}
@@ -280,8 +272,8 @@ export function SemanticSearch({
                               Clause {result.clause}
                             </span>
                             {result.relevance > 90 && (
-                              <Badge 
-                                variant="nokia" 
+                              <Badge
+                                variant="nokia"
                                 className="text-[10px]"
                               >
                                 High relevance
@@ -303,7 +295,6 @@ export function SemanticSearch({
   )
 }
 
-// Search bar for header
 interface HeaderSearchProps {
   className?: string
 }
@@ -311,7 +302,7 @@ interface HeaderSearchProps {
 export function HeaderSearch({ className }: HeaderSearchProps) {
   return (
     <div className={cn("w-full max-w-md", className)}>
-      <SemanticSearch 
+      <SemanticSearch
         placeholder="Search TS 38.133..."
         className="w-full"
       />

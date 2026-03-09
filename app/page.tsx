@@ -1,12 +1,10 @@
-"use client"
-
 import React from 'react'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { 
-  Clock, 
-  Radio, 
-  Activity, 
+import {
+  Clock,
+  Radio,
+  Activity,
   ArrowRight,
   BookOpen,
   Search,
@@ -16,6 +14,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 
 const features = [
   {
@@ -46,7 +45,7 @@ const clauses = [
     title: 'Clause 7: Timing',
     description: 'UE transmit timing, timer accuracy, timing advance, and synchronization requirements',
     icon: <Clock className="w-6 h-6" />,
-    href: '/clause7/',
+    href: '/clause7',
     subclauses: ['7.1 UE Transmit Timing', '7.2 UE Timer Accuracy', '7.3 Timing Advance', '7.4 Cell Phase Synchronization'],
     color: 'bg-blue-500'
   },
@@ -55,7 +54,7 @@ const clauses = [
     title: 'Clause 8: Signalling Characteristics',
     description: 'SCell activation/deactivation and TCI state switching requirements',
     icon: <Radio className="w-6 h-6" />,
-    href: '/clause8/',
+    href: '/clause8',
     subclauses: ['8.3 SCell Activation', '8.10 TCI State Switching'],
     color: 'bg-purple-500'
   },
@@ -64,7 +63,7 @@ const clauses = [
     title: 'Clause 9: Measurement Procedure',
     description: 'Intra-frequency, inter-frequency, and inter-RAT measurement requirements',
     icon: <Activity className="w-6 h-6" />,
-    href: '/clause9/',
+    href: '/clause9',
     subclauses: ['9.1 General Requirements', '9.2 Intra-frequency', '9.3 Inter-frequency', '9.4 Inter-RAT'],
     color: 'bg-green-500'
   }
@@ -73,11 +72,9 @@ const clauses = [
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <section className="relative py-20 px-4 lg:px-8 overflow-hidden">
-        {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-nokia-light/50 via-background to-background dark:from-nokia-navy/20" />
-        
+
         <div className="relative max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -88,27 +85,27 @@ export default function HomePage() {
             <Badge variant="nokia" className="mb-4">
               3GPP Technical Specification
             </Badge>
-            
+
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               <span className="gradient-text">TS 38.133</span>
               <span className="block text-2xl md:text-3xl lg:text-4xl font-medium text-muted-foreground mt-2">
                 NR Requirements for RRM
               </span>
             </h1>
-            
+
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive reference for Clauses 7, 8, and 9 covering timing requirements, 
+              Comprehensive reference for Clauses 7, 8, and 9 covering timing requirements,
               signalling characteristics, and measurement procedures.
             </p>
-            
+
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-              <Link href="/clause7/">
+              <Link to="/clause7">
                 <Button size="lg" variant="nokia">
                   Explore Clauses
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
-              <Link href="/about/">
+              <Link to="/about">
                 <Button size="lg" variant="outline">
                   Learn More
                 </Button>
@@ -118,7 +115,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="py-16 px-4 lg:px-8 border-t">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -146,7 +142,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Clauses Section */}
       <section className="py-16 px-4 lg:px-8 bg-muted/30">
         <div className="max-w-5xl mx-auto">
           <motion.div
@@ -167,7 +162,7 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + index * 0.1 }}
               >
-                <Link href={clause.href}>
+                <Link to={clause.href}>
                   <Card className="h-full card-hover cursor-pointer group">
                     <CardHeader>
                       <div className="flex items-start justify-between">
@@ -196,7 +191,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Quick Stats */}
       <section className="py-16 px-4 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -225,8 +219,4 @@ export default function HomePage() {
       </section>
     </div>
   )
-}
-
-function cn(...classes: (string | undefined | false)[]) {
-  return classes.filter(Boolean).join(' ')
 }

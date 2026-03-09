@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useEffect, useRef } from 'react'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
@@ -11,19 +9,18 @@ interface FormulaRendererProps {
   className?: string
 }
 
-export function FormulaRenderer({ 
-  formula, 
+export function FormulaRenderer({
+  formula,
   displayMode = false,
-  className 
+  className
 }: FormulaRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (containerRef.current && formula) {
       try {
-        // Clean the formula (remove $ if present)
         const cleanFormula = formula.replace(/^\$|\$$/g, '').trim()
-        
+
         katex.render(cleanFormula, containerRef.current, {
           displayMode,
           throwOnError: false,
@@ -42,7 +39,7 @@ export function FormulaRenderer({
   if (!formula) return null
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={cn(
         "katex-wrapper",
@@ -60,11 +57,11 @@ interface FormulaBlockProps {
   className?: string
 }
 
-export function FormulaBlock({ 
-  formula, 
+export function FormulaBlock({
+  formula,
   label,
   description,
-  className 
+  className
 }: FormulaBlockProps) {
   return (
     <div className={cn(
@@ -90,15 +87,15 @@ interface FormulaWithVariablesProps {
   className?: string
 }
 
-export function FormulaWithVariables({ 
-  formula, 
+export function FormulaWithVariables({
+  formula,
   variables,
-  className 
+  className
 }: FormulaWithVariablesProps) {
   return (
     <div className={cn("space-y-4", className)}>
       <FormulaBlock formula={formula} />
-      
+
       {variables.length > 0 && (
         <div className="bg-muted/50 rounded-lg p-4">
           <h4 className="text-sm font-medium mb-3">Variable Definitions</h4>
@@ -118,14 +115,12 @@ export function FormulaWithVariables({
   )
 }
 
-// Extract formulas from text and render them
 interface TextWithFormulasProps {
   text: string
   className?: string
 }
 
 export function TextWithFormulas({ text, className }: TextWithFormulasProps) {
-  // Split text by formula patterns ($...$)
   const parts = text.split(/(\$[^$]+\$)/g)
 
   return (

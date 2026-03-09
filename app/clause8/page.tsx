@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Radio, Zap, Clock, ChevronRight } from 'lucide-react'
@@ -44,10 +42,8 @@ export default function Clause8Page() {
   return (
     <div className="py-8 px-4 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Breadcrumb */}
         <Breadcrumb items={breadcrumbItems} className="mb-6" />
 
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -63,11 +59,10 @@ export default function Clause8Page() {
             </div>
           </div>
 
-          {/* Content Layer Toggle */}
           <div className="flex items-center justify-between flex-wrap gap-4">
-            <ContentLayerToggle 
-              currentLayer={contentLayer} 
-              onLayerChange={setContentLayer} 
+            <ContentLayerToggle
+              currentLayer={contentLayer}
+              onLayerChange={setContentLayer}
             />
             <div className="flex gap-2">
               <Badge variant="fr1">FR1</Badge>
@@ -76,7 +71,6 @@ export default function Clause8Page() {
           </div>
         </motion.div>
 
-        {/* Content based on layer */}
         {contentLayer === 'overview' && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -90,12 +84,12 @@ export default function Clause8Page() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p>
-                  Clause 8 of TS 38.133 specifies the signalling characteristics requirements for 
-                  5G NR carrier aggregation and dual connectivity operations. The primary focus is 
-                  on SCell activation and deactivation delays, which are critical for efficient 
+                  Clause 8 of TS 38.133 specifies the signalling characteristics requirements for
+                  5G NR carrier aggregation and dual connectivity operations. The primary focus is
+                  on SCell activation and deactivation delays, which are critical for efficient
                   carrier aggregation performance.
                 </p>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                   <div className="bg-muted/50 rounded-lg p-4">
                     <h4 className="font-medium mb-2 flex items-center gap-2">
@@ -117,7 +111,7 @@ export default function Clause8Page() {
                       </li>
                     </ul>
                   </div>
-                  
+
                   <div className="bg-muted/50 rounded-lg p-4">
                     <h4 className="font-medium mb-2 flex items-center gap-2">
                       <Clock className="w-4 h-4 text-nokia-blue" />
@@ -142,7 +136,6 @@ export default function Clause8Page() {
               </CardContent>
             </Card>
 
-            {/* Key Formulas Card */}
             <Card>
               <CardHeader>
                 <CardTitle>Key Activation Formula</CardTitle>
@@ -156,7 +149,6 @@ export default function Clause8Page() {
               </CardContent>
             </Card>
 
-            {/* Subclauses */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Card className="card-hover">
                 <CardHeader>
@@ -209,12 +201,12 @@ export default function Clause8Page() {
                 <div>
                   <h4 className="font-semibold mb-2">Known SCell Activation</h4>
                   <p className="text-muted-foreground mb-4">
-                    For known SCells, the activation time is significantly reduced because the UE 
-                    has already performed measurements and has timing synchronization established. 
-                    The key condition is that the UE must have sent a valid measurement report for 
+                    For known SCells, the activation time is significantly reduced because the UE
+                    has already performed measurements and has timing synchronization established.
+                    The key condition is that the UE must have sent a valid measurement report for
                     the SCell within the specified measurement period.
                   </p>
-                  
+
                   <div className="bg-muted/50 rounded-lg p-4">
                     <h5 className="font-medium mb-2">FR1 Known SCell Conditions</h5>
                     <ul className="space-y-1 text-sm text-muted-foreground">
@@ -231,8 +223,8 @@ export default function Clause8Page() {
                 <div>
                   <h4 className="font-semibold mb-2">Unknown SCell Activation</h4>
                   <p className="text-muted-foreground mb-4">
-                    For unknown SCells, the activation time includes additional components for cell 
-                    detection and measurement. The formulas account for SMTC periodicity, RS 
+                    For unknown SCells, the activation time includes additional components for cell
+                    detection and measurement. The formulas account for SMTC periodicity, RS
                     measurement periods, and various uncertainty factors.
                   </p>
 
@@ -243,9 +235,9 @@ export default function Clause8Page() {
                   />
                 </div>
 
-                <CrossReference 
-                  references={crossReferences} 
-                  currentClause="8.3.2" 
+                <CrossReference
+                  references={crossReferences}
+                  currentClause="8.3.2"
                 />
               </CardContent>
             </Card>
@@ -266,8 +258,8 @@ export default function Clause8Page() {
               <CardContent className="space-y-6">
                 <div className="prose dark:prose-invert max-w-none">
                   <p>
-                    UE configured with at least one downlink SCell in EN-DC, standalone NR CA, 
-                    NE-DC, or NR-DC shall be capable to transmit valid CSI report and apply actions 
+                    UE configured with at least one downlink SCell in EN-DC, standalone NR CA,
+                    NE-DC, or NR-DC shall be capable to transmit valid CSI report and apply actions
                     no later than in slot:
                   </p>
                   <p className="font-mono bg-muted p-4 rounded-lg">
@@ -283,7 +275,7 @@ export default function Clause8Page() {
                   </ul>
                 </div>
 
-                <FormulaBlock 
+                <FormulaBlock
                   formula="$n+\\frac{T_{HARQ}+T_{activation\\_time}+T_{CSI\\_Reporting}}{NR\\ slot\\ length}$"
                   label="Activation Slot Formula"
                 />
