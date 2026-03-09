@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -75,7 +75,7 @@ export function SemanticSearch({
     await new Promise(resolve => setTimeout(resolve, 300))
 
     // Mock results based on query
-    const mockResults: SearchResult[] = [
+    const mockResults = [
       {
         id: '7.1.2-1',
         clauseId: '7.1.2',
@@ -118,12 +118,12 @@ export function SemanticSearch({
       r.clauseId.includes(searchQuery)
     )
 
-    setResults(mockResults)
+    setResults(mockResults as SearchResult[])
     setIsLoading(false)
   }, [])
 
-  const debouncedSearch = useCallback(
-    debounce(performSearch, 200),
+  const debouncedSearch = useMemo(
+    () => debounce(performSearch, 200),
     [performSearch]
   )
 

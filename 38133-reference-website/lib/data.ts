@@ -125,7 +125,7 @@ export async function searchAllClauses(query: string): Promise<SearchResult[]> {
 }
 
 function searchSubclause(
-  subclause: { clause_id: string; title: string; text?: string; description?: string; requirements?: unknown[] },
+  subclause: { clause_id: string; title: string; text?: string; description?: string; requirements?: unknown[] | Record<string, unknown> },
   clauseNum: string,
   results: SearchResult[],
   query: string

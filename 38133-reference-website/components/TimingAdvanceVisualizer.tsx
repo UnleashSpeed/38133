@@ -123,7 +123,7 @@ export const TimingAdvanceVisualizer: React.FC<TimingAdvanceVisualizerProps> = (
         <div className="bg-blue-50 rounded-lg p-3">
           <div className="text-sm font-medium text-blue-900">Required Adjustment</div>
           <div className="text-lg font-bold text-blue-700">
-            {Math.abs(taDifference) * 16 * tcValue / 1000:.2f} μs
+            {(Math.abs(taDifference) * 16 * tcValue / 1000).toFixed(2)} μs
           </div>
           <div className="text-xs text-blue-600">
             {adjustmentSteps} step{adjustmentSteps > 1 ? 's' : ''}

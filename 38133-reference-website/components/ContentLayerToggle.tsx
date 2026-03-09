@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import React from 'react'
+import React from 'react';
 import { motion } from 'framer-motion'
 import { 
   BookOpen, 
@@ -63,7 +63,7 @@ export function ContentLayerToggle({
             <motion.div
               layoutId="activeLayer"
               className="absolute inset-0 bg-nokia-blue rounded-md"
-              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}
           <span className="relative z-10 flex items-center gap-2">

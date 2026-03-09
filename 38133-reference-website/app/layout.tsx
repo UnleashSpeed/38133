@@ -1,11 +1,11 @@
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import { ThemeProvider } from "@/components/ThemeProvider"
-import { Sidebar } from "@/components/Sidebar"
-import { HeaderSearch } from "@/components/SemanticSearch"
-import { ThemeToggle } from "@/components/ThemeToggle"
-import { cn } from "@/lib/utils"
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { SidebarWrapper } from "@/components/SidebarWrapper";
+import { HeaderSearch } from "@/components/SemanticSearch";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -35,12 +35,12 @@ export default function RootLayout({
           <div className="min-h-screen flex">
             {/* Sidebar - always visible on desktop */}
             <div className="hidden lg:block w-[280px] flex-shrink-0">
-              <Sidebar isOpen={true} onToggle={() => {}} />
+              <SidebarWrapper isDesktop={true} />
             </div>
-            
+
             {/* Mobile sidebar */}
             <div className="lg:hidden">
-              <Sidebar isOpen={false} onToggle={() => {}} />
+              <SidebarWrapper isDesktop={false} />
             </div>
             
             {/* Main content */}
