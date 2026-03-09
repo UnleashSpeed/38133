@@ -1,0 +1,678 @@
+{
+  "document_info": {
+    "specification": "3GPP TS 38.133",
+    "title": "NR; Requirements for support of radio resource management",
+    "version": "j20",
+    "clause": "8 - Signalling Characteristics",
+    "generated_date": "2024",
+    "explanation_type": "Expert Technical Analysis for 3GPP RRM Standardization"
+  },
+  "sections": {
+    "8.3.2": {
+      "clause_id": "8.3.2",
+      "title": "SCell Activation Delay Requirement for Deactivated SCell",
+      "expert_technical_overview": {
+        "paragraphs": [
+          "Clause 8.3.2 establishes the fundamental timing requirements governing SCell activation in NR carrier aggregation configurations, encompassing EN-DC, standalone NR CA, NE-DC, and NR-DC deployment scenarios. This clause defines the maximum allowable delay between reception of an SCell activation command (typically via MAC CE) and the UE's capability to transmit valid CSI reports while applying all required physical layer actions. The engineering significance lies in balancing rapid SCell activation for throughput enhancement against the practical constraints of RF synchronization, timing acquisition, and measurement reporting in multi-carrier systems.",
+          "The clause introduces a sophisticated tiered structure distinguishing between 'known' and 'unknown' SCell scenarios, with further differentiation between FR1 and FR2 frequency ranges. This multi-dimensional classification reflects the fundamental differences in beam management requirements, synchronization procedures, and measurement complexities between sub-6 GHz and mmWave operations. The known SCell paradigm leverages prior UE measurement knowledge to minimize activation latency, while unknown SCell scenarios accommodate more extensive cell detection and measurement procedures necessary when the UE lacks recent valid measurements for the target SCell.",
+          "Critical engineering trade-offs are embedded throughout the timing formulas, particularly the balance between activation delay minimization and measurement accuracy assurance. The 1280 ms validity window for known SCell conditions reflects practical UE implementation constraints while ensuring measurement freshness. The introduction of enhanced timing parameters (T_FirstSSB_MAX_enhanced, T_SMTC_MAX_enhanced) with Release 18 capabilities demonstrates the continuous evolution toward reduced latency through advanced UE processing and network coordination mechanisms."
+        ]
+      },
+      "detailed_analysis": {
+        "paragraphs": [
+          "The core timing formula n + (T_HARQ + T_activation_time + T_CSI_Reporting) / NR_slot_length establishes the slot-based framework for activation completion. T_HARQ accounts for the fundamental MAC-layer acknowledgment timing per TS 38.213, while T_CSI_Reporting encompasses the composite delay including CSI reference resource acquisition uncertainty, UE processing time, and reporting resource availability. This formulation explicitly recognizes that CSI reporting readiness is the definitive criterion for activation completion, as it validates both synchronization establishment and measurement capability.",
+          "For FR1 known SCell scenarios, the activation time bifurcates based on measurement period relative to the 2400 ms threshold. When recent measurements exist (≤2400 ms), T_activation_time = T_FirstSSB + T_Δ + 5 ms, where T_Δ represents fine timing tracking overhead (2×T_rs for 12 PRB SSB bandwidth, zero otherwise). The 5 ms constant accommodates fundamental UE processing and RF settling. For stale measurements (>2400 ms), the formula incorporates T_FirstSSB_MAX + T_rs + T_Δ + 5 ms, reflecting the need for additional measurement refresh cycles. The T_FirstSSB_MAX parameter ensures alignment with SMTC-configured SSB bursts across all active serving cells and target SCells.",
+          "FR1 unknown SCell activation presents the most complex timing scenarios, with formulas varying based on contiguous conditions, SSB configuration, and UE capabilities. The contiguous conditions (RTD ≤260 ns, power difference ≤6 dB, identical ssb-PositionInBurst and SMTC offset) enable significant latency reduction by leveraging spatial proximity to active serving cells. The single SSB or TCI-provided cases benefit from reduced beam acquisition complexity. Release 18 enhancements (shortMeasInterval-r18) further optimize timing through reduced measurement intervals, demonstrating the specification's evolution toward lower latency.",
+          "FR2 SCell activation fundamentally differs due to beam-centric operation requirements. Known SCell activation with SMTC configuration requires T_FirstSSB + 5 ms when SSBs satisfy clause 3.6.3 conditions (identical ssb-PositionsInBurst, same half-frame transmission). The scellWithoutSSB capability enables remarkable 3 ms activation when RS QCL-TypeD with active serving cell is available, eliminating SSB-dependent procedures entirely. Unknown FR2 SCell scenarios introduce T_uncertainty_MAC, T_FineTiming, and T_uncertainty_SP parameters accounting for TCI state activation timing relative to SCell activation command reception.",
+          "The SSB-less SCell activation framework (scellWithoutSSB, scellWithoutSSB-InterBandCA-r18) represents a significant architectural advancement, enabling SCell activation without SSB transmission through TRS-based QCL relationships. The inter-band CA variant introduces EPRE difference thresholds (12 dB vs. 30 dB) that determine whether single or dual TRS acquisition periods are required. This capability is particularly valuable for spectrum efficiency in scenarios where SSB overhead minimization is prioritized."
+        ]
+      },
+      "key_timing_parameters": {
+        "main_formula": "n + (T_HARQ + T_activation_time + T_CSI_Reporting) / NR_slot_length",
+        "parameters": [
+          {
+            "symbol": "T_HARQ",
+            "description": "HARQ acknowledgment timing per TS 38.213 (slot n to ACK/NACK)",
+            "typical_values": "3-4 slots (function of SCS)"
+          },
+          {
+            "symbol": "T_activation_time",
+            "description": "SCell-specific activation delay component",
+            "range": "3 ms (minimum) to 100+ ms (complex unknown FR2)"
+          },
+          {
+            "symbol": "T_CSI_Reporting",
+            "description": "Composite CSI reporting delay including acquisition, processing, and transmission uncertainty",
+            "typical_values": "Function of CSI-RS/SSB periodicity"
+          },
+          {
+            "symbol": "T_FirstSSB",
+            "description": "Time to first complete SSB burst after activation command processing",
+            "formula": "After slot n + (T_HARQ + 3ms) / NR_slot_length"
+          },
+          {
+            "symbol": "T_FirstSSB_MAX",
+            "description": "Maximum time to aligned SSB burst across all cells (intra-band) or first SSB (inter-band)",
+            "conditions": "FR1 intra-band: all cells same slot; FR1 inter-band: first SCell SSB; FR2: all cells same slot"
+          },
+          {
+            "symbol": "T_SMTC_MAX",
+            "description": "Longest SMTC periodicity among active cells and target SCell",
+            "minimum": "10 ms"
+          },
+          {
+            "symbol": "T_rs",
+            "description": "SSB transmission periodicity (SMTC-configured or 5 ms default)",
+            "typical_values": "5, 10, 20 ms"
+          },
+          {
+            "symbol": "T_Δ",
+            "description": "Fine timing tracking overhead",
+            "formula": "2×T_rs for 12 PRB SSB BW, else 0"
+          },
+          {
+            "symbol": "T_FineTiming",
+            "description": "Time between TCI activation command completion and first available SSB for TCI state",
+            "context": "Unknown FR2 SCell scenarios"
+          },
+          {
+            "symbol": "T_L1-RSRP_measure",
+            "description": "L1-RSRP measurement delay (M=1, T_Report=0 assumption)",
+            "reference": "Clause 9.2.5/9.3.5"
+          },
+          {
+            "symbol": "T_uncertainty_MAC",
+            "description": "Timing uncertainty for MAC CE-based TCI activation",
+            "zero_condition": "Simultaneous reception in FR2"
+          },
+          {
+            "symbol": "T_uncertainty_SP",
+            "description": "Timing uncertainty for semi-persistent CSI-RS activation",
+            "zero_condition": "Simultaneous reception in FR2"
+          }
+        ]
+      },
+      "engineering_trade_offs": {
+        "activation_delay_vs_measurement_accuracy": [
+          "Known SCell 1280 ms validity window balances measurement freshness with practical reporting latency",
+          "2400 ms measurement period threshold optimizes between measurement staleness and re-acquisition overhead",
+          "Contiguous conditions (260 ns RTD, 6 dB power diff) trade spatial proximity requirements for reduced activation time",
+          "FR2 beam refinement (T_L1-RSRP) adds latency but ensures reliable beam pair establishment",
+          "SSB-less activation trades spectrum efficiency (no SSB overhead) for TRS dependency and QCL complexity"
+        ],
+        "fr1_vs_fr2_considerations": [
+          "FR1: SSB-centric activation with cell-specific RS acquisition",
+          "FR2: Beam-centric operation with QCL-TypeD dependencies and beam refinement periods",
+          "FR2 scellWithoutSSB enables 3 ms activation vs. FR1 minimum ~5 ms with enhanced capabilities",
+          "FR2 unknown SCell requires TCI state timing coordination absent in FR1 procedures"
+        ]
+      },
+      "dependencies": {
+        "specification_clauses": [
+          "Clause 3.6.3: SSB transmission timing conditions for FR2",
+          "Clause 4.3 TS 38.213: MAC CE command processing timing",
+          "Clause 9.2/9.3: Cell identification and measurement requirements",
+          "Clause 9.2.5/9.3.5: L1-RSRP measurement periods"
+        ],
+        "related_clauses": [
+          "8.3.2A: IDLE/INACTIVE mode measurement-based activation",
+          "8.3.3: SCell deactivation timing",
+          "8.3.4-8.3.6: Direct SCell activation scenarios",
+          "8.3.7: Multiple SCell activation parallelism"
+        ]
+      }
+    },
+    "8.3.7": {
+      "clause_id": "8.3.7",
+      "title": "SCell Activation Delay Requirement for Deactivated SCell with Multiple Downlink SCells",
+      "expert_technical_overview": {
+        "paragraphs": [
+          "Clause 8.3.7 extends the single SCell activation framework to parallel multi-SCell activation scenarios, addressing the critical use case of simultaneous carrier aggregation expansion across multiple component carriers. This clause applies when the UE receives a single MAC command activating multiple SCells, requiring coordinated timing across all target SCells while respecting the constraints that no other SCell activation/deactivation/addition/release operations may occur before completion. The engineering complexity arises from managing parallel measurement procedures, SSB acquisition timing alignment across potentially different bands, and CSI reporting readiness for all activated SCells.",
+          "The clause introduces the N1 counting mechanism, a sophisticated exclusion framework that identifies which FR1 unknown SCells can benefit from parallel activation optimizations versus those requiring sequential processing. SCells meeting contiguous conditions (same band, aligned ssb-PositionInBurst, matching SMTC offset, RTD ≤260 ns, power difference ≤6 dB, single SSB or TCI-provided) are excluded from N1 counting, effectively allowing parallel activation without cumulative delay penalties. This design enables efficient intra-band CA activation while properly accounting for inter-band and non-contiguous scenarios requiring independent processing.",
+          "Multi-TRP and NR-DC considerations introduce additional complexity through per-CG MAC command reception and per-FR measurement gap requirements. The clause ensures that FR2 SCell activation timing remains consistent with single SCell activation when active serving cells exist, while providing optimized paths for known semi-persistent and periodic CSI-RS configurations. The T_FirstSSB_MAX_multiple_scells parameter ensures proper SSB burst alignment across all cells being activated, with different rules for intra-band (all cells same slot) versus inter-band (first SCell SSB) scenarios."
+        ]
+      },
+      "detailed_analysis": {
+        "paragraphs": [
+          "The fundamental timing structure maintains the n + (T_HARQ + T_activation_time_multiple_scells + T_CSI_Reporting) / NR_slot_length framework, with T_activation_time_multiple_scells incorporating parallel processing considerations. For FR1 known SCells, the timing bifurcates based on both measurement period (2400 ms threshold) and presence of parallel unknown SCells. When measurement period ≤2400 ms without parallel unknown SCells, T_activation_time_multiple_scells = T_FirstSSB_MAX_multiple_scells + 5 ms, representing the minimal parallel activation path. The introduction of T_rs (5 ms addition) occurs when parallel unknown SCells exist or when measurement period exceeds 2400 ms, reflecting measurement refresh requirements.",
+          "The N1 parameter definition is critical for understanding parallel activation limits. N1 counts FR1 unknown SCells that do NOT meet all contiguous exclusion conditions: contiguity to active/known SCell in same band, single SSB or TCI-provided configuration, aligned ssb-PositionInBurst, RTD ≤260 ns, power difference ≤6 dB, and matching SMTC offset. For each counted N1 SCell, the activation time accumulates an additional T_rs term (T_rs×N1 + T_rs for single SSB/TCI-provided case, T_SMTC_MAX_multiple_scells + T_rs×N1 for general case). This formulation ensures that truly independent SCells receive appropriate sequential processing time while permitting parallel optimization for contiguous, well-conditioned SCells.",
+          "The FR1 unknown SCell otherwise case (neither single SSB nor TCI-provided) presents the most complex timing with full L1-RSRP measurement requirements. The semi-persistent CSI-RS formula: 6 ms + T_FirstSSB_MAX_multiple_scells + T_SMTC_MAX_multiple_scells + T_rs×N1 + T_L1-RSRP_measure + T_L1-RSRP_report + T_HARQ + max(T_uncertainty_MAC_multiple_scells + T_FineTiming + 2 ms, T_uncertainty_SP_multiple_scells) incorporates all timing components including measurement period, reporting delay, and TCI activation uncertainty. The periodic CSI-RS variant reduces the leading constant (3 ms vs. 6 ms) but introduces RRC-based uncertainty (T_uncertainty_RRC_multiple_scells + T_RRC_delay) as an alternative path.",
+          "FR2 SCell activation in multiple SCell scenarios maintains consistency with single SCell activation when active serving cells exist on the target band, reflecting the beam-centric nature of mmWave operation where beam correspondence provides activation shortcuts. For unknown FR2 SCells with known parallel SCells, the formulas simplify significantly: 3 ms + max(T_uncertainty_MAC_multiple_scells + T_FineTiming + 2 ms, T_uncertainty_SP_multiple_scells) for semi-persistent, and max(T_uncertainty_MAC_multiple_scells + 5 ms + T_FineTiming, T_uncertainty_RRC_multiple_scells + T_RRC_delay - T_HARQ) for periodic. The T_uncertainty terms become zero with simultaneous reception capability, enabling rapid activation.",
+          "Additional interruption limitations are specified when SSB start positions across different bands are not aligned after the n + (T_HARQ + 3ms) / NR_slot_length reference point. The number of additional interruptions is bounded by the count of FR1 bands containing both SCells being activated (with T_FirstSSB_MAX_multiple_scells involving T_rs) and active serving cells. Each interruption length follows clause 8.2.2.2.2 specifications, ensuring that parallel activation does not cause excessive service disruption on active carriers. This interruption management is crucial for maintaining QoS on established bearers during CA expansion."
+        ]
+      },
+      "key_timing_parameters": {
+        "main_formula": "n + (T_HARQ + T_activation_time_multiple_scells + T_CSI_Reporting) / NR_slot_length",
+        "parameters": [
+          {
+            "symbol": "T_activation_time_multiple_scells",
+            "description": "Target SCell activation delay in multi-SCell scenario",
+            "context": "Parallel processing considerations"
+          },
+          {
+            "symbol": "T_FirstSSB_MAX_multiple_scells",
+            "description": "Time to aligned SSB burst for all cells in multi-SCell activation",
+            "intra_band": "All active serving cells and SCells same slot",
+            "inter_band": "First occasion when SCells transmit SSB burst"
+          },
+          {
+            "symbol": "T_SMTC_MAX_multiple_scells",
+            "description": "Longest SMTC periodicity among active cells and SCells being activated",
+            "fr1_intra_band": "Longest among same-band cells if cell-specific RS same slot",
+            "fr1_inter_band": "Longest of SCells being activated on same band",
+            "fr2": "Longest among active serving cells and SCells in FR2 intra-band CA",
+            "minimum": "10 ms"
+          },
+          {
+            "symbol": "N1",
+            "description": "Count of parallel FR1 unknown SCells not meeting contiguous exclusion conditions",
+            "exclusion_conditions": "Contiguous to active/known SCell, single SSB or TCI-provided, aligned ssb-PositionInBurst, RTD≤260ns, power diff≤6dB, matching SMTC offset"
+          },
+          {
+            "symbol": "T_uncertainty_MAC_multiple_scells",
+            "description": "Timing uncertainty for MAC CE-based TCI activation in multi-SCell scenario",
+            "zero_condition": "Simultaneous reception"
+          },
+          {
+            "symbol": "T_uncertainty_SP_multiple_scells",
+            "description": "Timing uncertainty for semi-persistent CSI-RS activation in multi-SCell scenario",
+            "zero_condition": "Simultaneous reception"
+          },
+          {
+            "symbol": "T_uncertainty_RRC_multiple_scells",
+            "description": "Timing uncertainty for RRC-based TCI configuration in multi-SCell scenario"
+          }
+        ],
+        "fr1_known_scell_formulas": [
+          {
+            "condition": "Measurement period ≤2400ms, parallel unknown SCell exists",
+            "formula": "T_FirstSSB_MAX_multiple_scells + T_SMTC_MAX_multiple_scells + T_rs + 5 ms"
+          },
+          {
+            "condition": "Measurement period ≤2400ms, no parallel unknown SCell",
+            "formula": "T_FirstSSB_MAX_multiple_scells + 5 ms"
+          },
+          {
+            "condition": "Measurement period >2400ms, parallel unknown SCell exists",
+            "formula": "T_FirstSSB_MAX_multiple_scells + T_SMTC_MAX_multiple_scells + T_rs + 5 ms"
+          },
+          {
+            "condition": "Measurement period >2400ms, no parallel unknown SCell",
+            "formula": "T_FirstSSB_MAX_multiple_scells + T_rs + 5 ms"
+          }
+        ],
+        "fr1_unknown_scell_formulas": [
+          {
+            "condition": "Not counted in N1 (meets exclusion)",
+            "formula": "T_FirstSSB_MAX_multiple_scells + T_SMTC_MAX_multiple_scells + T_rs + 5 ms"
+          },
+          {
+            "condition": "Single SSB or TCI-provided",
+            "formula": "T_FirstSSB_MAX_multiple_scells + T_SMTC_MAX_multiple_scells + T_rs×N1 + T_rs + 5 ms"
+          },
+          {
+            "condition": "Otherwise, semi-persistent CSI-RS",
+            "formula": "6 ms + T_FirstSSB_MAX_multiple_scells + T_SMTC_MAX_multiple_scells + T_rs×N1 + T_L1-RSRP_measure + T_L1-RSRP_report + T_HARQ + max(T_uncertainty_MAC_multiple_scells + T_FineTiming + 2 ms, T_uncertainty_SP_multiple_scells)"
+          },
+          {
+            "condition": "Otherwise, periodic CSI-RS",
+            "formula": "3 ms + T_FirstSSB_MAX_multiple_scells + T_SMTC_MAX_multiple_scells + T_rs×N1 + T_L1-RSRP_measure + T_L1-RSRP_report + max(T_HARQ + T_uncertainty_MAC_multiple_scells + 5 ms + T_FineTiming, T_uncertainty_RRC_multiple_scells + T_RRC_delay)"
+          }
+        ]
+      },
+      "engineering_trade_offs": {
+        "parallel_vs_sequential_processing": [
+          "N1 exclusion conditions enable parallel activation for well-conditioned contiguous SCells",
+          "Each N1-counted SCell adds T_rs sequential delay, bounding parallel efficiency",
+          "FR2 maintains single SCell timing with active serving cells, leveraging beam correspondence",
+          "Inter-band CA inherently limits parallelism due to independent RF chains"
+        ],
+        "interruption_management": [
+          "Additional interruptions bounded by band count with misaligned SSB starts",
+          "Each interruption per clause 8.2.2.2.2 limits QoS impact on active bearers",
+          "T_FirstSSB_MAX_multiple_scells alignment minimizes interruption count"
+        ]
+      },
+      "dependencies": {
+        "specification_clauses": [
+          "Clause 8.3.2: Single SCell activation baseline",
+          "Clause 8.2.2.2.2: Interruption length specifications"
+        ],
+        "related_clauses": [
+          "8.3.8: Multiple SCell deactivation",
+          "8.3.9-8.3.11: Direct multiple SCell activation",
+          "8.3.13: Multiple SCell PUCCH SCell activation"
+        ]
+      }
+    },
+    "8.10": {
+      "clause_id": "8.10",
+      "title": "Active TCI State Switching Delay",
+      "expert_technical_overview": {
+        "paragraphs": [
+          "Clause 8.10 establishes the comprehensive framework for Transmission Configuration Indication (TCI) state switching, governing the UE's transition between different beam configurations for PDCCH and PDSCH reception. This clause is fundamental to NR's beam management architecture, enabling dynamic beam adaptation in response to channel variations, mobility events, and traffic pattern changes. The requirements apply across MR-DC and standalone NR deployments, addressing the critical need for rapid beam switching to maintain link quality in mmWave and massive MIMO systems.",
+          "The clause introduces the pivotal 'known' versus 'unknown' TCI state classification, with known states requiring prior L1-RSRP reporting within a 1280 ms validity window. This classification directly impacts switching latency: known states leverage existing beam knowledge for rapid transition, while unknown states require additional L1-RSRP measurement time for beam refinement. The 1280 ms window balances measurement freshness with practical reporting constraints, ensuring that beam reports remain representative of current channel conditions while accommodating network scheduling flexibility.",
+          "Three primary triggering mechanisms are addressed: MAC-CE based switching (most common for scheduled beam updates), DCI-based switching (for immediate PDSCH beam indication), and RRC-based switching (for configuration changes). Each mechanism has distinct timing characteristics reflecting the trade-off between control channel overhead and switching responsiveness. The MAC-CE based approach provides the optimal balance, enabling sub-frame switching for known states while DCI-based switching offers the lowest latency for PDSCH-specific beam adaptation."
+        ]
+      },
+      "detailed_analysis": {
+        "paragraphs": [
+          "The MAC-CE based TCI state switching delay for known states follows the formula: UE able to receive PDCCH with target TCI state at first slot after slot n + T_HARQ + 3N_slot^subframe,μ + T_Ok×(T_first-SSB + T_SSB-proc) / NR slot length. The 3N_slot^subframe,μ term (3 subframes in slots) provides the fundamental processing time for MAC CE command decoding and preparation. T_Ok is a binary indicator (1 if target TCI state not in active TCI state list for PDSCH, 0 otherwise) that adds beam acquisition time only when necessary. T_first-SSB represents the time to first SSB transmission after MAC CE decoding, while T_SSB-proc (2 ms) accounts for SSB processing.",
+          "For unknown TCI states, the formula expands to include L1-RSRP measurement time: n + T_HARQ + 3N_slot^subframe,μ + T_L1-RSRP + T_Ouk×(T_first-SSB + T_SSB-proc). T_L1-RSRP is zero in FR1 or when QCL-TypeD is not involved in FR2, reflecting that beam refinement is unnecessary without spatial QCL relationships. T_Ouk varies based on measurement type: 1 for CSI-RS based L1-RSRP (requiring beam acquisition), 0 for SSB-based when QCL-TypeD is involved (SSB provides spatial information). This nuanced formulation recognizes that SSB-based beam reporting already contains spatial information when QCL-TypeD is configured.",
+          "The HST FR2 scenario (clause 8.10.3A) introduces enhanced timing for high-speed train deployments with power class 6 UEs. The formula adds TRS/SSB processing terms: n + T_HARQ + 3N_slot^subframe,μ + T_Ok×(T_first-SSB + AD×T_SSB + T_SSB-proc + T_rs + T_rs-proc). The T_rs (time to first TRS/SSB after SSB processing) and T_rs-proc (2 ms) terms accommodate the rapid channel variations characteristic of high-speed mobility. The AD (adjacent) parameter handles FR2 adjacent SSB scenarios where periodicity matching enables optimized timing.",
+          "DCI-based TCI state switching (clause 8.10.4) provides the lowest latency path for PDSCH beam adaptation. When tci-PresentInDCI is enabled and the target TCI state is known, the UE receives PDSCH with the indicated TCI state at the first slot after slot n + timeDurationForQCL. The timeDurationForQCL parameter, configured per CORESET, represents the UE's required processing time for PDCCH reception and spatial QCL application. This mechanism enables per-PDSCH beam flexibility without MAC CE overhead, critical for dynamic beam tracking in high-mobility scenarios.",
+          "RRC-based TCI state switching (clause 8.10.5) addresses configuration-driven beam changes with longer latency reflecting RRC procedure delays. Known state: n + (T_RRC_processing + T_Ok×(T_first-SSB + T_SSB-proc)) / NR slot length. Unknown state adds L1-RSRP measurement: n + (T_RRC_processing + T_L1-RSRP + T_Ouk×(T_first-SSB + T_SSB-proc)) / NR slot length. The UE is not required to receive PDCCH/PDSCH/CSI-RS or transmit PUCCH/PUSCH until switching completion, acknowledging the disruptive nature of RRC reconfiguration.",
+          "The active TCI state list update delay (clause 8.10.6) handles additions to the TCI state pool without immediate activation. When all new states are known, completion occurs at n + T_HARQ + 3N_slot^subframe,μ + T_Ok×(T_first-SSB_List + T_SSB-proc). When some states are unknown, T_L1-RSRP_list + T_Ouk×(T_first-SSB_List + T_SSB-proc) is added. This enables network pre-configuration of candidate beams, reducing subsequent activation latency."
+        ]
+      },
+      "key_timing_parameters": {
+        "mac_ce_known_formula": "First slot after slot n + T_HARQ + 3N_slot^subframe,μ + T_Ok×(T_first-SSB + T_SSB-proc) / NR slot length",
+        "mac_ce_unknown_formula": "First slot after slot n + T_HARQ + 3N_slot^subframe,μ + T_L1-RSRP + T_Ouk×(T_first-SSB + T_SSB-proc) / NR slot length",
+        "parameters": [
+          {
+            "symbol": "n",
+            "description": "Slot containing MAC CE command for TCI state switch",
+            "context": "Reference timing point"
+          },
+          {
+            "symbol": "T_HARQ",
+            "description": "HARQ acknowledgment timing",
+            "reference": "TS 38.213"
+          },
+          {
+            "symbol": "3N_slot^subframe,μ",
+            "description": "3 subframes in slots for UE processing",
+            "value": "3 × (1ms / slot_duration)"
+          },
+          {
+            "symbol": "T_Ok",
+            "description": "Known TCI state acquisition indicator",
+            "value_1": "Target TCI state NOT in active TCI state list for PDSCH",
+            "value_0": "Target TCI state already in active list"
+          },
+          {
+            "symbol": "T_first-SSB",
+            "description": "Time to first SSB transmission after MAC CE decoded",
+            "lbca_variant": "Time to first available SSB based on LBCA-SwitchingPattern if LB-CA via switching supported"
+          },
+          {
+            "symbol": "T_SSB-proc",
+            "description": "SSB processing time",
+            "value": "2 ms"
+          },
+          {
+            "symbol": "T_L1-RSRP",
+            "description": "L1-RSRP measurement time for beam refinement",
+            "fr1_or_no_qcl_d": "0 ms",
+            "fr2_with_qcl_d": "Beam refinement time"
+          },
+          {
+            "symbol": "T_Ouk",
+            "description": "Unknown TCI state acquisition indicator",
+            "csi_rs_based": "1 (requires beam acquisition)",
+            "ssb_based_with_qcl_d": "0 (SSB provides spatial info)",
+            "other_qcl_types": "1"
+          },
+          {
+            "symbol": "timeDurationForQCL",
+            "description": "UE processing time for DCI-based QCL application",
+            "configuration": "Per CORESET in RRC"
+          },
+          {
+            "symbol": "T_RRC_processing",
+            "description": "RRC procedure delay",
+            "reference": "TS 38.331 clause 12"
+          },
+          {
+            "symbol": "T_rs",
+            "description": "Time to first TRS/SSB after SSB processing (HST FR2)",
+            "context": "High-speed train scenarios"
+          },
+          {
+            "symbol": "T_rs-proc",
+            "description": "TRS processing time (HST FR2)",
+            "value": "2 ms"
+          },
+          {
+            "symbol": "AD",
+            "description": "Adjacent SSB indicator (HST FR2)",
+            "value_1": "SSBs adjacent in FR2 AND T_SSB1 = T_SSB2",
+            "value_0": "Otherwise"
+          }
+        ],
+        "known_conditions": [
+          "TCI state switch command within 1280 ms of L1-RSRP reporting",
+          "At least 1 L1-RSRP report sent for target TCI state before switch command",
+          "TCI state remains detectable during switching period",
+          "SSB associated with TCI state remains detectable",
+          "SNR of TCI state ≥ -3 dB"
+        ]
+      },
+      "engineering_trade_offs": {
+        "switching_latency_vs_reliability": [
+          "Known state: ~3 subframes + conditional beam acquisition",
+          "Unknown state: Additional L1-RSRP measurement time",
+          "DCI-based: Lowest latency but per-PDSCH overhead",
+          "MAC-CE: Balanced latency with scheduled control",
+          "RRC: Longest latency but comprehensive reconfiguration"
+        ],
+        "beam_management_strategies": [
+          "1280 ms validity window balances freshness with scheduling flexibility",
+          "T_Ok/T_Ouk indicators enable conditional processing based on state knowledge",
+          "T_L1-RSRP = 0 for FR1 reflects absence of beam refinement need",
+          "QCL-TypeD involvement determines beam acquisition necessity"
+        ]
+      },
+      "dependencies": {
+        "specification_clauses": [
+          "TS 38.213: MAC CE command processing",
+          "TS 38.331 clause 12: RRC procedure delay",
+          "Clause 3.6.3: SSB transmission timing"
+        ],
+        "related_clauses": [
+          "8.15-8.16: Unified TCI state switching",
+          "8.21-8.24: Multi-TRP TCI switching"
+        ]
+      }
+    },
+    "8.15_8.16": {
+      "clause_id": "8.15/8.16",
+      "title": "Unified TCI State Switching for Downlink and Uplink",
+      "expert_technical_overview": {
+        "paragraphs": [
+          "Clauses 8.15 and 8.16 introduce the unified TCI framework, a significant architectural enhancement enabling coordinated downlink and uplink beam management through shared TCI state configurations. This unified approach addresses the fundamental challenge of maintaining beam correspondence between DL reception and UL transmission, particularly critical in FR2 where beamforming is essential for both link directions. The framework applies to UEs configured with dl-OrJointTCI-StateList for DL channels and either dl-OrJointTCI-StateList (when unifiedTCI-StateType is Joint) or TCI-UL-State for UL channels/signals.",
+          "The unified TCI concept enables several key capabilities: joint DL/UL beam switching through single MAC CE commands, coordinated beam management across multiple serving cells via simultaneousU-TCI-UpdateList configurations, and flexible beam association through unifiedTCI-StateRef-r17 referencing. The additional PCI conditions (same active BWP, identical center frequency/SCS/SFN offset, known cell) enable TCI state configurations referencing beams from cells other than the serving cell, expanding beam selection flexibility for multi-cell coordination scenarios.",
+          "Clause 8.15 governs downlink unified TCI switching, maintaining similar timing structures to clause 8.10 but with enhanced applicability to UE-dedicated PDCCH/PDSCH. Clause 8.16 addresses uplink unified TCI switching, introducing pathloss reference signal (PL-RS) based timing that reflects the fundamental difference between DL beam selection (based on received signal quality) and UL beam selection (based on PL-RS for open-loop power control). The N_M parameter in UL switching indicates whether the target PL-RS is already maintained by the UE, enabling latency optimization for previously tracked references."
+        ]
+      },
+      "detailed_analysis": {
+        "paragraphs": [
+          "The unified downlink TCI state switching framework (clause 8.15.3) for known states follows: UE able to receive UE-dedicated PDCCH/PDSCH with target TCI state at first slot after slot n + T_HARQ + 3N_slot^subframe,μ + T_Ok×(T_first-SSB + T_SSB-proc) / NR slot length. This mirrors the clause 8.10 MAC-CE structure but explicitly applies to UE-dedicated channels, excluding common PDCCH. The old TCI state remains valid until slot n + T_HARQ + 3N_slot^subframe,μ, providing a clean transition window. For unknown states, the formula adds T_L1-RSRP + T_Ouk×(T_first-SSB + T_SSB-proc), consistent with beam refinement requirements.",
+          "DCI-based downlink unified TCI switching (clause 8.15.4) introduces the beamAppTime-r17 parameter, representing a significant advancement over clause 8.10. When the UE is configured with dl-OrJointTCI-StateList or TCI-UL-State and activated with multiple TCI state codepoints via MAC CE, DCI-based switching completes starting from the first slot at least beamAppTime-r17 symbols after the last symbol of PUCCH carrying HARQ-ACK for the DCI triggering activation. This symbol-level granularity provides more precise timing control than slot-based mechanisms, enabling tighter beam tracking loops.",
+          "The active downlink TCI state list update delay (clause 8.15.5) distinguishes between all-known and subset-unknown scenarios. All known: n + T_HARQ + 3N_slot^subframe,μ + T_Ok×(T_first-SSB_List + T_SSB-proc). Subset unknown: adds T_L1-RSRP_list + T_Ouk×(T_first-SSB_List + T_SSB-proc). The T_first-SSB_List parameter accommodates the first SSB for list update purposes, potentially different from single-state switching due to multiple beam acquisitions.",
+          "Uplink unified TCI state switching (clause 8.16.3) introduces fundamentally different timing based on pathloss reference signal acquisition. For known states with beamCorrespondenceWithoutUL-BeamSweeping = 1: UE able to transmit UL signal with target TCI state in slot n + T_HARQ + 3N_slot^subframe,μ + N_M×(T_first_target-PL-RS + 4×T_target_PL-RS + 2 ms) / NR slot length. The N_M parameter (1 if target PL-RS not maintained, 0 otherwise) enables zero-additional-delay switching when the PL-RS is already tracked. The 4×T_target_PL-RS term provides sufficient PL-RS samples for accurate pathloss estimation, while 2 ms accounts for processing.",
+          "For unknown UL TCI states, the formula expands: n + T_HARQ + 3N_slot^subframe,μ + (T_L1-RSRP + T_first_target-PL-RS + 4×T_target_PL-RS + 2 ms) / NR slot length. The T_L1-RSRP term accounts for beam quality measurement of the target UL TCI state, reflecting that the UE must first identify a suitable beam before PL-RS tracking can commence. This sequential dependency (beam identification → PL-RS acquisition → UL transmission) inherently results in longer switching delays for unknown UL states compared to known states.",
+          "The known conditions for UL TCI states (clause 8.16.2) extend beyond DL conditions to include RS configured in target UL TCI state detectability and SNR requirements. This reflects the additional complexity of UL beam management where both the TCI state's spatial properties (for beamforming) and the associated RS quality (for power control) must be verified. The 1280 ms validity window and L1-RSRP reporting requirements parallel DL conditions, enabling coordinated DL/UL beam transitions when both states are known."
+        ]
+      },
+      "key_timing_parameters": {
+        "dl_mac_ce_known_formula": "First slot after slot n + T_HARQ + 3N_slot^subframe,μ + T_Ok×(T_first-SSB + T_SSB-proc) / NR slot length",
+        "dl_mac_ce_unknown_formula": "First slot after slot n + T_HARQ + 3N_slot^subframe,μ + (T_L1-RSRP + T_Ouk×(T_first-SSB + T_SSB-proc)) / NR slot length",
+        "ul_mac_ce_known_formula": "Slot n + T_HARQ + 3N_slot^subframe,μ + N_M×(T_first_target-PL-RS + 4×T_target_PL-RS + 2 ms) / NR slot length",
+        "ul_mac_ce_unknown_formula": "Slot n + T_HARQ + 3N_slot^subframe,μ + (T_L1-RSRP + T_first_target-PL-RS + 4×T_target_PL-RS + 2 ms) / NR slot length",
+        "parameters": [
+          {
+            "symbol": "dl-OrJointTCI-StateList",
+            "description": "Configuration for DL or joint DL/UL TCI states",
+            "unified_type": "Joint or Separate"
+          },
+          {
+            "symbol": "TCI-UL-State",
+            "description": "UL-specific TCI state configuration",
+            "applicability": "When unifiedTCI-StateType is Separate"
+          },
+          {
+            "symbol": "simultaneousU-TCI-UpdateList1/2/3/4",
+            "description": "Coordinated multi-cell TCI update configurations",
+            "context": "Cross-cell beam coordination"
+          },
+          {
+            "symbol": "unifiedTCI-StateRef-r17",
+            "description": "Reference serving cell and BWP for unified TCI",
+            "condition": "All serving cells in update list must share same reference"
+          },
+          {
+            "symbol": "beamAppTime-r17",
+            "description": "Symbol count for DCI-based TCI application",
+            "context": "DL unified TCI DCI switching"
+          },
+          {
+            "symbol": "N_M",
+            "description": "PL-RS maintenance indicator (UL)",
+            "value_1": "Target PL-RS not maintained by UE",
+            "value_0": "Target PL-RS already tracked"
+          },
+          {
+            "symbol": "T_first_target-PL-RS",
+            "description": "Time to first target PL-RS transmission",
+            "context": "UL TCI switching"
+          },
+          {
+            "symbol": "T_target_PL-RS",
+            "description": "Target PL-RS periodicity",
+            "context": "UL power control reference"
+          },
+          {
+            "symbol": "beamCorrespondenceWithoutUL-BeamSweeping",
+            "description": "UE capability for beam correspondence without sweep",
+            "value_1": "UE can determine UL beam from DL measurement"
+          },
+          {
+            "symbol": "T_L1-RSRP",
+            "description": "L1-RSRP measurement time",
+            "dl_context": "Beam refinement for QCL-TypeD",
+            "ul_context": "Beam quality for UL TCI state"
+          }
+        ],
+        "additional_pci_conditions": [
+          "Active BWP of serving cell and additional PCI cell are same",
+          "Center frequency, SCS, and SFN offset identical",
+          "Cell with additional PCI is known to UE"
+        ]
+      },
+      "engineering_trade_offs": {
+        "unified_vs_separate_tci": [
+          "Joint TCI: Single command for DL/UL, reduced signaling overhead",
+          "Separate TCI: Independent optimization, higher flexibility",
+          "Unified framework enables coordinated beam management across cells",
+          "simultaneousU-TCI-UpdateList enables synchronized multi-cell updates"
+        ],
+        "dl_vs_ul_switching": [
+          "DL: Based on received signal quality (SSB/CSI-RS)",
+          "UL: Based on PL-RS for power control (4×T_target_PL-RS)",
+          "N_M enables zero-delay switching for tracked PL-RS",
+          "UL unknown states inherently longer due to sequential beam→PL-RS→TX dependency"
+        ],
+        "beam_acquisition_optimization": [
+          "T_Ok/T_Ouk conditional terms avoid unnecessary beam acquisition",
+          "1280 ms validity window balances freshness with scheduling",
+          "beamAppTime-r17 provides symbol-level precision for DCI switching",
+          "List update enables pre-configuration of candidate beams"
+        ]
+      },
+      "dependencies": {
+        "specification_clauses": [
+          "Clause 8.10: Active TCI state switching baseline",
+          "Clause 8.15.2/8.16.2: Known conditions for DL/UL TCI states"
+        ],
+        "related_clauses": [
+          "8.21-8.24: Multi-TRP unified TCI switching",
+          "TS 38.213: TCI state indication and QCL framework",
+          "TS 38.331: unifiedTCI-StateRef-r17 configuration"
+        ]
+      }
+    },
+    "8.21_8.24": {
+      "clause_id": "8.21-8.24",
+      "title": "Multi-TRP TCI State Switching for Single-DCI and Multi-DCI mTRP",
+      "expert_technical_overview": {
+        "paragraphs": [
+          "Clauses 8.21-8.24 extend the unified TCI framework to multi-TRP (mTRP) deployments, addressing the complex beam coordination requirements when UEs communicate with multiple transmission/reception points simultaneously. This capability is fundamental to advanced NR features including coherent/non-coherent joint transmission, dynamic point selection, and interference coordination. The clauses distinguish between single-DCI mTRP (S-DCI, where one DCI schedules PDSCH from multiple TRPs) and multi-DCI mTRP (M-DCI, where independent DCIs from different TRPs schedule respective PDSCH transmissions), each with distinct timing and coordination requirements.",
+          "Single-DCI mTRP (clauses 8.21 for DL, 8.23 for UL) enables coordinated beam switching across multiple TRPs through unified control, with the UE receiving a single MAC CE command that simultaneously updates TCI states for all participating TRPs. This architecture requires the UE to report S-DCI based MTRP capability and maintains the fundamental constraint that SSBs can be associated with the serving cell PCI (different from clause 8.15.2's additional PCI allowance). The max{} formulation in timing formulas reflects the parallel nature of multi-TRP beam acquisition—the overall switching delay is determined by the slowest TRP's beam establishment.",
+          "Multi-DCI mTRP (clauses 8.22 for DL, 8.24 for UL) supports independent per-TRP beam management through separate CORESET configurations distinguished by CORESETPoolIndex. This architecture enables independent TRP scheduling decisions but introduces complexity in timing alignment, particularly in FR2 where simultaneous reception from different QCL-D sources may not be supported. The OL (overlap) parameter in M-DCI timing formulas accounts for SSB overlap/adjacency scenarios where beam acquisition from one TRP may be delayed due to temporal proximity with another TRP's SSB transmission."
+        ]
+      },
+      "detailed_analysis": {
+        "paragraphs": [
+          "Single-DCI DL mTRP TCI switching (clause 8.21.3) presents three scenarios based on TRP state knowledge. Both known: UE receives PDCCH/PDSCH at first slot after n + T_HARQ + 3N_slot^subframe,μ + max{T_Ok1×(T_first-SSB1 + AD1×T_SSB1 + T_SSB-proc), T_Ok2×(T_first-SSB2 + AD2×T_SSB2 + T_SSB-proc)}. The max{} operator captures parallel beam acquisition—the UE must wait for both TRPs to complete beam establishment. The AD1/AD2 parameters (1 if SSBs adjacent in FR2 and periodicities match, 0 otherwise) handle FR2 adjacent SSB optimization. One unknown: adds T_L1-RSRP1 for the unknown TRP while maintaining known timing for the other. Both unknown: both TRPs require L1-RSRP measurement.",
+          "The single-DCI formulation reflects the fundamental constraint that S-DCI scheduling requires coherent beam alignment across TRPs for joint transmission. The T_Ok1/T_Ok2 indicators enable independent conditional acquisition per TRP—if one TRP's target state is already active while the other's is not, only the inactive TRP incurs beam acquisition delay. This flexibility is crucial for dynamic point selection scenarios where the network may switch between single-TRP and multi-TRP transmission based on channel conditions.",
+          "Multi-DCI DL mTRP (clause 8.22.3) introduces the OL parameter for SSB overlap handling. Known state: n + T_HARQ + 3N_slot^subframe,μ + T_Ok×(T_first-SSB + T_SSB-proc + OL×T_SSB). OL=1 when first SSB overlaps or is adjacent to first SSB from other TRP in FR2 AND (SSB periodicity < other TRP's OR (equal AND this TRP has lowest coresetPoolIndex)). This prioritizes the TRP with shorter periodicity or lower pool index when overlap occurs, ensuring deterministic timing. Unknown state adds T_L1-RSRP + T_Ouk×(T_first-SSB + T_SSB-proc + OL×T_SSB), maintaining the overlap consideration.",
+          "The M-DCI applicability constraints (clause 8.22.1) specify: no 2 TAs configured, or 2 TAs in FR1, or 2 TAs in FR2 if RTD<CP. Additionally, UE not expected to receive simultaneously from two different QCL-D sources in FR2. These constraints acknowledge the practical limitations of independent TRP reception, particularly regarding timing alignment and beamforming complexity. Requirements apply to each TRP independently, enabling asymmetric configurations where one TRP may be in known state while another is unknown.",
+          "Single-DCI UL mTRP (clause 8.23.3) extends the unified UL TCI framework to parallel TRP transmission. Both known: n + T_HARQ + 3N_slot^subframe,μ + max{N_M1×(T_first_target-PL-RS1 + 4×T_target_PL-RS1 + 2 ms), N_M2×(T_first_target-PL-RS2 + 4×T_target_PL-RS2 + 2 ms)}. The max{} formulation parallels DL S-DCI timing, with PL-RS acquisition determining overall delay. Both unknown adds T_L1-RSRP for beam identification before PL-RS acquisition. One unknown/one known combines both formulations, with the unknown TRP requiring beam measurement while the known TRP may have existing PL-RS tracking.",
+          "Multi-DCI UL mTRP (clause 8.24.3) maintains the same structure as single-TRP UL switching (clause 8.16.3) but applies independently per TRP. Known: n + T_HARQ + 3N_slot^subframe,μ + N_M×(T_first_target-PL-RS + 4×T_target_PL-RS + 2 ms). Unknown: adds T_L1-RSRP. The independence reflects that M-DCI UL scheduling allows separate per-TRP power control and beam management, unlike the coordinated requirement of S-DCI joint transmission. The same applicability constraints as clause 8.22.1 apply, ensuring timing alignment feasibility."
+        ]
+      },
+      "key_timing_parameters": {
+        "s_dci_dl_both_known_formula": "First slot after n + T_HARQ + 3N_slot^subframe,μ + max{T_Ok1×(T_first-SSB1 + AD1×T_SSB1 + T_SSB-proc), T_Ok2×(T_first-SSB2 + AD2×T_SSB2 + T_SSB-proc)} / NR slot length",
+        "s_dci_dl_one_unknown_formula": "First slot after n + T_HARQ + 3N_slot^subframe,μ + T_L1-RSRP1 + max{T_Ouk1×(T_first-SSB1 + AD1×T_SSB1 + T_SSB-proc), T_Ok2×(T_first-SSB2 + T_SSB-proc)} / NR slot length",
+        "s_dci_dl_both_unknown_formula": "First slot after n + T_HARQ + 3N_slot^subframe,μ + max{T_L1-RSRP1 + T_Ouk1×(T_first-SSB1 + T_SSB-proc), T_L1-RSRP2 + T_Ok2×(T_first-SSB2 + T_SSB-proc)} / NR slot length",
+        "m_dci_dl_known_formula": "First slot after n + T_HARQ + 3N_slot^subframe,μ + T_Ok×(T_first-SSB + T_SSB-proc + OL×T_SSB) / NR slot length",
+        "m_dci_dl_unknown_formula": "First slot after n + T_HARQ + 3N_slot^subframe,μ + (T_L1-RSRP + T_Ouk×(T_first-SSB + T_SSB-proc + OL×T_SSB)) / NR slot length",
+        "s_dci_ul_both_known_formula": "Slot n + T_HARQ + 3N_slot^subframe,μ + max{N_M1×(T_first_target-PL-RS1 + 4×T_target_PL-RS1 + 2 ms), N_M2×(T_first_target-PL-RS2 + 4×T_target_PL-RS2 + 2 ms)} / NR slot length",
+        "s_dci_ul_both_unknown_formula": "Slot n + T_HARQ + 3N_slot^subframe,μ + max{T_L1-RSRP1 + T_first_target-PL-RS1 + 4×T_target_PL-RS1 + 2 ms, T_L1-RSRP2 + T_first_target-PL-RS2 + 4×T_target_PL-RS2 + 2 ms} / NR slot length",
+        "m_dci_ul_known_formula": "Slot n + T_HARQ + 3N_slot^subframe,μ + N_M×(T_first_target-PL-RS + 4×T_target_PL-RS + 2 ms) / NR slot length",
+        "m_dci_ul_unknown_formula": "Slot n + T_HARQ + 3N_slot^subframe,μ + (T_L1-RSRP + T_first_target-PL-RS + 4×T_target_PL-RS + 2 ms) / NR slot length",
+        "parameters": [
+          {
+            "symbol": "S-DCI",
+            "description": "Single-DCI multi-TRP",
+            "characteristic": "One DCI schedules PDSCH from multiple TRPs"
+          },
+          {
+            "symbol": "M-DCI",
+            "description": "Multi-DCI multi-TRP",
+            "characteristic": "Independent DCIs from different TRPs"
+          },
+          {
+            "symbol": "CORESETPoolIndex",
+            "description": "Distinguishes CORESETs for different TRPs",
+            "context": "M-DCI configuration"
+          },
+          {
+            "symbol": "T_Ok1/T_Ok2",
+            "description": "Per-TRP known state acquisition indicators",
+            "context": "S-DCI independent TRP state tracking"
+          },
+          {
+            "symbol": "T_first-SSB1/T_first-SSB2",
+            "description": "Per-TRP first SSB timing",
+            "context": "Parallel beam acquisition"
+          },
+          {
+            "symbol": "AD1/AD2",
+            "description": "Per-TRP adjacent SSB indicators",
+            "formula": "1 if SSBs adjacent in FR2 AND T_SSB1 = T_SSB2"
+          },
+          {
+            "symbol": "T_L1-RSRP1/T_L1-RSRP2",
+            "description": "Per-TRP L1-RSRP measurement times",
+            "context": "Unknown TRP beam refinement"
+          },
+          {
+            "symbol": "OL",
+            "description": "SSB overlap indicator (M-DCI)",
+            "value_1": "First SSB overlaps/adjacent to other TRP AND (shorter periodicity OR equal with lower coresetPoolIndex)",
+            "value_0": "Otherwise"
+          },
+          {
+            "symbol": "N_M1/N_M2",
+            "description": "Per-TRP PL-RS maintenance indicators (UL)",
+            "context": "S-DCI UL parallel PL-RS tracking"
+          },
+          {
+            "symbol": "T_first_target-PL-RS1/2",
+            "description": "Per-TRP first PL-RS timing",
+            "context": "UL power control reference acquisition"
+          },
+          {
+            "symbol": "T_target_PL-RS1/2",
+            "description": "Per-TRP PL-RS periodicity",
+            "context": "UL open-loop power control"
+          },
+          {
+            "symbol": "2 TAs",
+            "description": "Two timing advance configurations",
+            "constraint": "Not configured, or FR1 only, or FR2 with RTD<CP"
+          },
+          {
+            "symbol": "QCL-D sources",
+            "description": "Spatial QCL reference signals",
+            "constraint": "UE not expected simultaneous reception from different QCL-D in FR2"
+          }
+        ],
+        "m_dci_applicability_constraints": [
+          "UE not configured with 2 TAs, OR configured with 2 TAs in FR1, OR configured with 2 TAs in FR2 if RTD < CP",
+          "UE not expected to receive simultaneously from two different QCL-D sources in FR2",
+          "Requirements applicable to each TRP independently"
+        ]
+      },
+      "engineering_trade_offs": {
+        "s_dci_vs_m_dci": [
+          "S-DCI: Coordinated control, joint transmission, max{} parallel timing",
+          "M-DCI: Independent scheduling, separate control, per-TRP timing",
+          "S-DCI optimal for coherent JT, M-DCI for flexible DPS",
+          "OL parameter in M-DCI handles SSB overlap contention"
+        ],
+        "multi_trp_complexity": [
+          "max{} formulation ensures all TRPs ready before transmission",
+          "Per-TRP T_Ok enables asymmetric state knowledge",
+          "L1-RSRP per TRP for independent beam refinement",
+          "AD parameter optimizes adjacent SSB scenarios"
+        ],
+        "ul_considerations": [
+          "S-DCI UL: Parallel PL-RS acquisition, max{} timing",
+          "M-DCI UL: Independent per-TRP power control",
+          "N_M per TRP enables zero-delay for tracked PL-RS",
+          "Sequential beam→PL-RS dependency for unknown states"
+        ]
+      },
+      "dependencies": {
+        "specification_clauses": [
+          "Clause 8.15/8.16: Unified TCI state switching baseline",
+          "Clause 8.21.2/8.22.2: Known conditions for mTRP TCI states",
+          "TS 38.213: CORESETPoolIndex and QCL framework"
+        ],
+        "related_clauses": [
+          "8.10: Active TCI state switching (single-TRP)",
+          "TS 38.331: mTRP configuration and capability reporting"
+        ]
+      }
+    }
+  },
+  "summary": {
+    "total_sections": 5,
+    "sections_covered": [
+      "8.3.2",
+      "8.3.7",
+      "8.10",
+      "8.15/8.16",
+      "8.21-8.24"
+    ],
+    "topic_areas": {
+      "scell_activation": [
+        "8.3.2",
+        "8.3.7"
+      ],
+      "tci_state_switching": [
+        "8.10",
+        "8.15/8.16",
+        "8.21-8.24"
+      ]
+    },
+    "key_engineering_themes": [
+      "Known vs Unknown state classification (1280 ms validity window)",
+      "FR1 vs FR2 timing differentiation (beam-centric vs cell-centric)",
+      "Parallel processing optimization (N1 counting, max{} formulations)",
+      "Activation delay vs measurement accuracy trade-offs",
+      "Multi-TRP coordination (S-DCI vs M-DCI architectures)",
+      "Unified DL/UL beam management (TCI state coordination)"
+    ],
+    "critical_parameters": [
+      "T_HARQ: HARQ acknowledgment timing",
+      "T_FirstSSB/T_FirstSSB_MAX: SSB acquisition timing",
+      "T_SMTC_MAX: SMTC periodicity (minimum 10 ms)",
+      "T_activation_time: Core activation delay component",
+      "T_L1-RSRP: Beam refinement measurement time",
+      "T_Ok/T_Ouk: Conditional beam acquisition indicators",
+      "N_M: PL-RS maintenance indicator (UL)",
+      "N1: Parallel SCell counting mechanism"
+    ]
+  },
+  "target_audience": [
+    "3GPP RAN4 delegates",
+    "RRM standardization experts",
+    "UE implementation architects",
+    "Network equipment vendors",
+    "Carrier aggregation and beam management researchers"
+  ]
+}
