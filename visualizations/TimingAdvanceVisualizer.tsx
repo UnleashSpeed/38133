@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Info, CheckCircle, AlertCircle } from 'lucide-react';
+import { ArrowRight, Info, CircleCheck as CheckCircle, CircleAlert as AlertCircle } from 'lucide-react';
 
 // 3GPP TS 38.133 Timing Advance Accuracy Requirements
 interface SCSConfig {

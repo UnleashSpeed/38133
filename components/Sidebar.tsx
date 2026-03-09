@@ -4,17 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  ChevronRight, 
-  ChevronDown, 
-  Clock, 
-  Radio, 
-  Activity, 
-  Info,
-  Menu,
-  X,
-  Home
-} from 'lucide-react'
+import { ChevronRight, ChevronDown, Clock, Radio, Activity, Info, Menu, X, Chrome as Home } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 

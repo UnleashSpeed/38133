@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Info, Clock, Zap, Radio, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Info, Clock, Zap, Radio, CircleCheck as CheckCircle, TriangleAlert as AlertTriangle } from 'lucide-react';
 
 // 3GPP TS 38.133 SCell Activation Timing Constants
 interface ActivationTiming {
