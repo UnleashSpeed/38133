@@ -4,16 +4,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Search, 
-  X, 
-  Loader2, 
-  FileText, 
-  Table, 
-  Calculator,
-  Sparkles,
-  ArrowRight
-} from 'lucide-react'
+import { Search, X, Loader as Loader2, FileText, Table, Calculator, Sparkles, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
