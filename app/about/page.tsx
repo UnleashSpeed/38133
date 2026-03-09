@@ -2,19 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { 
-  BookOpen, 
-  Code, 
-  Database, 
-  FileText, 
-  Github, 
-  ExternalLink,
-  CheckCircle,
-  Layers,
-  Search,
-  Table,
-  Calculator
-} from 'lucide-react'
+import { BookOpen, Code, Database, FileText, Github, ExternalLink, CircleCheck as CheckCircle, Layers, Search, Table, Calculator } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Breadcrumb } from '@/components/Breadcrumb'
